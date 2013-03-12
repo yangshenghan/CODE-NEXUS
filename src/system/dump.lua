@@ -28,7 +28,7 @@
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
 return function(...)
-    local serializer = require 'src/system/serialize'
+    local serializer = require 'system.serialize'
     local contents = serializer(...) 
     print(contents)
     return contents

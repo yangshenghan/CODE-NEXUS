@@ -28,14 +28,16 @@
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
 
+package.path            = package.path .. ';src/?.lua'
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Basic functions of the game                                            | --
 -- \ ---------------------------------------------------------------------- / --
-local serialize         = require 'src/system/serialize'
-local deserialize       = require 'src/system/deserialize'
-local compress          = require 'src/system/compress'
-local decompress        = require 'src/system/decompress'
-local dump              = require 'src/system/dump'
+local serialize         = require 'system.serialize'
+local deserialize       = require 'system.deserialize'
+local compress          = require 'system.compress'
+local decompress        = require 'system.decompress'
+local dump              = require 'system.dump'
 
 function table.first(t)
     return t[1]

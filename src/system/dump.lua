@@ -27,9 +27,11 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+
 return function(...)
-    local serializer = require 'system.serialize'
+    local serializer = require 'src.system.serialize'
     local contents = serializer(...) 
     print(contents)
     return contents
 end
+

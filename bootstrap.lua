@@ -27,21 +27,23 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'game'
-require 'input'
-require 'console'
 
-require 'core.manager'
-require 'core.screen'
-require 'core.object'
+require 'src.game'
+require 'src.input'
+require 'src.console'
 
-require 'manager.resource'
-require 'manager.screen'
-require 'manager.object'
+require 'src.core.manager'
+require 'src.core.screen'
+require 'src.core.object'
 
-require 'screen.error'
-require 'screen.loading'
-require 'screen.title'
-require 'screen.stage'
+require 'src.manager.resource'
+require 'src.manager.screen'
+require 'src.manager.object'
 
-require 'object.player'
+require 'src.screen.error'
+require 'src.screen.loading'
+require 'src.screen.title'
+require 'src.screen.stage'
+
+require 'src.object.player'
+

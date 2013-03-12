@@ -27,21 +27,52 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'src/game'
-require 'src/input'
-require 'src/console'
+nexus.screen.loading = {}
 
-require 'src/core/manager'
-require 'src/core/screen'
-require 'src/core/object'
+local function enter(instance)
+    instance.loading.routing = coroutine.create(instance.loading.enter)
+    instance.loading.progress = 0
+end
 
-require 'src/manager/resource'
-require 'src/manager/screen'
-require 'src/manager/object'
+local function update(instance)
+    coroutine.resume(instance.loading.routing, instance)
 
-require 'src/screen/error'
-require 'src/screen/loading'
-require 'src/screen/title'
-require 'src/screen/stage'
+    if coroutine.status(instance.loading.routing) == 'dead' then
+        -- local start = love.timer.getTime()
+        -- while love.timer.getTime() - start < 1 do end
+        instance.enter = instance.loading.enter
+        instance.update = instance.loading.update
+        instance.draw = instance.loading.draw
+        instance.loading.routing = nil
+    end
+end
 
-require 'src/object/player'
+local function draw(instance)
+    love.graphics.print(instance.loading.progress, 240, 240)
+end
+
+function nexus.screen.loading.setProgress(instance, value)
+    if value < 0 then
+        value = 0
+    end
+    if value > 1 then
+        value = 1
+    end
+    instance.loading.progress = value
+
+    coroutine.yield()
+end
+
+function nexus.screen.loading.new(instance)
+    instance.loading = {
+        screen          = instance,
+        enter           = instance.enter or function(...) end,
+        update          = instance.update or function(...) end,
+        draw            = instance.draw or function(...) end,
+        progress        = 0
+    }
+    instance.enter = enter
+    instance.update = update
+    instance.draw = draw
+    return nexus.screen.new(instance)
+end

@@ -138,5 +138,5 @@ function nexus.screen.stage.new(stage)
 
     instance.stage = nexus.core.load('stage', stage)
 
-    return nexus.screen.new(instance)
+    return nexus.screen.loading.new(instance)
 end

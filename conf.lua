@@ -48,6 +48,23 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Construction of base nexus table                                       | --
 -- \ ---------------------------------------------------------------------- / --
+NEXUS_KEY = {
+    Z           = 'z',
+    X           = 'x',
+    C           = 'c',
+    V           = 'v',
+    A           = 'a',
+    S           = 's',
+    D           = 'd',
+    F           = 'f',
+    UP          = 'up',
+    RIGHT       = 'right',
+    DOWN        = 'down',
+    LEFT        = 'left',
+    CONFIRM     = 'confirm',
+    CANCEL      = 'cancel'
+}
+
 nexus = {
     settings    = {
         showfps     = true,
@@ -64,15 +81,20 @@ nexus = {
         audios      = {
         },
         controls    = {
-            rush        = {'z'},
-            jump        = {'x'},
-            attack      = {'c'},
-            squat       = {'down'},
+            z           = {'z'},
+            x           = {'x'},
+            c           = {'c'},
+            v           = {'v'},
+            a           = {'a'},
+            s           = {'s'},
+            d           = {'d'},
+            f           = {'f'},
             up          = {'up'},
             right       = {'right'},
             down        = {'down'},
             left        = {'left'},
-            menu        = {'escape', 'return'}
+            confirm     = {'return'},
+            cancel      = {'escape'}
         }
     },
     system      = { -- shouldn't be changed at runtime

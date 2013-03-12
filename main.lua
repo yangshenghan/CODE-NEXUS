@@ -62,6 +62,7 @@ function love.update(dt)
         love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)
     end
 
+    nexus.input.update()
     nexus.manager.screen.update(dt)
 end
 

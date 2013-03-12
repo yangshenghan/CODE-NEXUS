@@ -45,17 +45,17 @@ local function leave(instance)
 end
 
 local function update(instance)
-    if nexus.input.isKeyDown(nexus.configures.controls.up) then
+    if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
         m_cursor = m_cursor - 1
         if m_cursor < 1 then
             m_cursor = #t_menus 
         end
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.down) then
+    if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
         m_cursor = m_cursor + 1
         if m_cursor > #t_menus then
-            m_cursor = 0
+            m_cursor = 1
         end
     end
 end

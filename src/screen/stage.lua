@@ -80,34 +80,34 @@ local function update(instance, dt)
 
     instance.world.update(instance.world, dt)
 
-    if nexus.input.isKeyDown(nexus.configures.controls.rush) then
+    if nexus.input.isKeyDown(NEXUS_KEY.Z) then
         nexus.console.showDebugMessage('Player rush')
         nexus.object.player.rush(player)
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.jump) then
+    if nexus.input.isKeyDown(NEXUS_KEY.X) then
         nexus.console.showDebugMessage('Player jump')
         nexus.object.player.jump(player)
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.attack) then
+    if nexus.input.isKeyDown(NEXUS_KEY.C) then
         nexus.console.showDebugMessage('Player attack')
         nexus.object.player.attack(player)
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.left) then
+    if nexus.input.isKeyDown(NEXUS_KEY.LEFT) then
         nexus.object.player.left(player)
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.right) then
+    if nexus.input.isKeyDown(NEXUS_KEY.RIGHT) then
         nexus.object.player.right(player)
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.up) then
+    if nexus.input.isKeyDown(NEXUS_KEY.UP) then
         nexus.object.player.up(player)
     end
 
-    if nexus.input.isKeyDown(nexus.configures.controls.down) then
+    if nexus.input.isKeyDown(NEXUS_KEY.DOWN) then
         nexus.object.player.down(player)
     end
 

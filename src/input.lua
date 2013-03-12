@@ -29,31 +29,58 @@
 --[[ ********************************************************************** ]]--
 nexus.input = {}
 
+local t_states = {}
+
+local t_controls = nexus.configures.controls
+
 function nexus.input.initialize()
+    for k, _ in pairs(t_controls) do
+        t_states[k] = {
+            press       = false,
+            trigger     = false,
+            counter     = 0
+        }
+    end
 end
 
-function nexus.input.isKeyDown(t)
-    for _, v in pairs(t) do
-        if love.keyboard.isDown(v) then
-            return true
+function nexus.input.update()
+    for k, t in pairs(t_controls) do
+        for _, v in pairs(t) do
+            local state = t_states[k]
+            if love.keyboard.isDown(v) then
+                if state.press then
+                    state.trigger = false
+                    state.counter = state.counter + 1
+                    if state.counter > 15 then
+                        state.counter = 0
+                    end
+                else
+                    state.trigger = true
+                end
+                state.press = true
+            else
+                state.press = false
+            end
         end
     end
-    return false
 end
 
-function nexus.input.isKeyUp()
-    for _, v in pairs(t) do
-        if love.keyboard.isUp(v) then
-            return true
-        end
-    end
-    return false
+function nexus.input.isKeyDown(key)
+    local state = t_states[key]
+    return state.press 
 end
 
-function nexus.input.isKeyTrigger(t)
-    return false
+function nexus.input.isKeyUp(key)
+    local state = t_states[key]
+    return not state.press 
 end
 
-function nexus.input.isKeyRepeat(t)
-    return nexus.input.isKeyDown(t) and nexus.input.isKeyTrigger(t) 
+function nexus.input.isKeyTrigger(key)
+    local state = t_states[key]
+    return state.trigger
+end
+
+function nexus.input.isKeyRepeat(key)
+    local state = t_states[key]
+    return state.press and state.counter == 0 
 end

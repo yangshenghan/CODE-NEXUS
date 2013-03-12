@@ -75,7 +75,7 @@ nexus = {
             width       = 1280,
             height      = 720,
             fullscreen  = false,
-            vsync       = false,
+            vsync       = true,
             fsaa        = 0
         },
         audios      = {

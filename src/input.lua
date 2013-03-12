@@ -29,6 +29,8 @@
 --[[ ********************************************************************** ]]--
 nexus.input = {}
 
+local f_isdown = love.keyboard.isDown
+
 local t_states = {}
 
 local t_controls = nexus.configures.controls
@@ -47,7 +49,7 @@ function nexus.input.update()
     for k, t in pairs(t_controls) do
         for _, v in pairs(t) do
             local state = t_states[k]
-            if love.keyboard.isDown(v) then
+            if f_isdown(v) then
                 if state.press then
                     state.trigger = false
                     state.counter = state.counter + 1

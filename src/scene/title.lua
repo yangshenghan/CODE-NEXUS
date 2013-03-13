@@ -27,34 +27,90 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.manager.window = {}
+nexus.scene.title = {}
 
-local t_windows = {}
+local f_update_coroutine = coroutine.wrap(function(instance, dt, timer)
+    --[[
+    local chosen
 
-function nexus.manager.window.initialize()
-end
-
-function nexus.manager.window.addWindow(window)
-    t_windows[window] = window
-end
-
-function nexus.manager.window.removeWindow(window)
-    t_windows[window] = nil
-end
-
-function nexus.manager.window.clearWindows()
-    t_windows = {}
-end
-
-function nexus.manager.window.update(...)
-    for _, window in pairs(t_windows) do
-        nexus.window.update(window, ...)
+    local function wait(microsecond, callback)
+        local wakeup = love.timer.getMicroTime() + microsecond / 1000
+        repeat callback() until select(2, coroutine.yield()) > wakeup
     end
-end
 
-function nexus.manager.window.draw(...)
-    for _, window in pairs(t_windows) do
-        nexus.window.draw(window, ...)
+    -- Show splash screen
+    wait(500, function()
+    end)
+
+    wait(500, function()
+    end)
+
+    wait(500, function()
+    end)
+
+    -- Start animation of PRESS TO START message
+    wait(500, function()
+    end)]]--
+
+    -- Show main menu
+    while not chosen do
+        --[[if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
+            m_cursor = m_cursor - 1
+            if m_cursor < 1 then
+                m_cursor = #t_menus
+            end
+        end
+
+        if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
+            m_cursor = m_cursor + 1
+            if m_cursor > #t_menus then
+                m_cursor = 1
+            end
+        end
+
+        if nexus.input.isKeyUp(NEXUS_KEY.C) then
+            chosen = m_cursor
+        end]]--
+        instance.command.update(instance.command, dt)
+
+        coroutine.yield()
     end
+
+    nexus.game.changeScene(nexus.scene.stage.new('prologue'))
+end)
+
+local function enter(instance)
+    instance.command = nexus.window.command.new(320, 240, {
+        {
+            text    = 'New Game',
+            handler = function(...) end
+        }, {
+            text    = 'Continue',
+            handler = function(...) end
+        }, {
+            text    = 'Exit',
+            handler = function(...) end
+        }
+    })
 end
 
+local function leave(instance)
+end
+
+local function update(instance, dt)
+    f_update_coroutine(instance, dt, love.timer.getMicroTime()) 
+end
+
+local function render(instance)
+    instance.command.render(instance.command)
+end
+
+function nexus.scene.title.new()
+    local instance = {
+        enter   = enter,
+        leave   = leave,
+        update  = update, 
+        render  = render
+    }
+    return nexus.scene.new(instance)
+end

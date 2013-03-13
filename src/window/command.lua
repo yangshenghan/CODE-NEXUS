@@ -29,7 +29,7 @@
 --[[ ********************************************************************** ]]--
 nexus.window.command = {}
 
-local function update(instance)
+local function update(instance, dt)
     if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
         instance.cursor = instance.cursor - 1
         if instance.cursor < 1 then
@@ -45,7 +45,7 @@ local function update(instance)
     end
 end
 
-local function draw(instance)
+local function render(instance)
     local index = 0
     for _, command in pairs(instance.commands) do
         love.graphics.setColor(255, 255, 255)
@@ -96,7 +96,6 @@ function nexus.window.command.new(x, y, commands)
         nexus.window.command.addCommands(instance, commands)
     end
     instance.update = update
-    instance.draw = draw
+    instance.render = render
     return nexus.window.new(instance)
 end
-

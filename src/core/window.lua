@@ -31,7 +31,7 @@ nexus.window   = {}
 
 local default = {
     update      = function(...) end,
-    draw        = function(...) end,
+    render      = function(...) end,
     active      = true,
     height      = nil,
     openness    = 1,
@@ -49,7 +49,6 @@ function nexus.window.new(instance)
             instance[k] = v
         end
     end
-    nexus.manager.window.addWindow(instance)
     return instance
 end
 
@@ -63,7 +62,7 @@ function nexus.window.update(instance)
     end
 end
 
-function nexus.window.draw(instance)
-    instance.draw(instance)
+function nexus.window.render(instance)
+    instance.render(instance)
 end
 

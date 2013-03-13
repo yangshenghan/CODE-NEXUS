@@ -31,6 +31,10 @@ nexus.game = {}
 
 local m_caption = love.graphics.getCaption()
 
+local t_current = nil
+
+local t_scenes = {}
+
 local function adjust_screen_mode()
     local best_screen_mode = table.last(nexus.utility.getScreenModes())
 
@@ -49,8 +53,8 @@ local function adjust_screen_mode()
 end
 
 function nexus.game.initialize(args)
-    -- local icon = nexus.manager.resource.loadImage('icon.png')
-    local font = nexus.manager.resource.loadFont('inconsolata.otf', 16)
+    -- local icon = nexus.resource.loadImage('icon.png')
+    local font = nexus.resource.loadFont('inconsolata.otf', 16)
 
     -- Initialize LÖVE subsystems
     love.graphics.setBackgroundColor(0, 0, 0)
@@ -62,21 +66,16 @@ function nexus.game.initialize(args)
     -- Initialize game subsystem
     nexus.input.initialize()
     -- nexus.console.initialize(font)
-
-    -- Initialize game managers
-    nexus.manager.resource.initialize()
-    nexus.manager.screen.initialize()
-    nexus.manager.object.initialize()
-    nexus.manager.window.initialize()
+    nexus.resource.initialize()
 
     if nexus.configures then
         if nexus.system.firstrun then
             adjust_screen_mode()
         end
-        nexus.game.changeScreen(nexus.screen.title.new())
-        -- nexus.game.changeScreen(nexus.screen.stage.new('prologue'))
+        nexus.game.changeScene(nexus.scene.title.new())
+        -- nexus.game.changeScene(nexus.scene.stage.new('prologue'))
     else
-        nexus.game.changeScreen(nexus.screen.error.new('Your game version is older than saving data!'))
+        nexus.game.changeScene(nexus.scene.error.new('Your game version is older than saving data!'))
     end
 end
 
@@ -87,13 +86,26 @@ function nexus.game.update(dt)
     end
 
     nexus.input.update()
-    nexus.manager.screen.update(dt)
-    nexus.manager.window.update(dt)
+
+    if t_current then
+        t_current.update(t_current, dt)
+    end
+
+    for _, scene in ipairs(t_scenes) do
+        if not scene.idle then
+            scene.update(scene, dt)
+        end
+    end
 end
 
 function nexus.game.render()
-    nexus.manager.screen.draw()
-    nexus.manager.window.draw()
+    if t_current then
+        t_current.render(t_current)
+    end
+
+    for _, scene in ipairs(t_scenes) do
+        scene.render(scene)
+    end
 
     -- if nexus.settings.console then
         -- local color = {love.graphics.getColor()}
@@ -146,14 +158,44 @@ function nexus.game.changeScreenMode(width, height, fullscreen, vsync, fsaa)
     nexus.core.save(nexus.system.paths.configure, nexus.configures)
 end
 
-function nexus.game.changeScreen(screen)
-    return nexus.manager.screen.change(screen)
+function nexus.game.changeScene(scene)
+    if t_current then
+        t_current.leave(t_current)
+    end
+    t_current = scene
+    if t_current then
+        t_current.enter(t_current)
+    end
 end
 
-function nexus.game.enterScreen(screen)
-    return nexus.manager.screen.push(screen)
+function nexus.game.enterScene(scene)
+    if #t_scenes > 0 then
+        local last = table.last(t_scenes)
+        nexus.scene.setIdle(last, true)
+        last.idleIn(last)
+    elseif t_current then
+        nexus.scene.setIdle(t_current, true)
+        t_current.idleIn(t_current)
+    end
+
+    table.insert(t_scenes, scene)
+    scene.enter(scene)
 end
 
-function nexus.game.leaveScreen()
-    return nexus.manager.screen.pop()
+function nexus.game.leaveScene()
+    if #t_scenes == 0 then
+        return
+    end
+
+    local popped = table.remove(t_scenes)
+    popped.leave(popped)
+
+    if #t_scenes > 0 then
+        local last = table.last(t_scenes)
+        nexus.scene.setIdle(last, false)
+        last.idleOut(last)
+    elseif t_current then
+        nexus.scene.setIdle(t_current, false)
+        t_current.idleOut(t_current)
+    end
 end

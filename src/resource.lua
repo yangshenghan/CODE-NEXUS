@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,45 +27,45 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.manager.resource = {
+nexus.resource = {
     fonts   = {}
 }
 
-function nexus.manager.resource.initialize()
+function nexus.resource.initialize()
 end
 
-function nexus.manager.resource.getAudioPath()
+function nexus.resource.getAudioPath()
     return 'res/audios/'
 end
 
-function nexus.manager.resource.getFontPath()
+function nexus.resource.getFontPath()
     return 'res/fonts/'
 end
 
-function nexus.manager.resource.getGraphicsPath()
+function nexus.resource.getGraphicsPath()
     return 'res/graphics/'
 end
 
-function nexus.manager.resource.getSoundPath()
+function nexus.resource.getSoundPath()
     return 'res/sounds/'
 end
 
-function nexus.manager.resource.getVideoPath()
+function nexus.resource.getVideoPath()
     return 'res/videos/'
 end
 
-function nexus.manager.resource.getMapPath()
+function nexus.resource.getMapPath()
     return 'data/maps/'
 end
 
-function nexus.manager.resource.loadFont(filename, size)
-    local filename = nexus.manager.resource.getFontPath() .. filename
+function nexus.resource.loadFont(filename, size)
+    local filename = nexus.resource.getFontPath() .. filename
 
-    if nexus.manager.resource.fonts[filename] == nil then
-        nexus.manager.resource.fonts[filename] = {}
+    if nexus.resource.fonts[filename] == nil then
+        nexus.resource.fonts[filename] = {}
     end
-    if nexus.manager.resource.fonts[filename][size] == nil then
-        nexus.manager.resource.fonts[filename][size] = love.graphics.newFont(filename, size)
+    if nexus.resource.fonts[filename][size] == nil then
+        nexus.resource.fonts[filename][size] = love.graphics.newFont(filename, size)
     end
-    return nexus.manager.resource.fonts[filename][size]
+    return nexus.resource.fonts[filename][size]
 end

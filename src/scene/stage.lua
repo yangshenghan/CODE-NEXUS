@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,7 +27,7 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.screen.stage = {
+nexus.scene.stage = {
     stages  = {}
 }
 
@@ -49,7 +49,7 @@ end
 
 local function enter(instance)
     instance.world = love.physics.newWorld(0, gravity * love.physics.getMeter(), true)
-    instance.objects = nexus.manager.object.getObjects()
+    instance.objects = {}
 
     instance.world:setCallbacks(begin_contact, end_contact, pre_solve, post_solve)
 
@@ -62,7 +62,7 @@ local function enter(instance)
         object.fixture = love.physics.newFixture(object.body, object.shape, data.density or 0)
         object.draw = data.draw or function(...) end
         object.update = data.update or function(...) end
-        nexus.manager.object.attachObject(object)
+        table.insert(instance.objects, object)
     end
 
     love.graphics.setBackgroundColor(104, 136, 248)
@@ -119,7 +119,7 @@ local function update(instance, dt)
     end
 end
 
-local function draw(instance)
+local function render(instance)
     player.draw(player)
     if #instance.objects > 0 then
         for _, v in pairs(instance.objects) do
@@ -128,15 +128,15 @@ local function draw(instance)
     end
 end
 
-function nexus.screen.stage.new(stage)
+function nexus.scene.stage.new(stage)
     local instance = {
         enter   = enter,
         leave   = leave,
         update  = update,
-        draw    = draw
+        render  = render
     }
 
     instance.stage = nexus.core.load('stage', stage)
 
-    return nexus.screen.loading.new(instance)
+    return nexus.scene.loading.new(instance)
 end

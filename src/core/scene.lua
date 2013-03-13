@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,18 +27,36 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.screen.error = {}
+nexus.scene   = {}
 
-local m_message = 'There is an error occured!' 
+local default = {
+    enter   = function(...) end,
+    leave   = function(...) end,
+    idleIn  = function(...) end,
+    idleOut = function(...) end,
+    update  = function(...) end,
+    -- The render callback may be removed and managed in nexus.game
+    render  = function(...) end,
+    idle    = false
+}
 
-local function draw(instance)
-    love.graphics.print(m_message, nexus.system.defaults.width / 2, nexus.system.defaults.height / 2)
+function nexus.scene.new(instance)
+    for k, v in pairs(default) do
+        if instance[k] == nil then
+            instance[k] = v
+        end
+    end
+    return instance
 end
 
-function nexus.screen.error.new(message)
-    local instance = {
-        draw    = draw
-    }
-    m_message = message
-    return nexus.screen.new(instance)
+function nexus.scene.isIdle(instance)
+    return instance.idle
+end
+
+function nexus.scene.setIdle(instance, idle)
+    instance.idle = idle
+end
+
+function nexus.scene.toggleIdle(instance)
+    instance.idle = not instance.idle
 end

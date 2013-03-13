@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,17 +27,18 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.manager.object = {}
+nexus.scene.error = {}
 
-local objects = {}
+local m_message = 'There is an error occured!' 
 
-function nexus.manager.object.initialize()
+local function render(instance)
+    love.graphics.print(m_message, nexus.system.defaults.width / 2, nexus.system.defaults.height / 2)
 end
 
-function nexus.manager.object.getObjects()
-    return objects
-end
-
-function nexus.manager.object.attachObject(object)
-    table.insert(objects, object)
+function nexus.scene.error.new(message)
+    local instance = {
+        render  = render
+    }
+    m_message = message
+    return nexus.scene.new(instance)
 end

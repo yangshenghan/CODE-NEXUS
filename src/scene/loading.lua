@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,105 +27,52 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.screen.title = {}
-
---[[local m_cursor = 1
-
-local t_menus = {
-    'New Game',
-    'Continue',
-    'Exit'
-}]]--
-
-local f_update_coroutine = coroutine.wrap(function(instance, time)
-    --[[
-    local chosen
-
-    local function wait(microsecond, callback)
-        local wakeup = love.timer.getMicroTime() + microsecond / 1000
-        repeat callback() until select(2, coroutine.yield()) > wakeup
-    end
-
-    -- Show splash screen
-    wait(500, function()
-    end)
-
-    wait(500, function()
-    end)
-
-    wait(500, function()
-    end)
-
-    -- Start animation of PRESS TO START message
-    wait(500, function()
-    end)]]--
-
-    -- Show main menu
-    while not chosen do
-        --[[if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
-            m_cursor = m_cursor - 1
-            if m_cursor < 1 then
-                m_cursor = #t_menus
-            end
-        end
-
-        if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-            m_cursor = m_cursor + 1
-            if m_cursor > #t_menus then
-                m_cursor = 1
-            end
-        end
-
-        if nexus.input.isKeyUp(NEXUS_KEY.C) then
-            chosen = m_cursor
-        end]]--
-
-        coroutine.yield()
-    end
-
-    nexus.game.changeScreen(nexus.screen.stage.new('prologue'))
-end)
+nexus.scene.loading = {}
 
 local function enter(instance)
-    local command = nexus.window.command.new(320, 240, {
-        {
-            text    = 'New Game',
-            handler = function(...) end
-        }, {
-            text    = 'Continue',
-            handler = function(...) end
-        }, {
-            text    = 'Exit',
-            handler = function(...) end
-        }
-    })
-
-    --[[m_cursor = 1]]--
-end
-
-local function leave(instance)
+    instance.loading.progress = 0
+    instance.loading.coroutine = coroutine.create(instance.loading.enter)
 end
 
 local function update(instance)
-    f_update_coroutine(instance, love.timer.getMicroTime()) 
+    coroutine.resume(instance.loading.coroutine, instance)
+
+    if coroutine.status(instance.loading.coroutine) == 'dead' then
+        -- local start = love.timer.getTime()
+        -- while love.timer.getTime() - start < 1 do end
+        instance.enter = instance.loading.enter
+        instance.update = instance.loading.update
+        instance.render = instance.loading.render
+        instance.loading.routing = nil
+    end
 end
 
-local function draw(instance)
-    --[[for index, title in pairs(t_menus) do
-        love.graphics.setColor(255, 255, 255)
-        if m_cursor == index then
-            love.graphics.setColor(255, 255, 0)
-        end
-        love.graphics.print(tostring(title), 120, 480 + index * 20)
-    end]]--
+local function render(instance)
+    love.graphics.print(instance.loading.progress, 240, 240)
 end
 
-function nexus.screen.title.new()
-    local instance = {
-        enter   = enter,
-        leave   = leave,
-        update  = update, 
-        draw    = draw
+function nexus.scene.loading.setProgress(instance, value)
+    if value < 0 then
+        value = 0
+    end
+    if value > 1 then
+        value = 1
+    end
+    instance.loading.progress = value
+
+    coroutine.yield()
+end
+
+function nexus.scene.loading.new(instance)
+    instance.loading = {
+        screen          = instance,
+        enter           = instance.enter or function(...) end,
+        update          = instance.update or function(...) end,
+        render          = instance.render or function(...) end,
+        progress        = 0
     }
-    return nexus.screen.new(instance)
+    instance.enter = enter
+    instance.update = update
+    instance.render = render
+    return nexus.scene.new(instance)
 end

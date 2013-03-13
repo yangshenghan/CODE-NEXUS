@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,27 +27,76 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+nexus.window.command = {}
 
-require 'src.game'
-require 'src.input'
-require 'src.console'
+local function update(instance)
+    if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
+        instance.cursor = instance.cursor - 1
+        if instance.cursor < 1 then
+            instance.cursor = instance.size 
+        end
+    end
 
-require 'src.core.manager'
-require 'src.core.screen'
-require 'src.core.object'
-require 'src.core.window'
+    if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
+        instance.cursor = instance.cursor + 1
+        if instance.cursor > instance.size then
+            instance.cursor = 1
+        end
+    end
+end
 
-require 'src.manager.resource'
-require 'src.manager.screen'
-require 'src.manager.object'
-require 'src.manager.window'
+local function draw(instance)
+    local index = 0
+    for _, command in pairs(instance.commands) do
+        love.graphics.setColor(255, 255, 255)
+        if instance.cursor == index + 1 then
+            love.graphics.setColor(255, 255, 0)
+        end
+        love.graphics.print(command.text, instance.x, instance.y + index * 20) 
+        index = index + 1
+    end
+end
 
-require 'src.window.command'
+function nexus.window.command.setHandler(instance, text, handler)
+    local command = instance.commands[text]
+    command.handler = handler
+end
 
-require 'src.screen.error'
-require 'src.screen.loading'
-require 'src.screen.title'
-require 'src.screen.stage'
+function nexus.window.command.addCommand(instance, text, enabled)
+    assert(type(text) == 'string')
 
-require 'src.object.player'
+    instance.size = instance.size + 1
+    instance.commands[text] = {
+        text    = text,
+        enabled = enabled,
+        handler = function(...) end
+    }
+end
+
+function nexus.window.command.addCommands(instance, commands)
+    assert(type(commands) == 'table')
+
+    for _, command in pairs(commands) do
+        nexus.window.command.addCommand(instance, command.text, command.enabled)
+        if command.handler then
+            nexus.window.command.setHandler(instance, command.text, command.handler)
+        end
+    end
+end
+
+function nexus.window.command.new(x, y, commands)
+    local instance = {
+        x               = x,
+        y               = y,
+        size            = 0,
+        cursor          = 1,
+        commands        = {}
+    }
+    if commands then
+        nexus.window.command.addCommands(instance, commands)
+    end
+    instance.update = update
+    instance.draw = draw
+    return nexus.window.new(instance)
+end
 

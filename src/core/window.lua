@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,27 +27,43 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+nexus.window   = {}
 
-require 'src.game'
-require 'src.input'
-require 'src.console'
+local default = {
+    update      = function(...) end,
+    draw        = function(...) end,
+    active      = true,
+    height      = nil,
+    openness    = 1,
+    padding     = 12,
+    visible     = true,
+    width       = nil,
+    x           = nil,
+    y           = nil,
+    z           = 1000
+}
 
-require 'src.core.manager'
-require 'src.core.screen'
-require 'src.core.object'
-require 'src.core.window'
+function nexus.window.new(instance)
+    for k, v in pairs(default) do
+        if instance[k] == nil then
+            instance[k] = v
+        end
+    end
+    nexus.manager.window.addWindow(instance)
+    return instance
+end
 
-require 'src.manager.resource'
-require 'src.manager.screen'
-require 'src.manager.object'
-require 'src.manager.window'
+function nexus.window.dispose(instance)
+    nexus.manager.window.removeWindow(instance)
+end
 
-require 'src.window.command'
+function nexus.window.update(instance)
+    if instance.active then
+        instance.update(instance)
+    end
+end
 
-require 'src.screen.error'
-require 'src.screen.loading'
-require 'src.screen.title'
-require 'src.screen.stage'
-
-require 'src.object.player'
+function nexus.window.draw(instance)
+    instance.draw(instance)
+end
 

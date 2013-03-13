@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,27 +27,34 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+nexus.manager.window = {}
 
-require 'src.game'
-require 'src.input'
-require 'src.console'
+local t_windows = {}
 
-require 'src.core.manager'
-require 'src.core.screen'
-require 'src.core.object'
-require 'src.core.window'
+function nexus.manager.window.initialize()
+end
 
-require 'src.manager.resource'
-require 'src.manager.screen'
-require 'src.manager.object'
-require 'src.manager.window'
+function nexus.manager.window.addWindow(window)
+    t_windows[window] = window
+end
 
-require 'src.window.command'
+function nexus.manager.window.removeWindow(window)
+    t_windows[window] = nil
+end
 
-require 'src.screen.error'
-require 'src.screen.loading'
-require 'src.screen.title'
-require 'src.screen.stage'
+function nexus.manager.window.clearWindows()
+    t_windows = {}
+end
 
-require 'src.object.player'
+function nexus.manager.window.update(...)
+    for _, window in pairs(t_windows) do
+        nexus.window.update(window, ...)
+    end
+end
+
+function nexus.manager.window.draw(...)
+    for _, window in pairs(t_windows) do
+        nexus.window.draw(window, ...)
+    end
+end
 

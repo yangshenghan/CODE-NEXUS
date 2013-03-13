@@ -29,15 +29,16 @@
 --[[ ********************************************************************** ]]--
 nexus.screen.title = {}
 
-local m_cursor = 1
+--[[local m_cursor = 1
 
 local t_menus = {
     'New Game',
     'Continue',
     'Exit'
-}
+}]]--
 
 local f_update_coroutine = coroutine.wrap(function(instance, time)
+    --[[
     local chosen
 
     local function wait(microsecond, callback)
@@ -57,11 +58,11 @@ local f_update_coroutine = coroutine.wrap(function(instance, time)
 
     -- Start animation of PRESS TO START message
     wait(500, function()
-    end)
+    end)]]--
 
     -- Show main menu
     while not chosen do
-        if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
+        --[[if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
             m_cursor = m_cursor - 1
             if m_cursor < 1 then
                 m_cursor = #t_menus
@@ -77,7 +78,7 @@ local f_update_coroutine = coroutine.wrap(function(instance, time)
 
         if nexus.input.isKeyUp(NEXUS_KEY.C) then
             chosen = m_cursor
-        end
+        end]]--
 
         coroutine.yield()
     end
@@ -86,7 +87,20 @@ local f_update_coroutine = coroutine.wrap(function(instance, time)
 end)
 
 local function enter(instance)
-    m_cursor = 1 
+    local command = nexus.window.command.new(320, 240, {
+        {
+            text    = 'New Game',
+            handler = function(...) end
+        }, {
+            text    = 'Continue',
+            handler = function(...) end
+        }, {
+            text    = 'Exit',
+            handler = function(...) end
+        }
+    })
+
+    --[[m_cursor = 1]]--
 end
 
 local function leave(instance)
@@ -97,13 +111,13 @@ local function update(instance)
 end
 
 local function draw(instance)
-    for index, title in pairs(t_menus) do
+    --[[for index, title in pairs(t_menus) do
         love.graphics.setColor(255, 255, 255)
         if m_cursor == index then
             love.graphics.setColor(255, 255, 0)
         end
         love.graphics.print(tostring(title), 120, 480 + index * 20)
-    end
+    end]]--
 end
 
 function nexus.screen.title.new()

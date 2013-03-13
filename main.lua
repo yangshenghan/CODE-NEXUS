@@ -51,6 +51,7 @@ function love.load(args)
     nexus.manager.resource.initialize()
     nexus.manager.screen.initialize()
     nexus.manager.object.initialize()
+    nexus.manager.window.initialize()
 
     -- Initialize game instance actually
     nexus.game.initialize()
@@ -64,10 +65,12 @@ function love.update(dt)
 
     nexus.input.update()
     nexus.manager.screen.update(dt)
+    nexus.manager.window.update(dt)
 end
 
 function love.draw()
     nexus.manager.screen.draw()
+    nexus.manager.window.draw()
 
     -- if nexus.settings.console then
         -- local color = {love.graphics.getColor()}

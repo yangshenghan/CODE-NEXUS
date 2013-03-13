@@ -63,6 +63,7 @@ function nexus.input.update()
                 state.press = true
             else
                 if state.press then
+                    state.counter = 0
                     state.release = true
                 end
                 state.press = false
@@ -73,12 +74,12 @@ end
 
 function nexus.input.isKeyDown(key)
     local state = t_states[key]
-    return state.press 
+    return state.press
 end
 
 function nexus.input.isKeyUp(key)
     local state = t_states[key]
-    return state.release 
+    return state.release
 end
 
 function nexus.input.isKeyTrigger(key)
@@ -88,5 +89,5 @@ end
 
 function nexus.input.isKeyRepeat(key)
     local state = t_states[key]
-    return state.press and state.counter == 0 
+    return state.press and state.counter == 0
 end

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-13                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -29,6 +29,8 @@
 --[[ ********************************************************************** ]]--
 nexus.game = {}
 
+local m_caption = love.graphics.getCaption()
+
 local function adjust_screen_mode()
     local best_screen_mode = table.last(nexus.utility.getScreenModes())
 
@@ -46,7 +48,27 @@ local function adjust_screen_mode()
     end
 end
 
-function nexus.game.initialize()
+function nexus.game.initialize(args)
+    -- local icon = nexus.manager.resource.loadImage('icon.png')
+    local font = nexus.manager.resource.loadFont('inconsolata.otf', 16)
+
+    -- Initialize LÖVE subsystems
+    love.graphics.setBackgroundColor(0, 0, 0)
+    -- love.graphics.setIcon(icon)
+    -- love.mouse.setGrab(true)
+    love.mouse.setVisible(false)
+    love.physics.setMeter(32)
+
+    -- Initialize game subsystem
+    nexus.input.initialize()
+    -- nexus.console.initialize(font)
+
+    -- Initialize game managers
+    nexus.manager.resource.initialize()
+    nexus.manager.screen.initialize()
+    nexus.manager.object.initialize()
+    nexus.manager.window.initialize()
+
     if nexus.configures then
         if nexus.system.firstrun then
             adjust_screen_mode()
@@ -58,8 +80,52 @@ function nexus.game.initialize()
     end
 end
 
+function nexus.game.update(dt)
+    if nexus.settings.showfps then
+        local fps = love.timer.getFPS()
+        love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)
+    end
+
+    nexus.input.update()
+    nexus.manager.screen.update(dt)
+    nexus.manager.window.update(dt)
+end
+
+function nexus.game.render()
+    nexus.manager.screen.draw()
+    nexus.manager.window.draw()
+
+    -- if nexus.settings.console then
+        -- local color = {love.graphics.getColor()}
+        -- love.graphics.setColor(34, 34, 34, 180)
+        -- love.graphics.rectangle('fill', 2, 2, love.graphics.getWidth() - 4, love.graphics.getHeight() - 4)
+        -- love.graphics.setColor(240, 240, 0, 255)
+        -- nexus.console.draw(4, love.graphics.getHeight() - 4)
+        -- love.graphics.setColor(unpack(color))
+    -- end
+end
+
+function nexus.game.finalizer()
+    love.audio.stop()
+end
+
+function nexus.game.focus(focus)
+    if focus then
+        -- Resume audio system
+    else
+        -- Pause audio system
+    end
+end
+
 function nexus.game.toggleFullscreen()
     love.graphics.toggleFullscreen()
+end
+
+function nexus.game.toggleFPS()
+    nexus.settings.showfps = not nexus.settings.showfps
+    if not nexus.settings.showfps then
+        love.graphics.setCaption(m_caption)
+    end
 end
 
 function nexus.game.changeScreenMode(width, height, fullscreen, vsync, fsaa)

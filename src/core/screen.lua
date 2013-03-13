@@ -35,6 +35,7 @@ local default = {
     idleIn  = function(...) end,
     idleOut = function(...) end,
     update  = function(...) end,
+    -- The draw callback will be removed and managed in nexus.manager.screen
     draw    = function(...) end,
     idle    = false
 }
@@ -59,3 +60,4 @@ end
 function nexus.screen.toggleIdle(instance)
     instance.idle = not instance.idle
 end
+

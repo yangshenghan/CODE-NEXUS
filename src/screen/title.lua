@@ -37,6 +37,54 @@ local t_menus = {
     'Exit'
 }
 
+local f_update_coroutine = coroutine.wrap(function(instance, time)
+    local chosen
+
+    local function wait(microsecond, callback)
+        local wakeup = love.timer.getMicroTime() + microsecond / 1000
+        repeat callback() until select(2, coroutine.yield()) > wakeup
+    end
+
+    -- Show splash screen
+    wait(500, function()
+    end)
+
+    wait(500, function()
+    end)
+
+    wait(500, function()
+    end)
+
+    -- Start animation of PRESS TO START message
+    wait(500, function()
+    end)
+
+    -- Show main menu
+    while not chosen do
+        if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
+            m_cursor = m_cursor - 1
+            if m_cursor < 1 then
+                m_cursor = #t_menus
+            end
+        end
+
+        if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
+            m_cursor = m_cursor + 1
+            if m_cursor > #t_menus then
+                m_cursor = 1
+            end
+        end
+
+        if nexus.input.isKeyUp(NEXUS_KEY.C) then
+            chosen = m_cursor
+        end
+
+        coroutine.yield()
+    end
+
+    nexus.game.changeScreen(nexus.screen.stage.new('prologue'))
+end)
+
 local function enter(instance)
     m_cursor = 1 
 end
@@ -45,19 +93,7 @@ local function leave(instance)
 end
 
 local function update(instance)
-    if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
-        m_cursor = m_cursor - 1
-        if m_cursor < 1 then
-            m_cursor = #t_menus 
-        end
-    end
-
-    if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        m_cursor = m_cursor + 1
-        if m_cursor > #t_menus then
-            m_cursor = 1
-        end
-    end
+    f_update_coroutine(instance, love.timer.getMicroTime()) 
 end
 
 local function draw(instance)
@@ -74,7 +110,7 @@ function nexus.screen.title.new()
     local instance = {
         enter   = enter,
         leave   = leave,
-        update  = update,
+        update  = update, 
         draw    = draw
     }
     return nexus.screen.new(instance)

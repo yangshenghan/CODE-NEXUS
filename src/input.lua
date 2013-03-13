@@ -39,6 +39,7 @@ function nexus.input.initialize()
     for k, _ in pairs(t_controls) do
         t_states[k] = {
             press       = false,
+            release     = false,
             trigger     = false,
             counter     = 0
         }
@@ -61,6 +62,9 @@ function nexus.input.update()
                 end
                 state.press = true
             else
+                if state.press then
+                    state.release = true
+                end
                 state.press = false
             end
         end
@@ -74,7 +78,7 @@ end
 
 function nexus.input.isKeyUp(key)
     local state = t_states[key]
-    return not state.press 
+    return state.release 
 end
 
 function nexus.input.isKeyTrigger(key)

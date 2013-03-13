@@ -30,14 +30,14 @@
 nexus.screen.loading = {}
 
 local function enter(instance)
-    instance.loading.routing = coroutine.create(instance.loading.enter)
     instance.loading.progress = 0
+    instance.loading.coroutine = coroutine.create(instance.loading.enter)
 end
 
 local function update(instance)
-    coroutine.resume(instance.loading.routing, instance)
+    coroutine.resume(instance.loading.coroutine, instance)
 
-    if coroutine.status(instance.loading.routing) == 'dead' then
+    if coroutine.status(instance.loading.coroutine) == 'dead' then
         -- local start = love.timer.getTime()
         -- while love.timer.getTime() - start < 1 do end
         instance.enter = instance.loading.enter

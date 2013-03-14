@@ -64,7 +64,6 @@ local function enter(instance)
         {
             text    = 'New Game',
             handler = function(...)
-                print('???')
                 nexus.game.changeScene(nexus.scene.stage.new('prologue'))
                 -- nexus.game.changeScene(nexus.scene.newgame.new())
             end

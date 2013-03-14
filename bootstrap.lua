@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-13                                                    ]]--
+--[[ Updates: 2013-03-14                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -43,7 +43,12 @@ require 'src.window.command'
 require 'src.scene.error'
 require 'src.scene.loading'
 require 'src.scene.title'
+require 'src.scene.newgame'
+require 'src.scene.continue'
 require 'src.scene.stage'
+require 'src.scene.option'
+require 'src.scene.extra'
+require 'src.scene.exit'
 
 require 'src.object.player'
 

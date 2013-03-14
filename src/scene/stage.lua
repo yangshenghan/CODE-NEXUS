@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-13                                                    ]]--
+--[[ Updates: 2013-03-14                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -81,17 +81,14 @@ local function update(instance, dt)
     instance.world.update(instance.world, dt)
 
     if nexus.input.isKeyDown(NEXUS_KEY.Z) then
-        nexus.console.showDebugMessage('Player rush')
         nexus.object.player.rush(player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.X) then
-        nexus.console.showDebugMessage('Player jump')
         nexus.object.player.jump(player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.C) then
-        nexus.console.showDebugMessage('Player attack')
         nexus.object.player.attack(player)
     end
 

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-13                                                    ]]--
+--[[ Updates: 2013-03-14                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -56,13 +56,16 @@ function nexus.window.dispose(instance)
     nexus.manager.window.removeWindow(instance)
 end
 
-function nexus.window.update(instance)
+function nexus.window.update(instance, dt, ...)
     if instance.active then
-        instance.update(instance)
+        return instance.update(instance, dt, ...)
     end
+    return true
 end
 
-function nexus.window.render(instance)
-    instance.render(instance)
+function nexus.window.render(instance, ...)
+    if instance.visible then
+        instance.render(instance, ...)
+    end
 end
 

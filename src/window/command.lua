@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-13                                                    ]]--
+--[[ Updates: 2013-03-14                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -53,41 +53,40 @@ local function update(instance, dt)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.C) then
-        local index = 1
-        for _, command in pairs(instance.commands) do
-            if index == instance.cursor then
-                command.handler()
-            end
-            index = index + 1
-        end
+        local command = instance.commands[instance.cursor]
+        command.handler()
+        return instance.cursor 
     end
 end
 
 local function render(instance)
-    local index = 0
-    for _, command in pairs(instance.commands) do
+    for index, command in ipairs(instance.commands) do
         love.graphics.setColor(255, 255, 255)
-        if instance.cursor == index + 1 then
+        if instance.cursor == index then
             love.graphics.setColor(255, 255, 0)
         end
         love.graphics.print(command.text, instance.x, instance.y + index * 20) 
-        index = index + 1
     end
 end
 
 function nexus.window.command.setHandler(instance, text, handler)
-    local command = instance.commands[text]
-    command.handler = handler
+    for _, command in ipairs(instance.commands) do
+        if command.text == text then
+            command.handler = handler
+            return true
+        end
+    end
+    return false
 end
 
-function nexus.window.command.addCommand(instance, text, enabled)
+function nexus.window.command.addCommand(instance, text, enabled, handler)
     assert(type(text) == 'string')
 
     instance.size = instance.size + 1
-    instance.commands[text] = {
+    instance.commands[instance.size] = {
         text    = text,
-        enabled = enabled,
-        handler = function(...) end
+        enabled = enabled ~= nil or false and true,
+        handler = handler or function(...) end
     }
 end
 
@@ -95,10 +94,7 @@ function nexus.window.command.addCommands(instance, commands)
     assert(type(commands) == 'table')
 
     for _, command in pairs(commands) do
-        nexus.window.command.addCommand(instance, command.text, command.enabled)
-        if command.handler then
-            nexus.window.command.setHandler(instance, command.text, command.handler)
-        end
+        nexus.window.command.addCommand(instance, command.text, command.enabled, command.handler)
     end
 end
 

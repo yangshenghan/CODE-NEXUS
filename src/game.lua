@@ -31,6 +31,8 @@ nexus.game = {}
 
 local m_caption = love.graphics.getCaption()
 
+local t_args = nil
+
 local t_current = nil
 
 local t_scenes = {}
@@ -55,6 +57,8 @@ end
 function nexus.game.initialize(args)
     -- local icon = nexus.resource.loadImage('icon.png')
     local font = nexus.resource.loadFont('inconsolata.otf', 16)
+
+    t_args = args
 
     -- Initialize LÖVE subsystems
     love.graphics.setBackgroundColor(0, 0, 0)
@@ -115,6 +119,13 @@ function nexus.game.render()
         -- nexus.console.draw(4, love.graphics.getHeight() - 4)
         -- love.graphics.setColor(unpack(color))
     -- end
+end
+
+function nexus.game.reload()
+    t_scenes = {}
+    t_current = nil
+
+    nexus.game.initialize(t_args)
 end
 
 function nexus.game.finalizer()

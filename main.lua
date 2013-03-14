@@ -44,6 +44,10 @@ function love.keypressed(key, unicode)
         nexus.settings.console = not nexus.settings.console
     end
 
+    if key == 'f5' then
+        nexus.game.reload()
+    end
+
     if (love.keyboard.isDown('lalt') or love.keyboard.isDown('ralt')) and key == 'return' then
         nexus.game.toggleFullscreen()
     end

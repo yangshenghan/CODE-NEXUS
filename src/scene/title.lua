@@ -29,7 +29,7 @@
 --[[ ********************************************************************** ]]--
 nexus.scene.title = {}
 
-local f_update_coroutine = coroutine.wrap(function(instance, dt, timer)
+local f_update_coroutine = function(instance, dt, timer)
     --[[
     local function wait(microsecond, callback)
         local wakeup = love.timer.getMicroTime() + microsecond / 1000
@@ -54,13 +54,15 @@ local f_update_coroutine = coroutine.wrap(function(instance, dt, timer)
     ]]--
 
     -- Show main menu
-    while not nexus.window.update(instance.command, dt) do
+    while true do
+        nexus.window.update(instance.window.command, dt)
         coroutine.yield()
     end
-end)
+end
 
 local function enter(instance)
-    instance.command = nexus.window.command.new(320, 240, {
+    instance.coroutine.update = coroutine.create(f_update_coroutine)
+    instance.window.command = nexus.window.command.new(320, 240, {
         {
             text    = 'New Game',
             handler = function(...)
@@ -74,14 +76,14 @@ local function enter(instance)
             end,
             enabled = false
         }, {
-            text    = 'Option',
-            handler = function(...)
-                nexus.game.enterScene(nexus.scene.option.new())
-            end
-        }, {
             text    = 'Extra',
             handler = function(...)
                 nexus.game.enterScene(nexus.scene.extra.new())
+            end
+        }, {
+            text    = 'Option',
+            handler = function(...)
+                nexus.game.enterScene(nexus.scene.option.new())
             end
         }, {
             text    = 'Exit',
@@ -94,22 +96,28 @@ local function enter(instance)
 end
 
 local function leave(instance)
+    instance.window.command = nil
+    instance.coroutine.update = nil
 end
 
 local function update(instance, dt)
-    f_update_coroutine(instance, dt, love.timer.getMicroTime()) 
+    if instance.idle then return end
+
+    coroutine.resume(instance.coroutine.update, instance, dt, love.timer.getMicroTime())
 end
 
 local function render(instance)
-    instance.command.render(instance.command)
+    instance.window.command.render(instance.window.command)
 end
 
 function nexus.scene.title.new()
     local instance = {
-        enter   = enter,
-        leave   = leave,
-        update  = update, 
-        render  = render
+        enter       = enter,
+        leave       = leave,
+        update      = update, 
+        render      = render,
+        window      = {},
+        coroutine   = {}
     }
     return nexus.scene.new(instance)
 end

@@ -36,6 +36,9 @@ local function leave(instance)
 end
 
 local function update(instance, dt)
+    if nexus.input.isKeyDown(NEXUS_KEY.CONFIRM) or nexus.input.isKeyDown(NEXUS_KEY.CANCEL) then
+        nexus.game.leaveScene()
+    end
 end
 
 local function render(instance)

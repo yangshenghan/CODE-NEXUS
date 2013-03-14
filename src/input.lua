@@ -31,63 +31,64 @@ nexus.input = {}
 
 local f_isdown = love.keyboard.isDown
 
-local t_states = {}
+local t_pressed = {}
+
+local t_released = {}
+
+local t_triggered = {}
+
+local t_counter = {}
 
 local t_controls = nexus.configures.controls
 
 function nexus.input.initialize()
-    for k, _ in pairs(t_controls) do
-        t_states[k] = {
-            press       = false,
-            release     = false,
-            trigger     = false,
-            counter     = 0
-        }
+    for key, _ in pairs(t_controls) do
+        t_pressed[key] = false
+        t_released[key] = false
+        t_triggered[key] = false
+        t_counter[key] = 0
     end
 end
 
 function nexus.input.update()
-    for k, t in pairs(t_controls) do
-        for _, v in pairs(t) do
-            local state = t_states[k]
-            if f_isdown(v) then
-                if state.press then
-                    state.trigger = false
-                    state.counter = state.counter + 1
-                    if state.counter > 15 then
-                        state.counter = 0
+    for key, keys in pairs(t_controls) do
+        for _, keycode in pairs(keys) do
+            if f_isdown(keycode) then
+                if t_pressed[key] then
+                    t_triggered[key] = false
+                    t_counter[key] = t_counter[key] + 1
+                    if t_counter[key] > 15 then
+                        t_counter[key] = 0
                     end
                 else
-                    state.trigger = true
+                    t_triggered[key] = true
                 end
-                state.press = true
+                t_pressed[key] = true
+                t_released[key] = false
             else
-                if state.press then
-                    state.counter = 0
-                    state.release = true
+                if t_pressed[key] then
+                    t_counter[key] = 0
+                    t_released[key] = true
                 end
-                state.press = false
+                t_pressed[key] = false
             end
         end
     end
 end
 
 function nexus.input.isKeyDown(key)
-    local state = t_states[key]
-    return state.press
+    return t_pressed[key] 
 end
 
 function nexus.input.isKeyUp(key)
-    local state = t_states[key]
-    return state.release
+    return t_released[key]
 end
 
 function nexus.input.isKeyTrigger(key)
-    local state = t_states[key]
-    return state.trigger
+    return t_triggered[key]
 end
 
 function nexus.input.isKeyRepeat(key)
-    local state = t_states[key]
-    return state.press and state.counter == 0
+    return t_pressed[key] and t_counter[key] == 0
 end
+

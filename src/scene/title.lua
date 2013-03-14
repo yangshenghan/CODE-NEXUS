@@ -54,23 +54,6 @@ local f_update_coroutine = coroutine.wrap(function(instance, dt, timer)
 
     -- Show main menu
     while not chosen do
-        --[[if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
-            m_cursor = m_cursor - 1
-            if m_cursor < 1 then
-                m_cursor = #t_menus
-            end
-        end
-
-        if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-            m_cursor = m_cursor + 1
-            if m_cursor > #t_menus then
-                m_cursor = 1
-            end
-        end
-
-        if nexus.input.isKeyUp(NEXUS_KEY.C) then
-            chosen = m_cursor
-        end]]--
         instance.command.update(instance.command, dt)
 
         coroutine.yield()
@@ -89,7 +72,9 @@ local function enter(instance)
             handler = function(...) end
         }, {
             text    = 'Exit',
-            handler = function(...) end
+            handler = function(...)
+                love.event.quit()
+            end
         }
     })
 end

@@ -29,18 +29,36 @@
 --[[ ********************************************************************** ]]--
 nexus.window.command = {}
 
+function nexus.input.moveCursorUp(instance, wrap)
+    instance.cursor = instance.cursor - 1
+    if instance.cursor < 1 then
+        instance.cursor = wrap and instance.size or 1 
+    end
+end
+
+function nexus.input.moveCursorDown(instance, wrap)
+    instance.cursor = instance.cursor + 1
+    if instance.cursor > instance.size then
+        instance.cursor = wrap and 1 or instance.size
+    end
+end
+
 local function update(instance, dt)
     if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
-        instance.cursor = instance.cursor - 1
-        if instance.cursor < 1 then
-            instance.cursor = instance.size 
-        end
+        nexus.input.moveCursorUp(instance, nexus.input.isKeyTrigger(NEXUS_KEY.UP))
     end
 
     if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        instance.cursor = instance.cursor + 1
-        if instance.cursor > instance.size then
-            instance.cursor = 1
+        nexus.input.moveCursorDown(instance, nexus.input.isKeyTrigger(NEXUS_KEY.DOWN))
+    end
+
+    if nexus.input.isKeyDown(NEXUS_KEY.C) then
+        local index = 1
+        for _, command in pairs(instance.commands) do
+            if index == instance.cursor then
+                command.handler()
+            end
+            index = index + 1
         end
     end
 end

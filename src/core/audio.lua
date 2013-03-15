@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -37,6 +37,14 @@ function nexus.audio.finalize()
 end
 
 function nexus.audio.update(dt)
+end
+
+function nexus.audio.pause()
+    love.audio.pause()
+end
+
+function nexus.audio.resume()
+    love.audio.resume()
 end
 
 function nexus.audio.changeAudioConfigures()

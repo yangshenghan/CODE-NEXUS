@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -62,6 +62,14 @@ function nexus.scene.render()
     for _, scene in ipairs(t_scenes) do
         scene.render(scene)
     end
+end
+
+function nexus.scene.pause()
+    nexus.scene.base.setIdle(t_current, true)
+end
+
+function nexus.scene.resume()
+    nexus.scene.base.setIdle(t_current, false)
 end
 
 function nexus.scene.clear()

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -122,6 +122,12 @@ function nexus.input.update(dt)
         if f_isdown('f4') then love.event.quit() end
         if f_isdown('return') then nexus.graphics.toggleFullscreen() end
     end
+end
+
+function nexus.input.pause()
+end
+
+function nexus.input.resume()
 end
 
 function nexus.input.clear()

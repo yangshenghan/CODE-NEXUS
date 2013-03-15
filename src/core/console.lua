@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -409,4 +409,10 @@ function nexus.console.render()
         -- nexus.console.draw(4, love.graphics.getHeight() - 4)
         -- love.graphics.setColor(unpack(color))
     -- end
+end
+
+function nexus.console.pause()
+end
+
+function nexus.console.resume()
 end

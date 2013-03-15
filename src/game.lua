@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -103,9 +103,17 @@ end
 
 function nexus.game.focus(focus)
     if focus then
-        -- Resume audio system
+        nexus.scene.resume()
+        nexus.input.resume()
+        nexus.graphics.resume()
+        nexus.console.resume()
+        nexus.audio.resume()
     else
-        -- Pause audio system
+        nexus.audio.pause()
+        nexus.console.pause()
+        nexus.graphics.pause()
+        nexus.input.pause()
+        nexus.scene.pause()
     end
 end
 

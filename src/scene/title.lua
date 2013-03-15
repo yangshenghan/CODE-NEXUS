@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -31,7 +31,7 @@ nexus.scene.title = {}
 
 local f_update_coroutine = function(instance, dt, timer)
     --[[
-    local function wait(microsecond, callback)
+    local wait = function(microsecond, callback)
         local wakeup = love.timer.getMicroTime() + microsecond / 1000
         repeat callback() until select(2, coroutine.yield()) > wakeup
     end
@@ -55,7 +55,7 @@ local f_update_coroutine = function(instance, dt, timer)
 
     -- Show main menu
     while true do
-        nexus.window.update(instance.window.command, dt)
+        nexus.window.base.update(instance.window.command, dt)
         coroutine.yield()
     end
 end
@@ -64,32 +64,31 @@ local function enter(instance)
     instance.coroutine.update = coroutine.create(f_update_coroutine)
     instance.window.command = nexus.window.command.new(320, 240, {
         {
-            text    = 'New Game',
+            text    = nexus.database.getTranslatedText('New Game'),
             handler = function(...)
-                nexus.game.changeScene(nexus.scene.stage.new('prologue'))
-                -- nexus.game.changeScene(nexus.scene.newgame.new())
+                nexus.scene.goto(nexus.scene.stage.new('prologue'))
+                -- nexus.scene.goto(nexus.scene.newgame.new())
             end
         }, {
-            text    = 'Continue',
+            text    = nexus.database.getTranslatedText('Continue'),
             handler = function(...)
-                nexus.game.enterScene(nexus.scene.continue.new())
+                nexus.scene.enter(nexus.scene.continue.new())
             end,
             enabled = false
         }, {
-            text    = 'Extra',
+            text    = nexus.database.getTranslatedText('Extra'),
             handler = function(...)
-                nexus.game.enterScene(nexus.scene.extra.new())
+                nexus.scene.enter(nexus.scene.extra.new())
             end
         }, {
-            text    = 'Option',
+            text    = nexus.database.getTranslatedText('Option'),
             handler = function(...)
-                nexus.game.enterScene(nexus.scene.option.new())
+                nexus.scene.enter(nexus.scene.option.new())
             end
         }, {
-            text    = 'Exit',
+            text    = nexus.database.getTranslatedText('Exit'),
             handler = function(...)
-                love.event.quit()
-                -- nexus.game.changeScene(nexus.scene.exit.new())
+                nexus.scene.goto(nexus.scene.exit.new())
             end
         }
     })
@@ -119,6 +118,5 @@ function nexus.scene.title.new()
         window      = {},
         coroutine   = {}
     }
-    return nexus.scene.new(instance)
+    return nexus.scene.base.new(instance)
 end
-

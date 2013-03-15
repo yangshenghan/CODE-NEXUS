@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -111,5 +111,5 @@ function nexus.window.command.new(x, y, commands)
     end
     instance.update = update
     instance.render = render
-    return nexus.window.new(instance)
+    return nexus.window.base.new(instance)
 end

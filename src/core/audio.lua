@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,4 +27,23 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.manager = {}
+nexus.audio = {}
+
+function nexus.audio.initialize()
+end
+
+function nexus.audio.finalize()
+    love.audio.stop()
+end
+
+function nexus.audio.update()
+end
+
+function nexus.audio.changeAudioConfigures()
+    nexus.game.saveGameConfigure()
+end
+
+function nexus.audio.playCancel()
+    local source = nexus.resource.loadSoundSource('cancel')
+    source.play(source)
+end

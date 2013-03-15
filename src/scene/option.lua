@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -37,7 +37,7 @@ end
 
 local function update(instance, dt)
     if nexus.input.isKeyDown(NEXUS_KEY.CONFIRM) or nexus.input.isKeyDown(NEXUS_KEY.CANCEL) then
-        nexus.game.leaveScene()
+        nexus.scene.leave()
     end
 end
 
@@ -51,6 +51,5 @@ function nexus.scene.option.new()
         update  = update, 
         render  = render
     }
-    return nexus.scene.new(instance)
+    return nexus.scene.base.new(instance)
 end
-

@@ -31,6 +31,12 @@ return {
     code        = 'en_US',
     language    = 'English (US)',
     fonts       = {},
-    texts       = {},
+    texts       = {
+        ['New Game']        = 'New Game',
+        ['Continue']        = 'Continue',
+        ['Extra']           = 'Extra',
+        ['Option']          = 'Option',
+        ['Exit']            = 'Exit'
+    },
     formats     = {}
 }

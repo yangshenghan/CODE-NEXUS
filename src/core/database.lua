@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,30 +27,75 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'src.game'
+nexus.database = {
+    fonts       = {},
+    texts       = {},
+    formats     = {}
+}
 
-require 'src.core.audio'
-require 'src.core.console'
-require 'src.core.database'
-require 'src.core.graphics'
-require 'src.core.input'
-require 'src.core.resource'
-require 'src.core.scene'
+local t_caches = {}
 
-require 'src.base.scene'
-require 'src.base.object'
-require 'src.base.window'
+local function load_data_resource(folder, filename)
+    local path = folder .. filename .. '.lua'
 
-require 'src.scene.error'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'
+    if not t_caches[path] then
+        t_caches[path] = nexus.core.load(path)
+    end
 
-require 'src.object.player'
+    return t_caches[path]
+end
 
-require 'src.window.command'
+function nexus.database.loadMapData(filename)
+    return load_data_resource('data/maps/', filename)
+end
+
+function nexus.database.loadObjectData(filename)
+    return load_data_resource('data/objects/', filename)
+end
+
+function nexus.database.loadScriptData(filename)
+    return load_data_resource('data/scripts/', filename)
+end
+
+function nexus.database.loadStageData(filename)
+    return load_data_resource('data/stages/', filename)
+end
+
+function nexus.database.loadTextData(filename)
+    return load_data_resource('data/texts/', filename)
+end
+
+function nexus.database.getTextsList()
+    
+end
+
+function nexus.database.getTranslatedText(text)
+    return nexus.database.texts[text] or text
+end
+
+function nexus.database.initialize()
+    local texts = nexus.database.loadTextData(nexus.configures.options.language)
+
+    nexus.database.fonts = texts.fonts
+    nexus.database.texts = texts.texts
+    nexus.database.formats = texts.formats
+end
+
+function nexus.database.finalize()
+    nexus.database.formats = {}
+    nexus.database.texts = {}
+    nexus.database.fonts = {}
+
+    nexus.database.clear()
+end
+
+function nexus.database.update()
+end
+
+function nexus.database.clear()
+    t_caches = {}
+end
+
+function nexus.database.changeOptionConfigures()
+    nexus.game.saveGameConfigure()
+end

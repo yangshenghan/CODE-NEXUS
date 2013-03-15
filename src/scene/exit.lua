@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -30,6 +30,7 @@
 nexus.scene.exit = {}
 
 local function enter(instance)
+    nexus.game.exit()
 end
 
 local function leave(instance)
@@ -48,6 +49,5 @@ function nexus.scene.exit.new()
         update  = update, 
         render  = render
     }
-    return nexus.scene.new(instance)
+    return nexus.scene.base.new(instance)
 end
-

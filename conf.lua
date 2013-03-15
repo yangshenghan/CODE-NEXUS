@@ -110,13 +110,6 @@ nexus = {
         console     = true
     },
     configures  = {
-        graphics    = {
-            width       = 1280,
-            height      = 720,
-            fullscreen  = false,
-            vsync       = true,
-            fsaa        = 0
-        },
         audios      = {
         },
         controls    = {
@@ -134,27 +127,34 @@ nexus = {
             left        = {'left'},
             confirm     = {'return'},
             cancel      = {'escape'}
+        },
+        gameplay    = {
+        },
+        graphics    = {
+            width       = 1280,
+            height      = 720,
+            fullscreen  = false,
+            vsync       = true,
+            fsaa        = 0
+        },
+        options     = {
+            language    = 'en_US'
         }
     },
     system      = { -- shouldn't be changed at runtime
         version     = {
             major       = '0',
-            minor       = '1',
+            minor       = '2',
             micro       = '0',
             patch       = '0',
             build       = '0',
-            stamp       = '20130228',
+            stamp       = '20130315',
             stage       = 'Development',
         },
         paths       = {
             identity    = 'code-nexus',
             configure   = 'config.dat',
-            saving      = 'save-%2d.sav',
-            maps        = 'data/maps/',
-            texts       = 'data/texts/',
-            stages      = 'data/stages/',
-            scripts     = 'data/scripts/',
-            objects     = 'data/objects/'
+            saving      = 'save-%02d.sav'
         },
         defaults    = {
             width       = 640,
@@ -162,6 +162,7 @@ nexus = {
             fullscreen  = false
         },
         parameters  = {
+            saving_slot_size        = 15,
             logical_grid_size       = 16
         },
         debug       = true,
@@ -176,6 +177,7 @@ nexus = {
 nexus.utility = {}
 
 local m_version = nil
+
 local t_upgrader = {}
 
 function nexus.utility.getGameVersion()
@@ -189,16 +191,6 @@ function nexus.utility.getVersionString()
     return nexus.system.version.major .. '.' .. nexus.system.version.minor .. '.' .. nexus.system.version.micro
 end
 
-function nexus.utility.getScreenModes()
-    local modes = love.graphics.getModes()
-    table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)
-    return modes
-end
-
-function nexus.utility.getBestScreenMode()
-    return table.last(nexus.utility.getScreenModes())
-end
-
 function nexus.utility.upgradeGameData(identifier, chunk)
     return chunk.data
 end
@@ -210,14 +202,6 @@ end
 -- | Core functions in the game                                             | --
 -- \ ---------------------------------------------------------------------- / --
 nexus.core = {}
-
-local t_paths   = {
-    map             = nexus.system.paths.maps,
-    text            = nexus.system.paths.texts,
-    stage           = nexus.system.paths.stages,
-    script          = nexus.system.paths.scripts,
-    object          = nexus.system.paths.objects
-}
 
 function nexus.core.serialize(data)
     return serialize(data)
@@ -259,11 +243,10 @@ function nexus.core.read(filename)
     return chunk.data
 end
 
-function nexus.core.load(identifier, filename)
+function nexus.core.load(path)
     local ok
     local chunk
     local result
-    local path = t_paths[identifier] .. filename .. '.lua'
 
     ok, chunk = pcall(love.filesystem.load, path)
     if not ok then
@@ -278,6 +261,10 @@ function nexus.core.load(identifier, filename)
     return result
 end
 
+function nexus.core.exists(filename)
+    return love.filesystem.exists(filename)
+end
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Entry point of LÖVE before modules are loaded                          | --
 -- \ ---------------------------------------------------------------------- / --
@@ -286,7 +273,7 @@ function love.conf(game)
     local filename = nexus.system.paths.configure
 
     love.filesystem.setIdentity(identity)
-    if not love.filesystem.exists(filename) then
+    if not nexus.core.exists(filename) then
         nexus.core.save(filename, nexus.configures)
         nexus.system.firstrun = true
     end

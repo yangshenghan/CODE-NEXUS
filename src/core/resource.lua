@@ -27,89 +27,105 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.scene = {}
+nexus.resource = {}
 
-local t_current = nil
+local t_fonts = {}
 
-local t_scenes = {}
+local t_images = {}
 
-function nexus.scene.initialize()
+local t_sources = {}
+
+local function load_font_resource(folder, filename, size)
+    local path = folder .. filename
+
+    if not t_fonts[path] then
+        t_fonts[path] = {}
+    end
+
+    if not t_fonts[path][size] then
+        t_fonts[path][size] = love.graphics.newFont(path, size)
+    end
+
+    return t_fonts[path][size]
 end
 
-function nexus.scene.finalize()
-    t_current = nil
+local function load_image_resource(folder, filename)
+    local path = folder .. filename
 
-    nexus.scene.clear()
+    if not t_images[path] or t_images[path].isDisposed() then
+        t_images[path] = love.graphics.newImage(path)
+    end
+
+    return t_images[path]
 end
 
-function nexus.scene.update()
-    if t_current then
-        t_current.update(t_current, dt)
+local function load_source_resource(folder, filename)
+    local path = folder .. filename
+
+    if not t_sources[path] then
+        t_sources[path] = love.audio.newSource(path)
     end
 
-    for _, scene in ipairs(t_scenes) do
-        if not nexus.scene.base.isIdle(scene) then
-            scene.update(scene, dt)
-        end
-    end
+    return t_sources[path]
 end
 
-function nexus.scene.render()
-    if t_current then
-        t_current.render(t_current)
-    end
-
-    for _, scene in ipairs(t_scenes) do
-        scene.render(scene)
-    end
+function nexus.resource.initialize()
 end
 
-function nexus.scene.clear()
-    t_scenes = {}
+function nexus.resource.finalize()
+    nexus.resource.clear()
 end
 
-function nexus.scene.getCurrentScene()
-    return t_current
+function nexus.resource.update()
 end
 
-function nexus.scene.goto(scene)
-    if t_current then
-        t_current.leave(t_current)
-    end
-    t_current = scene
-    if t_current then
-        t_current.enter(t_current)
-    end
+function nexus.resource.clear()
+    t_fonts = {}
+    t_images = {}
+    t_sources = {}
+    collectgarbage()
 end
 
-function nexus.scene.enter(scene)
-    if #t_scenes > 0 then
-        local last = table.last(t_scenes)
-        nexus.scene.base.setIdle(last, true)
-        last.idleIn(last)
-    elseif t_current then
-        nexus.scene.base.setIdle(t_current, true)
-        t_current.idleIn(t_current)
-    end
-
-    table.insert(t_scenes, scene)
-    scene.enter(scene)
+function nexus.resource.loadEffectSource(filename)
+    return load_source_resource('res/audios/effects/', filename)
 end
 
-function nexus.scene.leave()
-    if #t_scenes == 0 then
-        return
-    end
+function nexus.resource.loadMusicSource(filename)
+    return load_source_resource('res/audios/musics/', filename)
+end
 
-    local popped = table.remove(t_scenes)
-    popped.leave(popped)
+function nexus.resource.loadSoundSource(filename)
+    return load_source_resource('res/audios/sounds/', filename)
+end
 
-    if #t_scenes > 0 then
-        local last = table.last(t_scenes)
-        nexus.scene.base.setIdle(last, false)
-        last.idleOut(last)
-    elseif t_current then
-        nexus.scene.base.setIdle(t_current, false)
-        t_current.idleOut(t_current)
-    end
+function nexus.resource.loadAnimationIamge(filename)
+    return load_image_resource('res/graphics/animations/', filename)
+end
+
+function nexus.resource.loadCharacterImage(filename)
+    return load_image_resource('res/graphics/characters/', filename)
+end
+
+function nexus.resource.loadIconImage(filename)
+    return load_image_resource('res/graphics/icons/', filename)
+end
+
+function nexus.resource.loadMapImage(filename)
+    return load_image_resource('res/graphics/maps/', filename)
+end
+
+function nexus.resource.loadObjectImage(filename)
+    return load_image_resource('res/graphics/objects/', filename)
+end
+
+function nexus.resource.loadPictureImage(filename)
+    return load_image_resource('res/graphics/pictures/', filename)
+end
+
+function nexus.resource.loadSystemImage(filename)
+    return load_image_resource('res/graphics/systems/', filename)
+end
+
+function nexus.resource.loadFont(filename, size)
+    return load_font_resource('res/fonts/', filename, size)
 end

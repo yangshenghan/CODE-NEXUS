@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,30 +27,49 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'src.game'
+nexus.object.base = {}
 
-require 'src.core.audio'
-require 'src.core.console'
-require 'src.core.database'
-require 'src.core.graphics'
-require 'src.core.input'
-require 'src.core.resource'
-require 'src.core.scene'
+local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
 
-require 'src.base.scene'
-require 'src.base.object'
-require 'src.base.window'
+local default = {
+    create  = function(...) end,
+    delete  = function(...) end,
+    update  = function(...) end,
+    render  = function(...) end,
+    object  = {
+        x           = 0,        -- logical x position
+        y           = 0,        -- logical y position
+        rx          = 0,        -- real x position (logical x * LOGICAL_GRID_SIZE)
+        ry          = 0         -- real y potition (logical y * LOGICAL_GRID_SIZE)
+    }
+}
 
-require 'src.scene.error'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'
+function nexus.object.base.move(instance, x, y)
+    if x then
+        instance.object.x = x
+        instance.object.rx = x * LOGICAL_GRID_SIZE
+    end
+    if y then
+        instance.object.y = y
+        instance.object.ry = y * LOGICAL_GRID_SIZE
+    end
+end
 
-require 'src.object.player'
+function nexus.object.base.isMoving(instance)
+    if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
+    if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
+    return false
+end
 
-require 'src.window.command'
+function nexus.object.base.isPassable(instance, x, y)
+    local stage = nexus.scene.stage.getCurrentStage()
+    if x < 0 or y < 0 then return false end
+    if x > stage.width / LOGICAL_GRID_SIZE or y > stage.height / LOGICAL_GRID_SIZE then return false end
+    return true
+end
+
+function nexus.object.base.new(instance)
+    table.recursiveMerge(instance, default)
+    instance.create(instance)
+    return instance
+end

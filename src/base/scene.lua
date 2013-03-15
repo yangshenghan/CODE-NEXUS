@@ -27,49 +27,36 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.object = {}
-
-local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
+nexus.scene.base = {}
 
 local default = {
-    create  = function(...) end,
-    delete  = function(...) end,
+    enter   = function(...) end,
+    leave   = function(...) end,
+    idleIn  = function(...) end,
+    idleOut = function(...) end,
     update  = function(...) end,
+    -- The render callback may be removed and managed in nexus.game
     render  = function(...) end,
-    object  = {
-        x           = 0,        -- logical x position
-        y           = 0,        -- logical y position
-        rx          = 0,        -- real x position (logical x * LOGICAL_GRID_SIZE)
-        ry          = 0         -- real y potition (logical y * LOGICAL_GRID_SIZE)
-    }
+    idle    = false
 }
 
-function nexus.object.move(instance, x, y)
-    if x then
-        instance.object.x = x
-        instance.object.rx = x * LOGICAL_GRID_SIZE
+function nexus.scene.base.new(instance)
+    for k, v in pairs(default) do
+        if instance[k] == nil then
+            instance[k] = v
+        end
     end
-    if y then
-        instance.object.y = y
-        instance.object.ry = y * LOGICAL_GRID_SIZE
-    end
-end
-
-function nexus.object.isMoving(instance)
-    if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
-    if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
-    return false
-end
-
-function nexus.object.isPassable(instance, x, y)
-    local stage = nexus.scene.stage.getCurrentStage()
-    if x < 0 or y < 0 then return false end
-    if x > stage.width / LOGICAL_GRID_SIZE or y > stage.height / LOGICAL_GRID_SIZE then return false end
-    return true
-end
-
-function nexus.object.new(instance)
-    table.recursiveMerge(instance, default)
-    instance.create(instance)
     return instance
+end
+
+function nexus.scene.base.isIdle(instance)
+    return instance.idle
+end
+
+function nexus.scene.base.setIdle(instance, idle)
+    instance.idle = idle
+end
+
+function nexus.scene.base.toggleIdle(instance)
+    instance.idle = not instance.idle
 end

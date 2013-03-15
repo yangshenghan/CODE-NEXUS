@@ -298,7 +298,7 @@ local function initialize_output_stream(font, width, height, spacing)
     output.chars_per_line = math.floor(output.width / output.char_width) - 1
 end
 
-function nexus.console.initialize(font, width, height, spacing)
+function initialize_console_object(font, width, height, spacing)
     initialize_input_stream()
     initialize_output_stream(font, width, height, spacing)
 
@@ -386,4 +386,27 @@ function nexus.console.showDebugMessage(...)
     if nexus.system.level > 4 then
         output_push_message('[ DEBUG ]', ...)
     end
+end
+
+function nexus.console.initialize()
+    local font = nexus.resource.loadFont('inconsolata.otf', 16)
+
+    initialize_console_object(font)
+end
+
+function nexus.console.finalize()
+end
+
+function nexus.console.update()
+end
+
+function nexus.console.render()
+    -- if nexus.settings.console then
+        -- local color = {love.graphics.getColor()}
+        -- love.graphics.setColor(34, 34, 34, 180)
+        -- love.graphics.rectangle('fill', 2, 2, love.graphics.getWidth() - 4, love.graphics.getHeight() - 4)
+        -- love.graphics.setColor(240, 240, 0, 255)
+        -- nexus.console.draw(4, love.graphics.getHeight() - 4)
+        -- love.graphics.setColor(unpack(color))
+    -- end
 end

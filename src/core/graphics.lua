@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,45 +27,69 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.window   = {}
+nexus.graphics = {}
 
-local default = {
-    update      = function(...) end,
-    render      = function(...) end,
-    active      = true,
-    height      = nil,
-    openness    = 1,
-    padding     = 12,
-    visible     = true,
-    width       = nil,
-    x           = nil,
-    y           = nil,
-    z           = 1000
-}
+local m_caption = love.graphics.getCaption()
 
-function nexus.window.new(instance)
-    for k, v in pairs(default) do
-        if instance[k] == nil then
-            instance[k] = v
-        end
-    end
-    return instance
+function nexus.graphics.initialize()
+    -- local icon = nexus.resource.loadImage('icon.png')
+
+    -- love.graphics.setIcon(icon)
+    love.graphics.setBackgroundColor(0, 0, 0)
 end
 
-function nexus.window.dispose(instance)
-    nexus.manager.window.removeWindow(instance)
+function nexus.graphics.finalize()
 end
 
-function nexus.window.update(instance, dt, ...)
-    if instance.active then
-        return instance.update(instance, dt, ...)
-    end
-    return true
-end
-
-function nexus.window.render(instance, ...)
-    if instance.visible then
-        instance.render(instance, ...)
+function nexus.graphics.update()
+    if nexus.settings.showfps then
+        local fps = love.timer.getFPS()
+        love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)
     end
 end
 
+function nexus.graphics.render()
+end
+
+function nexus.graphics.toggleFullscreen()
+    love.graphics.toggleFullscreen()
+end
+
+function nexus.graphics.toggleFPS()
+    nexus.settings.showfps = not nexus.settings.showfps
+    if not nexus.settings.showfps then
+        love.graphics.setCaption(m_caption)
+    end
+end
+
+function nexus.graphics.getScreenModes()
+    local modes = love.graphics.getModes()
+    table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)
+    return modes
+end
+
+function nexus.graphics.getBestScreenMode()
+    return table.last(nexus.utility.getScreenModes())
+end
+
+function nexus.graphics.screenshot()
+    return love.graphics.newScreenshot()
+end
+
+function nexus.graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
+    width = width or nexus.configures.graphics.width
+    height = height or nexus.configures.graphics.height
+    fullscreen = fullscreen or nexus.configures.graphics.fullscreen
+    vsync = vsync or nexus.configures.graphics.vsync
+    fsaa = fsaa or nexus.configures.graphics.fsaa
+
+    love.graphics.setMode(width, height, fullscreen, vsync, fsaa)
+
+    nexus.configures.graphics.width = width
+    nexus.configures.graphics.height = height
+    nexus.configures.graphics.fillscreen = fullscreen
+    nexus.configures.graphics.vsync = vsync
+    nexus.configures.graphics.fsaa = fsaa
+
+    nexus.game.saveGameConfigure()
+end

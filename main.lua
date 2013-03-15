@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-13                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -30,44 +30,7 @@
 require 'bootstrap'
 
 love.load = nexus.game.initialize
-love.quit = nexus.game.finalizer
+love.quit = nexus.game.finalize
 love.draw = nexus.game.render
 love.focus = nexus.game.focus
 love.update = nexus.game.update
-
-function love.keypressed(key, unicode)
-    if key == 'f1' then
-        nexus.game.toggleFPS()
-    end
-
-    if key == 'f4' then
-        nexus.settings.console = not nexus.settings.console
-    end
-
-    if key == 'f5' then
-        nexus.game.reload()
-    end
-
-    if (love.keyboard.isDown('lalt') or love.keyboard.isDown('ralt')) and key == 'return' then
-        nexus.game.toggleFullscreen()
-    end
-
-    -- if nexus.settings.console then
-        -- return nexus.console.keypressed(key, unicode)
-    -- end
-
-    -- if key == 'rctrl' then
-        -- debug.debug()
-        -- nexus.game.debug = true
-    -- end
-
-    if key == 'escape' then
-        love.event.quit()
-    end
-end
-
-function love.keyreleased(key, unicode)
-    -- if key == 'rctrl' then
-        -- nexus.game.debug = false
-    -- end
-end

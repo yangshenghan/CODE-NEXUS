@@ -31,6 +31,12 @@ return {
     code        = 'zh_TW',
     language    = '繁體中文',
     fonts       = {},
-    texts       = {},
+    texts       = {
+        ['New Game']        = '開新遊戲',
+        ['Continue']        = '繼續遊戲',
+        ['Extra']           = '遊戲畫廊',
+        ['Option']          = '遊戲設定',
+        ['Exit']            = '退出遊戲'
+    },
     formats     = {}
 }

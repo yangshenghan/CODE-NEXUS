@@ -31,9 +31,9 @@ nexus.scene.stage = {}
 
 local function enter(instance)
     -- Load stage data
-    instance.map = nexus.core.load('map', instance.name)
-    instance.stage = nexus.core.load('stage', instance.name)
-    instance.script = nexus.core.load('script', instance.name)
+    instance.map = nexus.database.loadMapData(instance.name)
+    instance.stage = nexus.database.loadStageData(instance.name)
+    instance.script = nexus.database.loadScriptData(instance.name)
 
     -- Initialize stage
     instance.player = nexus.object.player.new()
@@ -76,19 +76,19 @@ local function update(instance, dt)
         nexus.object.player.attack(instance.player)
     end
 
-    if nexus.input.isKeyDown(NEXUS_KEY.LEFT) and nexus.object.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
+    if nexus.input.isKeyDown(NEXUS_KEY.LEFT) and nexus.object.base.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
         nexus.object.player.left(instance.player)
     end
 
-    if nexus.input.isKeyDown(NEXUS_KEY.RIGHT) and nexus.object.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
+    if nexus.input.isKeyDown(NEXUS_KEY.RIGHT) and nexus.object.base.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
         nexus.object.player.right(instance.player)
     end
 
-    if nexus.input.isKeyDown(NEXUS_KEY.UP) and nexus.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
+    if nexus.input.isKeyDown(NEXUS_KEY.UP) and nexus.object.base.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
         nexus.object.player.up(instance.player)
     end
 
-    if nexus.input.isKeyDown(NEXUS_KEY.DOWN) and nexus.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
+    if nexus.input.isKeyDown(NEXUS_KEY.DOWN) and nexus.object.base.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
         nexus.object.player.down(instance.player)
     end
 
@@ -113,7 +113,7 @@ local function render(instance)
 end
 
 function nexus.scene.stage.getCurrentStage()
-    local scene = nexus.game.getCurrentScene()
+    local scene = nexus.scene.getCurrentScene()
     return scene.stage
 end
 

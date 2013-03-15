@@ -27,102 +27,44 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.resource = {}
+nexus.window.base = {}
 
-local t_fonts = {}
+local default = {
+    update      = function(...) end,
+    render      = function(...) end,
+    active      = true,
+    height      = nil,
+    openness    = 1,
+    padding     = 12,
+    visible     = true,
+    width       = nil,
+    x           = nil,
+    y           = nil,
+    z           = 1000
+}
 
-local t_images = {}
-
-local t_sources = {}
-
-local function load_font_resource(folder, filename, size)
-    local path = folder .. filename
-
-    if not t_fonts[path] then
-        t_fonts[path] = {}
+function nexus.window.base.new(instance)
+    for k, v in pairs(default) do
+        if instance[k] == nil then
+            instance[k] = v
+        end
     end
+    return instance
+end
 
-    if not t_fonts[path][size] then
-        t_fonts[path][size] = love.graphics.newFont(path, size)
+function nexus.window.base.dispose(instance)
+    nexus.manager.window.removeWindow(instance)
+end
+
+function nexus.window.base.update(instance, dt, ...)
+    if instance.active then
+        return instance.update(instance, dt, ...)
     end
-
-    return t_fonts[path][size]
+    return true
 end
 
-local function load_image_resource(folder, filename)
-    local path = folder .. filename
-
-    if not t_images[path] or t_images[path].isDisposed() then
-        t_images[path] = love.graphics.newImage(path)
+function nexus.window.base.render(instance, ...)
+    if instance.visible then
+        instance.render(instance, ...)
     end
-
-    return t_images[path]
-end
-
-local function load_source_resource(folder, filename)
-    local path = folder .. filename
-
-    if not t_sources[path] then
-        t_sources[path] = love.audio.newSource(path)
-    end
-
-    return t_sources[path]
-end
-
-function nexus.resource.initialize()
-end
-
-function nexus.resource.finalizer()
-    nexus.resource.clear()
-end
-
-function nexus.resource.clear()
-    t_fonts = {}
-    t_images = {}
-    t_sources = {}
-    collectgarbage()
-end
-
-function nexus.resource.loadEffectSource(filename)
-    return load_source_resource('res/audios/effects/', filename)
-end
-
-function nexus.resource.loadMusicSource(filename)
-    return load_source_resource('res/audios/musics/', filename)
-end
-
-function nexus.resource.loadSoundSource(filename)
-    return load_source_resource('res/audios/sounds/', filename)
-end
-
-function nexus.resource.loadAnimationIamge(filename)
-    return load_image_resource('res/graphics/animations/', filename)
-end
-
-function nexus.resource.loadCharacterImage(filename)
-    return load_image_resource('res/graphics/characters/', filename)
-end
-
-function nexus.resource.loadIconImage(filename)
-    return load_image_resource('res/graphics/icons/', filename)
-end
-
-function nexus.resource.loadMapImage(filename)
-    return load_image_resource('res/graphics/maps/', filename)
-end
-
-function nexus.resource.loadObjectImage(filename)
-    return load_image_resource('res/graphics/objects/', filename)
-end
-
-function nexus.resource.loadPictureImage(filename)
-    return load_image_resource('res/graphics/pictures/', filename)
-end
-
-function nexus.resource.loadSystemImage(filename)
-    return load_image_resource('res/graphics/systems/', filename)
-end
-
-function nexus.resource.loadFont(filename, size)
-    return load_font_resource('res/fonts/', filename, size)
 end

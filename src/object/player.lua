@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -65,7 +65,7 @@ end
 local function update(instance, dt)
 end
 
-local function draw(instance)
+local function render(instance)
     love.graphics.setColor(193, 47, 14)
     love.graphics.circle('fill', t_object.body:getX(), t_object.body:getY(), t_object.shape:getRadius())
 end
@@ -105,7 +105,7 @@ function nexus.object.player.new(world)
         create  = create,
         delete  = delete,
         update  = update,
-        draw    = draw,
+        render  = render,
         world   = world
     }
 

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-14                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -33,8 +33,6 @@ nexus.scene.stage = {
 
 local gravity = 9.81;
 
-local player = nil
-
 local function begin_contact(a, b, collision)
 end
 
@@ -53,7 +51,7 @@ local function enter(instance)
 
     instance.world:setCallbacks(begin_contact, end_contact, pre_solve, post_solve)
 
-    player = nexus.object.player.new(instance.world)
+    instance.player = nexus.object.player.new(instance.world)
 
     for _, data in pairs(instance.stage.objects) do
         local object = {}
@@ -69,10 +67,10 @@ local function enter(instance)
 end
 
 local function leave(instance)
-    player.delete(player)
+    instance.player.delete(instance.player)
 
     instance.world = nil
-    player = nil
+    instance.player = nil
 end
 
 local function update(instance, dt)
@@ -81,34 +79,34 @@ local function update(instance, dt)
     instance.world.update(instance.world, dt)
 
     if nexus.input.isKeyDown(NEXUS_KEY.Z) then
-        nexus.object.player.rush(player)
+        nexus.object.player.rush(instance.player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.X) then
-        nexus.object.player.jump(player)
+        nexus.object.player.jump(instance.player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.C) then
-        nexus.object.player.attack(player)
+        nexus.object.player.attack(instance.player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.LEFT) then
-        nexus.object.player.left(player)
+        nexus.object.player.left(instance.player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.RIGHT) then
-        nexus.object.player.right(player)
+        nexus.object.player.right(instance.player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.UP) then
-        nexus.object.player.up(player)
+        nexus.object.player.up(instance.player)
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.DOWN) then
-        nexus.object.player.down(player)
+        nexus.object.player.down(instance.player)
     end
 
-    player.update(player, dt)
+    instance.player.update(instance.player, dt)
     if #instance.objects > 0 then
         for _, v in pairs(instance.objects) do
             v:update(dt)
@@ -117,7 +115,8 @@ local function update(instance, dt)
 end
 
 local function render(instance)
-    player.draw(player)
+    instance.player.render(instance.player)
+
     if #instance.objects > 0 then
         for _, v in pairs(instance.objects) do
             v:draw(v.body:getWorldPoints(v.shape:getPoints()))

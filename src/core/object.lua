@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -33,7 +33,8 @@ local default = {
     create  = function(...) end,
     delete  = function(...) end,
     update  = function(...) end,
-    draw    = function(...) end
+    render  = function(...) end,
+    world   = nil
 }
 
 function nexus.object.new(instance)

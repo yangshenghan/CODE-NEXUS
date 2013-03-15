@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -43,6 +43,45 @@ end
 
 function table.last(t)
     return t[table.maxn(t)]
+end
+
+function table.clone(t, metatable)
+    local u = {}
+
+    if metatable then
+        setmetatable(u, metatable)
+    else
+        setmetatable(u, getmetatable(t))
+    end
+
+    for key, value in pairs(t) do
+        if type(value) == 'table' then
+            u[key] = table.clone(value)
+        else
+            u[key] = value
+        end
+    end
+    return u
+end
+
+function table.merge(t, s)
+    local r = table.clone(t)
+
+    for key, value in pairs(s) do
+        r[key] = value
+    end
+
+    return r
+end
+
+function table.recursiveMerge(t, s)
+    for key, value in pairs(t) do
+        if type(value) == 'table' then
+            table.recursiveMerge(s[key], value)
+        else
+            s[key] = value
+        end
+    end
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -111,13 +150,19 @@ nexus = {
             identity    = 'code-nexus',
             configure   = 'config.dat',
             saving      = 'save-%d.sav',
-            objects     = 'data/objects/',
-            stages      = 'data/stages/'
+            maps        = 'data/maps/',
+            texts       = 'data/texts/',
+            stages      = 'data/stages/',
+            scripts     = 'data/scripts/',
+            objects     = 'data/objects/'
         },
         defaults    = {
             width       = 640,
             height      = 360,
             fullscreen  = false
+        },
+        parameters  = {
+            logical_grid_size       = 16
         },
         debug       = true,
         level       = 5,
@@ -167,7 +212,10 @@ end
 nexus.core = {}
 
 local t_paths   = {
+    map             = nexus.system.paths.maps,
+    text            = nexus.system.paths.texts,
     stage           = nexus.system.paths.stages,
+    script          = nexus.system.paths.scripts,
     object          = nexus.system.paths.objects
 }
 
@@ -252,6 +300,8 @@ function love.conf(game)
     game.url = 'http://yangshenghan.twbbs.org'
     game.identity = identity
     game.release = not nexus.system.debug
+
+    game.modules.physics = false
 
     game.screen.width = nexus.system.defaults.width
     game.screen.height = nexus.system.defaults.height

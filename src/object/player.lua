@@ -27,77 +27,85 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.object.player = {
-}
+nexus.object.player = {}
 
-local t_state = nil
-
-local t_object = nil
+local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
 
 local function create(instance)
-    local body = love.physics.newBody(
-        instance.world,
-        nexus.configures.graphics.width / 2,
-        nexus.configures.graphics.height / 2,
-        'dynamic'
-    )
-    local shape = love.physics.newCircleShape(20)
-    local fixture = love.physics.newFixture(body, shape, 1)
-
-    t_state   = {
-        rushing     = false,
-        jumping     = false,
-        attacking   = false
-    }
-
-    t_object = {
-        body        = body,
-        shape       = shape,
-        fixture     = fixture
-    }
+    nexus.object.move(instance, 10, 10)
 end
 
 local function delete(instance)
-    t_state = nil
-    t_object = nil
+    instance.object.rushing = nil
+    instance.object.jumping = nil
+    instance.object.attacking = nil
 end
 
 local function update(instance, dt)
+    if instance.object.rushing then
+        coroutine.resume(instance.object.rushing, dt)
+    end
+
+    if instance.object.jumping then
+        coroutine.resume(instance.object.jumping, dt)
+    end
+
+    if instance.object.attacking then
+        coroutine.resume(instance.object.attacking, dt)
+    end
 end
 
 local function render(instance)
     love.graphics.setColor(193, 47, 14)
-    love.graphics.circle('fill', t_object.body:getX(), t_object.body:getY(), t_object.shape:getRadius())
+    love.graphics.circle('fill', instance.object.rx, nexus.configures.graphics.height - instance.object.ry, LOGICAL_GRID_SIZE / 2)
 end
 
 function nexus.object.player.rush(instance)
+    if not instance.object.rushing then
+        instance.object.rushing = coroutine.create(function(dt)
+            instance.object.rushing = nil
+        end)
+    end
 end
 
 function nexus.object.player.jump(instance)
-    if not t_state.jumping then
-        -- self.player.body:applyForce(0, -400)
-        t_object.body:applyForce(0, -40000)
+    if not instance.object.jumping then
+        instance.object.jumping = coroutine.create(function(dt)
+            while instance.object.ry < (instance.object.y + 4) * LOGICAL_GRID_SIZE do
+                instance.object.ry = instance.object.ry + 4 * LOGICAL_GRID_SIZE * dt * 8
+                coroutine.yield()
+            end
+            while instance.object.ry > instance.object.y * LOGICAL_GRID_SIZE do
+                instance.object.ry = instance.object.ry - 4 * LOGICAL_GRID_SIZE * dt * 8
+                coroutine.yield()
+            end
+            instance.object.jumping = nil
+        end)
     end
 end
 
 function nexus.object.player.attack(instance)
+    if not instance.object.attacking then
+        instance.object.attacking = coroutine.create(function(dt)
+            instance.object.attacking = nil
+        end)
+    end
 end
 
-function nexus.object.player.left(instance)
-    t_object.body:applyForce(-120000, 0)
+function nexus.object.player.up(instance)
+    nexus.object.move(instance, false, instance.object.y + 1)
 end
 
 function nexus.object.player.right(instance)
-    t_object.body:applyForce(120000, 0)
-end
-
-function nexus.object.player.up(self)
-    t_object.body:applyForce(0, -120000)
-    -- t_object.body:setPosition(nexus.configures.graphics.width / 2, nexus.configures.graphics.height / 2)
+    nexus.object.move(instance, instance.object.x + 1, false)
 end
 
 function nexus.object.player.down(instance)
-    t_object.body:applyForce(0, 120000)
+    nexus.object.move(instance, false, instance.object.y - 1)
+end
+
+function nexus.object.player.left(instance)
+    nexus.object.move(instance, instance.object.x - 1, false)
 end
 
 function nexus.object.player.new(world)
@@ -105,11 +113,8 @@ function nexus.object.player.new(world)
         create  = create,
         delete  = delete,
         update  = update,
-        render  = render,
-        world   = world
+        render  = render
     }
-
     instance.object = nexus.core.load('object', 'player')
-
     return nexus.object.new(instance)
 end

@@ -65,7 +65,6 @@ function nexus.game.initialize(args)
     -- love.graphics.setIcon(icon)
     -- love.mouse.setGrab(true)
     love.mouse.setVisible(false)
-    love.physics.setMeter(32)
 
     -- Initialize game subsystem
     nexus.input.initialize()
@@ -76,8 +75,8 @@ function nexus.game.initialize(args)
         if nexus.system.firstrun then
             adjust_screen_mode()
         end
-        nexus.game.changeScene(nexus.scene.title.new())
-        -- nexus.game.changeScene(nexus.scene.stage.new('prologue'))
+        -- nexus.game.changeScene(nexus.scene.title.new())
+        nexus.game.changeScene(nexus.scene.stage.new('prologue'))
     else
         nexus.game.changeScene(nexus.scene.error.new('Your game version is older than saving data!'))
     end
@@ -167,6 +166,10 @@ function nexus.game.changeScreenMode(width, height, fullscreen, vsync, fsaa)
     nexus.configures.graphics.fsaa = fsaa
 
     nexus.core.save(nexus.system.paths.configure, nexus.configures)
+end
+
+function nexus.game.getCurrentScene()
+    return t_current
 end
 
 function nexus.game.changeScene(scene)

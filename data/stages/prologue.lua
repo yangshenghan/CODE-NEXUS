@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-12                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -28,6 +28,8 @@
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
 return {
+    width       = 1280,
+    height      = 720,
     objects     = {
         ground      = {
             x           = nexus.configures.graphics.width / 2,
@@ -35,9 +37,9 @@ return {
             width       = nexus.configures.graphics.width,
             height      = 50,
             bodyType    = 'static',
-            draw        = function(...)
+            render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.polygon('fill', {select(2, ...)})
+                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
             end
         },
         sky         = {
@@ -46,9 +48,9 @@ return {
             width       = nexus.configures.graphics.width,
             height      = 50,
             bodyType    = 'static',
-            draw        = function(...)
+            render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.polygon('fill', {select(2, ...)})
+                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
             end
         },
         leftwall    = {
@@ -57,9 +59,9 @@ return {
             width       = 50,
             height      = nexus.configures.graphics.height,
             bodyType    = 'static',
-            draw        = function(...)
+            render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.polygon('fill', {select(2, ...)})
+                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
             end
         },
         rightwall   = {
@@ -68,9 +70,9 @@ return {
             width       = 50,
             height      = nexus.configures.graphics.height,
             bodyType    = 'static',
-            draw        = function(...)
+            render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.polygon('fill', {select(2, ...)})
+                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
             end
         },
         block1      = {
@@ -80,9 +82,9 @@ return {
             height      = 100,
             density     = 5,
             bodyType    = 'dynamic',
-            draw        = function(...)
+            render      = function(instance)
                 love.graphics.setColor(50, 50, 50)
-                love.graphics.polygon('fill', {select(2, ...)})
+                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
             end
         },
         block2      = {
@@ -92,9 +94,9 @@ return {
             height      = 50,
             density     = 2,
             bodyType    = 'dynamic',
-            draw        = function(...)
+            render      = function(instance)
                 love.graphics.setColor(50, 50, 50)
-                love.graphics.polygon('fill', {select(2, ...)})
+                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
             end
         }
     }

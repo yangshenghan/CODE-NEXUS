@@ -33,15 +33,7 @@ local t_fonts = {}
 
 local t_images = {}
 
-local function load_image_resource(folder, filename)
-    local path = folder .. filename
-
-    if not t_images[path] or t_images[path].isDisposed() then
-        t_images[path] = love.graphics.newImage(path)
-    end
-
-    return t_images[path]
-end
+local t_sources = {}
 
 local function load_font_resource(folder, filename, size)
     local path = folder .. filename
@@ -57,6 +49,26 @@ local function load_font_resource(folder, filename, size)
     return t_fonts[path][size]
 end
 
+local function load_image_resource(folder, filename)
+    local path = folder .. filename
+
+    if not t_images[path] or t_images[path].isDisposed() then
+        t_images[path] = love.graphics.newImage(path)
+    end
+
+    return t_images[path]
+end
+
+local function load_source_resource(folder, filename)
+    local path = folder .. filename
+
+    if not t_sources[path] then
+        t_sources[path] = love.audio.newSource(path)
+    end
+
+    return t_sources[path]
+end
+
 function nexus.resource.initialize()
 end
 
@@ -67,7 +79,20 @@ end
 function nexus.resource.clear()
     t_fonts = {}
     t_images = {}
+    t_sources = {}
     collectgarbage()
+end
+
+function nexus.resource.loadEffectSource(filename)
+    return load_source_resource('res/audios/effects/', filename)
+end
+
+function nexus.resource.loadMusicSource(filename)
+    return load_source_resource('res/audios/musics/', filename)
+end
+
+function nexus.resource.loadSoundSource(filename)
+    return load_source_resource('res/audios/sounds/', filename)
 end
 
 function nexus.resource.loadAnimationIamge(filename)

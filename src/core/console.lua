@@ -397,7 +397,7 @@ end
 function nexus.console.finalize()
 end
 
-function nexus.console.update()
+function nexus.console.update(dt)
 end
 
 function nexus.console.render()

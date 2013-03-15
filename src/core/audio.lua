@@ -36,7 +36,7 @@ function nexus.audio.finalize()
     love.audio.stop()
 end
 
-function nexus.audio.update()
+function nexus.audio.update(dt)
 end
 
 function nexus.audio.changeAudioConfigures()

@@ -71,13 +71,13 @@ function nexus.game.initialize()
 end
 
 function nexus.game.update(dt)
-    nexus.audio.update()
-    nexus.console.update()
-    nexus.database.update()
-    nexus.graphics.update()
-    nexus.input.update()
-    nexus.resource.update()
-    nexus.scene.update()
+    nexus.audio.update(dt)
+    nexus.console.update(dt)
+    nexus.database.update(dt)
+    nexus.graphics.update(dt)
+    nexus.input.update(dt)
+    nexus.resource.update(dt)
+    nexus.scene.update(dt)
 end
 
 function nexus.game.render()

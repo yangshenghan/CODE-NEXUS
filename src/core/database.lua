@@ -89,7 +89,7 @@ function nexus.database.finalize()
     nexus.database.clear()
 end
 
-function nexus.database.update()
+function nexus.database.update(dt)
 end
 
 function nexus.database.clear()

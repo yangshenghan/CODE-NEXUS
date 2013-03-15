@@ -42,7 +42,7 @@ function nexus.scene.finalize()
     nexus.scene.clear()
 end
 
-function nexus.scene.update()
+function nexus.scene.update(dt)
     if t_current then
         t_current.update(t_current, dt)
     end

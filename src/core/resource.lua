@@ -76,7 +76,7 @@ function nexus.resource.finalize()
     nexus.resource.clear()
 end
 
-function nexus.resource.update()
+function nexus.resource.update(dt)
 end
 
 function nexus.resource.clear()

@@ -41,7 +41,7 @@ end
 function nexus.graphics.finalize()
 end
 
-function nexus.graphics.update()
+function nexus.graphics.update(dt)
     if nexus.settings.showfps then
         local fps = love.timer.getFPS()
         love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)

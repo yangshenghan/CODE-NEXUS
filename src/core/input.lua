@@ -66,7 +66,7 @@ function nexus.input.finalize()
     nexus.input.clear()
 end
 
-function nexus.input.update()
+function nexus.input.update(dt)
     for key, keys in pairs(t_controls) do
         for _, keycode in pairs(keys) do
             if f_isdown(keycode) then

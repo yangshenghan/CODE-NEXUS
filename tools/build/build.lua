@@ -48,3 +48,26 @@ local platform          = 'Windows'
 -- / ---------------------------------------------------------------------- \ --
 -- | Actually processing the game package                                   | --
 -- \ ---------------------------------------------------------------------- / --
+local chunks = {}
+
+local files = {
+    '../../data/stages/prologue.lua'
+}
+
+local output = assert(io.open('compiled.lua', 'wb'))
+
+for _, file in ipairs(files) do
+    chunks[#chunks + 1] = assert(loadfile(file))
+end
+
+if #chunks == 1 then
+    chunks = chunks[1]
+else
+    for i, f in ipairs(chunks) do
+        chunks[i] = string.format('%sloadstring%q(...);', i == #chunks and 'return ' or ' ', string.dump(f))
+    end
+    chunks = assert(loadstring(table.concat(chunks)))
+end
+
+output.write(output, string.dump(chunks))
+output.close(output)

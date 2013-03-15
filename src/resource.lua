@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-13                                                    ]]--
+--[[ Updates: 2013-03-15                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,45 +27,77 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.resource = {
-    fonts   = {}
-}
+nexus.resource = {}
+
+local t_fonts = {}
+
+local t_images = {}
+
+local function load_image_resource(folder, filename)
+    local path = folder .. filename
+
+    if not t_images[path] or t_images[path].isDisposed() then
+        t_images[path] = love.graphics.newImage(path)
+    end
+
+    return t_images[path]
+end
+
+local function load_font_resource(folder, filename, size)
+    local path = folder .. filename
+
+    if not t_fonts[path] then
+        t_fonts[path] = {}
+    end
+
+    if not t_fonts[path][size] then
+        t_fonts[path][size] = love.graphics.newFont(path, size)
+    end
+
+    return t_fonts[path][size]
+end
 
 function nexus.resource.initialize()
 end
 
-function nexus.resource.getAudioPath()
-    return 'res/audios/'
+function nexus.resource.finalizer()
+    nexus.resource.clear()
 end
 
-function nexus.resource.getFontPath()
-    return 'res/fonts/'
+function nexus.resource.clear()
+    t_fonts = {}
+    t_images = {}
+    collectgarbage()
 end
 
-function nexus.resource.getGraphicsPath()
-    return 'res/graphics/'
+function nexus.resource.loadAnimationIamge(filename)
+    return load_image_resource('res/graphics/animations/', filename)
 end
 
-function nexus.resource.getSoundPath()
-    return 'res/sounds/'
+function nexus.resource.loadCharacterImage(filename)
+    return load_image_resource('res/graphics/characters/', filename)
 end
 
-function nexus.resource.getVideoPath()
-    return 'res/videos/'
+function nexus.resource.loadIconImage(filename)
+    return load_image_resource('res/graphics/icons/', filename)
 end
 
-function nexus.resource.getMapPath()
-    return 'data/maps/'
+function nexus.resource.loadMapImage(filename)
+    return load_image_resource('res/graphics/maps/', filename)
+end
+
+function nexus.resource.loadObjectImage(filename)
+    return load_image_resource('res/graphics/objects/', filename)
+end
+
+function nexus.resource.loadPictureImage(filename)
+    return load_image_resource('res/graphics/pictures/', filename)
+end
+
+function nexus.resource.loadSystemImage(filename)
+    return load_image_resource('res/graphics/systems/', filename)
 end
 
 function nexus.resource.loadFont(filename, size)
-    local filename = nexus.resource.getFontPath() .. filename
-
-    if nexus.resource.fonts[filename] == nil then
-        nexus.resource.fonts[filename] = {}
-    end
-    if nexus.resource.fonts[filename][size] == nil then
-        nexus.resource.fonts[filename][size] = love.graphics.newFont(filename, size)
-    end
-    return nexus.resource.fonts[filename][size]
+    return load_font_resource('res/fonts/', filename, size)
 end

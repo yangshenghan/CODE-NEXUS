@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -29,14 +29,14 @@
 --[[ ********************************************************************** ]]--
 nexus.window.command = {}
 
-function nexus.input.moveCursorUp(instance, wrap)
+function nexus.window.command.moveCursorUp(instance, wrap)
     instance.cursor = instance.cursor - 1
     if instance.cursor < 1 then
         instance.cursor = wrap and instance.size or 1 
     end
 end
 
-function nexus.input.moveCursorDown(instance, wrap)
+function nexus.window.command.moveCursorDown(instance, wrap)
     instance.cursor = instance.cursor + 1
     if instance.cursor > instance.size then
         instance.cursor = wrap and 1 or instance.size
@@ -45,11 +45,11 @@ end
 
 local function update(instance, dt)
     if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
-        nexus.input.moveCursorUp(instance, nexus.input.isKeyTrigger(NEXUS_KEY.UP))
+        nexus.window.command.moveCursorUp(instance, nexus.input.isKeyTrigger(NEXUS_KEY.UP))
     end
 
     if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        nexus.input.moveCursorDown(instance, nexus.input.isKeyTrigger(NEXUS_KEY.DOWN))
+        nexus.window.command.moveCursorDown(instance, nexus.input.isKeyTrigger(NEXUS_KEY.DOWN))
     end
 
     if nexus.input.isKeyDown(NEXUS_KEY.C) then

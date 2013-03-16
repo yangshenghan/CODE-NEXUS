@@ -27,80 +27,30 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.database = {
-    fonts       = {},
-    texts       = {},
-    formats     = {}
-}
+nexus.window.common = {}
 
-local t_caches = {}
-
-local function load_data_resource(folder, filename)
-    local path = folder .. filename .. '.lua'
-
-    if not t_caches[path] then
-        t_caches[path] = nexus.core.load(path)
-    end
-
-    return t_caches[path]
+function nexus.window.common.drawCharacterHealth(character, x, y, width)
 end
 
-function nexus.database.loadDatabaseData(filename)
-    return load_data_resource('data/databases/', filename)
+function nexus.window.common.drawCharacterEnergy(character, x, y, width)
 end
 
-function nexus.database.loadExtraData(filename)
-    return load_data_resource('data/extras/', filename)
+function nexus.window.common.drawChatacterName(character, x, y, width)
 end
 
-function nexus.database.loadMapData(filename)
-    return load_data_resource('data/maps/', filename)
+function nexus.window.common.drawGaugeBar(x, y, width, rate)
 end
 
-function nexus.database.loadObjectData(filename)
-    return load_data_resource('data/objects/', filename)
+local function update(instance, dt)
 end
 
-function nexus.database.loadScriptData(filename)
-    return load_data_resource('data/scripts/', filename)
+local function render(instance)
 end
 
-function nexus.database.loadStageData(filename)
-    return load_data_resource('data/stages/', filename)
-end
-
-function nexus.database.loadTextData(filename)
-    return load_data_resource('data/texts/', filename)
-end
-
-function nexus.database.getTextsList()
-    
-end
-
-function nexus.database.getTranslatedText(text)
-    return nexus.database.texts[text] or text
-end
-
-function nexus.database.initialize()
-    local texts = nexus.database.loadTextData(nexus.configures.options.language)
-
-    nexus.database.fonts = texts.fonts
-    nexus.database.texts = texts.texts
-    nexus.database.formats = texts.formats
-end
-
-function nexus.database.finalize()
-    nexus.database.formats = {}
-    nexus.database.texts = {}
-    nexus.database.fonts = {}
-
-    nexus.database.clear()
-end
-
-function nexus.database.clear()
-    t_caches = {}
-end
-
-function nexus.database.changeOptionConfigures()
-    nexus.game.saveGameConfigure()
+function nexus.window.common.new()
+    local instance = {
+        update          = update,
+        render          = render
+    }
+    return nexus.window.base.new(instance)
 end

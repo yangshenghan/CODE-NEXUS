@@ -27,7 +27,7 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.console = {}
+nexus.scene.console = {}
 
 local lk = love.keypressed
 
@@ -330,7 +330,7 @@ local function output_push_message(...)
     output_stream_push(table.concat(s, ' '))
 end
 
-function nexus.console.draw(ox, oy)
+function nexus.scene.console.draw(ox, oy)
     assert(ox and oy)
     local s = table.concat{prompt, get_current_line(), ' '}
     local n = output_stream_push(s)
@@ -338,81 +338,81 @@ function nexus.console.draw(ox, oy)
     output_stream_pop(n)
 end
 
-function nexus.console.focus()
+function nexus.scene.console.focus()
     if focus then
         focus.unfocus(focus)
     end
     love.keypressed = function(...)
-        nexus.console.keypressed(...)
+        nexus.scene.console.keypressed(...)
     end
-    focus = nexus.console
+    focus = nexus.scene.console
 end
 
-function nexus.console.unfocus(key)
+function nexus.scene.console.unfocus(key)
     love.keypressed = lk
     focus = nil
     love.keypressed(key)
 end
 
-function nexus.console.keypressed(...)
+function nexus.scene.console.keypressed(...)
     console_keypressed_event(...)
 end
 
-function nexus.console.showErrorMessage(...)
+function nexus.scene.console.showErrorMessage(...)
     if nexus.system.level > 0 then
         output_push_message('[ ERROR ]', ...)
     end
 end
 
-function nexus.console.showWarningMessage(...)
+function nexus.scene.console.showWarningMessage(...)
     if nexus.system.level > 1 then
         output_push_message('[WARNING]', ...)
     end
 end
 
-function nexus.console.showInformationMessage(...)
+function nexus.scene.console.showInformationMessage(...)
     if nexus.system.level > 2 then
         output_push_message('[I N F O]', ...)
     end
 end
 
-function nexus.console.showLogMessage(...)
+function nexus.scene.console.showLogMessage(...)
     if nexus.system.level > 3 then
         output_push_message('[ L O G ]', ...)
     end
 end
 
-function nexus.console.showDebugMessage(...)
+function nexus.scene.console.showDebugMessage(...)
     if nexus.system.level > 4 then
         output_push_message('[ DEBUG ]', ...)
     end
 end
 
-function nexus.console.initialize()
+function nexus.scene.console.initialize()
     local font = nexus.resource.loadFont('inconsolata.otf', 16)
 
     initialize_console_object(font)
 end
 
-function nexus.console.finalize()
+function nexus.scene.console.finalize()
 end
 
-function nexus.console.update(dt)
+function nexus.scene.console.update(dt)
 end
 
-function nexus.console.render()
+function nexus.scene.console.render()
     -- if nexus.settings.console then
         -- local color = {love.graphics.getColor()}
         -- love.graphics.setColor(34, 34, 34, 180)
         -- love.graphics.rectangle('fill', 2, 2, love.graphics.getWidth() - 4, love.graphics.getHeight() - 4)
         -- love.graphics.setColor(240, 240, 0, 255)
-        -- nexus.console.draw(4, love.graphics.getHeight() - 4)
+        -- nexus.scene.console.draw(4, love.graphics.getHeight() - 4)
         -- love.graphics.setColor(unpack(color))
     -- end
 end
 
-function nexus.console.pause()
+function nexus.scene.console.pause()
 end
 
-function nexus.console.resume()
+function nexus.scene.console.resume()
 end

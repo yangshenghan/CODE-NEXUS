@@ -52,7 +52,6 @@ end
 
 function nexus.game.initialize()
     nexus.audio.initialize()
-    nexus.console.initialize()
     nexus.database.initialize()
     nexus.graphics.initialize()
     nexus.input.initialize()
@@ -72,14 +71,12 @@ end
 
 function nexus.game.update(dt)
     nexus.audio.update(dt)
-    nexus.console.update(dt)
     nexus.graphics.update(dt)
     nexus.input.update(dt)
     nexus.scene.update(dt)
 end
 
 function nexus.game.render()
-    nexus.console.render()
     nexus.graphics.render()
     nexus.scene.render()
 end
@@ -95,7 +92,6 @@ function nexus.game.finalize()
     nexus.input.finalize()
     nexus.graphics.finalize()
     nexus.database.finalize()
-    nexus.console.finalize()
     nexus.audio.finalize()
 end
 
@@ -104,11 +100,9 @@ function nexus.game.focus(focus)
         nexus.scene.resume()
         nexus.input.resume()
         nexus.graphics.resume()
-        nexus.console.resume()
         nexus.audio.resume()
     else
         nexus.audio.pause()
-        nexus.console.pause()
         nexus.graphics.pause()
         nexus.input.pause()
         nexus.scene.pause()

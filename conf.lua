@@ -167,72 +167,10 @@ nexus = {
         },
         debug       = true,
         level       = 5,
-        firstrun    = false
+        firstrun    = false,
+        error       = nil
     }
 }
-
--- / ---------------------------------------------------------------------- \ --
--- | Data functions                                                         | --
--- \ ---------------------------------------------------------------------- / --
-nexus.data = {}
-
-local function on_after_load()
-end
-
-local function on_before_save()
-    nexus.data.system.savingcount = nexus.data.system.savingcount + 1
-end
-
-function nexus.data.setup()
-    nexus.game.data.contrl = {
-        levels      = 0x0000,
-    }
-
-    nexus.game.data.status = {
-        N = {
-            health  = 10,
-            energy  = 10
-        },
-        B = {
-            health  = 10,
-            energy  = 10
-        },
-        A = {
-            health  = 10,
-            energy  = 10
-        }
-    }
-
-    nexus.game.data.system = {
-        savingcount     = 0,
-        killedcount     = 0,
-        gameversion     = nexus.core.getGameVersion()
-    }
-
-    return data
-end
-
-function nexus.data.load(index)
-    on_after_load()
-    return false
-end
-
-function nexus.data.save(index)
-    on_before_save()
-    return false
-end
-
-function nexus.data.delete(index)
-    return false
-end
-
-function nexus.data.exists()
-    for index = 1, nexus.system.parameters.saving_slot_size do
-        local filename = string.format(nexus.system.paths.saving, index)
-        if nexus.core.exists(filename) then return true end
-    end
-    return false
-end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Core functions in the game                                             | --
@@ -308,11 +246,13 @@ function nexus.core.load(path)
 
     ok, chunk = pcall(love.filesystem.load, path)
     if not ok then
-        error('The following error happend: ' .. tostring(chunk))
+        nexus.system.error = tostring(chunk)
+        return nil
     else
         ok, result = pcall(chunk)
         if not ok then
-            error('The following error happened: ' .. tostring(result))
+            nexus.system.error = tostring(result)
+            return nil
         end
     end
 
@@ -321,6 +261,44 @@ end
 
 function nexus.core.exists(filename)
     return love.filesystem.exists(filename)
+end
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Data functions                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+nexus.data = {}
+
+local function on_after_load()
+end
+
+local function on_before_save()
+    nexus.data.system.savingcount = nexus.data.system.savingcount + 1
+end
+
+function nexus.data.setup()
+    nexus.game.data = nexus.database.loadScriptData('setup')
+end
+
+function nexus.data.load(index)
+    on_after_load()
+    return false
+end
+
+function nexus.data.save(index)
+    on_before_save()
+    return false
+end
+
+function nexus.data.delete(index)
+    return false
+end
+
+function nexus.data.exists()
+    for index = 1, nexus.system.parameters.saving_slot_size do
+        local filename = string.format(nexus.system.paths.saving, index)
+        if nexus.core.exists(filename) then return true end
+    end
+    return false
 end
 
 -- / ---------------------------------------------------------------------- \ --

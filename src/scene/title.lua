@@ -68,6 +68,7 @@ local function enter(instance)
         {
             text    = nexus.database.getTranslatedText('New Game'),
             handler = function(...)
+                nexus.data.setup()
                 nexus.scene.goto(nexus.scene.stage.new('prologue'))
                 -- nexus.scene.goto(nexus.scene.newgame.new())
             end

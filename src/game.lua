@@ -63,7 +63,7 @@ function nexus.game.initialize()
 
     nexus.game.data = nil
 
-    if nexus.configures then
+    if nexus.configures and not nexus.system.error then
         if nexus.system.firstrun then
             adjust_screen_mode()
         end

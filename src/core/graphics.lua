@@ -75,7 +75,7 @@ function nexus.graphics.getScreenModes()
 end
 
 function nexus.graphics.getBestScreenMode()
-    return table.last(nexus.utility.getScreenModes())
+    return table.last(nexus.graphics.getScreenModes())
 end
 
 function nexus.graphics.screenshot()

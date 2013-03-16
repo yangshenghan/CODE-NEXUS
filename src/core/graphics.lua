@@ -35,7 +35,7 @@ function nexus.graphics.initialize()
     -- local icon = nexus.resource.loadImage('icon.png')
 
     -- love.graphics.setIcon(icon)
-    love.graphics.setBackgroundColor(0, 0, 0)
+    love.graphics.reset()
 end
 
 function nexus.graphics.finalize()

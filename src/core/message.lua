@@ -27,31 +27,26 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'src.game'
+nexus.message = {}
 
-require 'src.core.audio'
-require 'src.core.database'
-require 'src.core.graphics'
-require 'src.core.input'
-require 'src.core.message'
-require 'src.core.resource'
-require 'src.core.scene'
+function nexus.message.initialize()
+end
 
-require 'src.base.scene'
-require 'src.base.object'
-require 'src.base.window'
+function nexus.message.finalize()
+    nexus.message.clear()
+end
 
-require 'src.scene.error'
-require 'src.scene.console'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'
+function nexus.message.update(dt)
+end
 
-require 'src.object.player'
+function nexus.message.render()
+end
 
-require 'src.window.command'
+function nexus.message.pause()
+end
+
+function nexus.message.resume()
+end
+
+function nexus.message.clear()
+end

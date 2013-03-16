@@ -51,6 +51,8 @@ function nexus.input.initialize()
     -- love.mouse.setGrab(true)
     love.mouse.setVisible(false)
 
+    nexus.input.reload()
+
     for key, _ in pairs(t_controls) do
         t_pressed[key] = false
         t_released[key] = false
@@ -128,6 +130,9 @@ function nexus.input.pause()
 end
 
 function nexus.input.resume()
+end
+
+function nexus.input.reload()
 end
 
 function nexus.input.clear()

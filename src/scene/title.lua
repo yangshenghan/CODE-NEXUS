@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -37,14 +37,16 @@ local f_update_coroutine = function(instance, dt, timer)
     end
 
     -- Show splash screen
-    wait(500, function()
-    end)
+    if not instance.skip then
+        wait(500, function()
+        end)
 
-    wait(500, function()
-    end)
+        wait(500, function()
+        end)
 
-    wait(500, function()
-    end)
+        wait(500, function()
+        end)
+    end
 
     -- Start animation of PRESS TO START message
     wait(500, function()
@@ -109,12 +111,13 @@ local function render(instance)
     instance.window.command.render(instance.window.command)
 end
 
-function nexus.scene.title.new()
+function nexus.scene.title.new(skip)
     local instance = {
         enter       = enter,
         leave       = leave,
         update      = update, 
         render      = render,
+        skip        = skip,
         window      = {},
         coroutine   = {}
     }

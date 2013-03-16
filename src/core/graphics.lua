@@ -39,6 +39,7 @@ function nexus.graphics.initialize()
 end
 
 function nexus.graphics.finalize()
+    nexus.graphics.clear()
 end
 
 function nexus.graphics.update(dt)
@@ -55,6 +56,9 @@ function nexus.graphics.pause()
 end
 
 function nexus.graphics.resume()
+end
+
+function nexus.graphics.clear()
 end
 
 function nexus.graphics.toggleFullscreen()

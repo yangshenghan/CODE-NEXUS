@@ -33,6 +33,8 @@ nexus.scene = {}
 nexus.object = {}
 nexus.window = {}
 
+local m_loaded = false
+
 local function adjust_screen_mode()
     local best_screen_mode = nexus.graphics.getBestScreenMode()
 
@@ -55,6 +57,7 @@ function nexus.game.initialize()
     nexus.database.initialize()
     nexus.graphics.initialize()
     nexus.input.initialize()
+    nexus.message.initialize()
     nexus.resource.initialize()
     nexus.scene.initialize()
 
@@ -62,7 +65,8 @@ function nexus.game.initialize()
         if nexus.system.firstrun then
             adjust_screen_mode()
         end
-        nexus.scene.goto(nexus.scene.title.new())
+        nexus.scene.goto(nexus.scene.title.new(m_loaded))
+        m_loaded = true
         -- nexus.scene.goto(nexus.scene.stage.new('prologue'))
     else
         nexus.scene.goto(nexus.scene.error.new(nexus.database.getTranslatedText('Your game version is older than saving data!')))
@@ -73,22 +77,26 @@ function nexus.game.update(dt)
     nexus.audio.update(dt)
     nexus.graphics.update(dt)
     nexus.input.update(dt)
+    nexus.message.update(dt)
     nexus.scene.update(dt)
 end
 
 function nexus.game.render()
     nexus.graphics.render()
+    nexus.message.render()
     nexus.scene.render()
 end
 
 function nexus.game.reload()
     nexus.game.finalize()
+    love.event.clear()
     nexus.game.initialize()
 end
 
 function nexus.game.finalize()
     nexus.scene.finalize()
     nexus.resource.finalize()
+    nexus.message.finalize()
     nexus.input.finalize()
     nexus.graphics.finalize()
     nexus.database.finalize()
@@ -98,6 +106,7 @@ end
 function nexus.game.focus(focus)
     if focus then
         nexus.scene.resume()
+        nexus.message.resume()
         nexus.input.resume()
         nexus.graphics.resume()
         nexus.audio.resume()
@@ -105,6 +114,7 @@ function nexus.game.focus(focus)
         nexus.audio.pause()
         nexus.graphics.pause()
         nexus.input.pause()
+        nexus.message.pause()
         nexus.scene.pause()
     end
 end

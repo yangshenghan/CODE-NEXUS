@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-16                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -172,36 +172,94 @@ nexus = {
 }
 
 -- / ---------------------------------------------------------------------- \ --
--- | Utility functions                                                      | --
+-- | Data functions                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-nexus.utility = {}
+nexus.data = {}
 
-local m_version = nil
+local function on_after_load()
+end
 
-local t_upgrader = {}
+local function on_before_save()
+    nexus.data.system.savingcount = nexus.data.system.savingcount + 1
+end
 
-function nexus.utility.getGameVersion()
-    if not m_version then
-        m_version = tonumber(nexus.system.version.major) * 2 ^ 24 + tonumber(nexus.system.version.minor) * 2 ^ 16 + tonumber(nexus.system.version.micro) * 2 ^ 8 + tonumber(nexus.system.version.patch)
+function nexus.data.setup()
+    nexus.game.data.contrl = {
+        levels      = 0x0000,
+    }
+
+    nexus.game.data.status = {
+        N = {
+            health  = 10,
+            energy  = 10
+        },
+        B = {
+            health  = 10,
+            energy  = 10
+        },
+        A = {
+            health  = 10,
+            energy  = 10
+        }
+    }
+
+    nexus.game.data.system = {
+        savingcount     = 0,
+        killedcount     = 0,
+        gameversion     = nexus.core.getGameVersion()
+    }
+
+    return data
+end
+
+function nexus.data.load(index)
+    on_after_load()
+    return false
+end
+
+function nexus.data.save(index)
+    on_before_save()
+    return false
+end
+
+function nexus.data.delete(index)
+    return false
+end
+
+function nexus.data.exists()
+    for index = 1, nexus.system.parameters.saving_slot_size do
+        local filename = string.format(nexus.system.paths.saving, index)
+        if nexus.core.exists(filename) then return true end
     end
-    return m_version
-end
-
-function nexus.utility.getVersionString()
-    return nexus.system.version.major .. '.' .. nexus.system.version.minor .. '.' .. nexus.system.version.micro
-end
-
-function nexus.utility.upgradeGameData(identifier, chunk)
-    return chunk.data
-end
-
-function nexus.utility.registerDataUpgrader(identifier, upgrader)
+    return false
 end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Core functions in the game                                             | --
 -- \ ---------------------------------------------------------------------- / --
 nexus.core = {}
+
+local m_version = nil
+
+local t_upgrader = {}
+
+function nexus.core.getGameVersion()
+    if not m_version then
+        m_version = tonumber(nexus.system.version.major) * 2 ^ 24 + tonumber(nexus.system.version.minor) * 2 ^ 16 + tonumber(nexus.system.version.micro) * 2 ^ 8 + tonumber(nexus.system.version.patch)
+    end
+    return m_version
+end
+
+function nexus.core.getVersionString()
+    return nexus.system.version.major .. '.' .. nexus.system.version.minor .. '.' .. nexus.system.version.micro
+end
+
+function nexus.core.upgradeGameData(identifier, chunk)
+    return chunk.data
+end
+
+function nexus.core.registerDataUpgrader(identifier, upgrader)
+end
 
 function nexus.core.serialize(data)
     return serialize(data)
@@ -226,7 +284,7 @@ end
 function nexus.core.save(filename, data, identifier)
     local chunk = {
         identifier  = identifier,
-        version     = nexus.utility.getGameVersion(),
+        version     = nexus.core.getGameVersion(),
         data        = data
     }
     return love.filesystem.write(filename, compress(serialize(chunk)))
@@ -234,10 +292,10 @@ end
 
 function nexus.core.read(filename)
     local chunk = deserialize(decompress(love.filesystem.read(filename)))
-    if chunk.version < nexus.utility.getGameVersion() then
-        local data = nexus.utility.upgradeGameData(chunk.identifier, chunk) 
+    if chunk.version < nexus.core.getGameVersion() then
+        local data = nexus.core.upgradeGameData(chunk.identifier, chunk) 
         nexus.core.save(filename, data, chunk.identifier)
-    elseif chunk.version > nexus.utility.getGameVersion() then
+    elseif chunk.version > nexus.core.getGameVersion() then
         return nil
     end
     return chunk.data

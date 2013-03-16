@@ -61,6 +61,8 @@ function nexus.game.initialize()
     nexus.resource.initialize()
     nexus.scene.initialize()
 
+    nexus.game.data = nil
+
     if nexus.configures then
         if nexus.system.firstrun then
             adjust_screen_mode()
@@ -129,12 +131,4 @@ end
 
 function nexus.game.saveGameConfigure()
     nexus.core.save(nexus.system.paths.configure, nexus.configures, 'configure')
-end
-
-function nexus.game.isSavingExists()
-    for index = 1, nexus.system.parameters.saving_slot_size do
-        local filename = string.format(nexus.system.paths.saving, index)
-        if nexus.core.exists(filename) then return true end
-    end
-    return false
 end

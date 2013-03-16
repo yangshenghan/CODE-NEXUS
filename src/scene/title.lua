@@ -76,7 +76,7 @@ local function enter(instance)
             handler = function(...)
                 nexus.scene.enter(nexus.scene.continue.new())
             end,
-            enabled = false
+            enabled = nexus.data.exists()
         }, {
             text    = nexus.database.getTranslatedText('Extra'),
             handler = function(...)

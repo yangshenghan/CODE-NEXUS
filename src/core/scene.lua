@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-17                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -73,6 +73,10 @@ function nexus.scene.resume()
 end
 
 function nexus.scene.clear()
+    while #t_scenes > 0 do
+        nexus.scene.leave()
+    end
+
     t_scenes = {}
 end
 

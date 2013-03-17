@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-17                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -68,8 +68,11 @@ function nexus.game.initialize()
             adjust_screen_mode()
         end
         nexus.scene.goto(nexus.scene.title.new(m_loaded))
-        m_loaded = true
         -- nexus.scene.goto(nexus.scene.stage.new('prologue'))
+        if nexus.settings.console then
+            nexus.scene.enter(nexus.scene.console.new())
+        end
+        m_loaded = true
     else
         nexus.scene.goto(nexus.scene.error.new(nexus.database.getTranslatedText('Your game version is older than saving data!')))
     end

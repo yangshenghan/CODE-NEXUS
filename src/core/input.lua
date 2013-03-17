@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-17                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -31,7 +31,7 @@ nexus.input = {}
 
 local m_system_f1 = false
 
-local m_system_f4 = false
+local m_system_f9 = false
 
 local m_system_f12 = false
 
@@ -102,13 +102,13 @@ function nexus.input.update(dt)
         m_system_f1 = false
     end
 
-    if f_isdown('f4') then
-        if not m_system_f4 then
-            m_system_f4 = true
-            nexus.settings.console = not nexus.settings.console
+    if f_isdown('f9') then
+        if not m_system_f9 then
+            m_system_f9 = true
+            nexus.console.toggleConsole()
         end
     else
-        m_system_f4 = false
+        m_system_f9 = false
     end
 
     if f_isdown('f12') then
@@ -141,7 +141,7 @@ function nexus.input.clear()
     t_released = {}
     t_pressed = {}
     m_system_f1 = false
-    m_system_f4 = false
+    m_system_f9 = false
     m_system_f12 = false
 end
 

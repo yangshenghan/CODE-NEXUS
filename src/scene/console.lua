@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-17                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -29,132 +29,134 @@
 --[[ ********************************************************************** ]]--
 nexus.scene.console = {}
 
-local lk = love.keypressed
+-- / ---------------------------------------------------------------------- \ --
+-- | Local used name and modules                                            | --
+-- \ ---------------------------------------------------------------------- / --
+nexus.console = {}
+nexus.console.input = {}
+nexus.console.output = {}
 
-local focus = nil
+local console = nexus.console
 
-local chunk = nil
+-- / ---------------------------------------------------------------------- \ --
+-- | The submodule input of the nexus.console                               | --
+-- \ ---------------------------------------------------------------------- / --
+local m_cursor = 1
 
-local prompt1 = '> '
+local m_selected = 1
 
-local prompt2 = '| '
+local m_commandline = {}
 
-local prompt = prompt1
+local t_hooks = {}
 
-local input = {
-    history = {},
-    selected = 1,
-    lines = {},
-    cursor = 1,
-    completenext = nil,
-    hooks = {},
-    complete_add_parens = true,
-    complete_base = _G,
-    console_command_execute = function() end
-}
+local t_history = {}
 
-local function chars(str)
+local t_functions = _G
+
+local f_executer = nil
+
+local f_autocomplete = nil
+
+local function chars(s)
     local t = {}
-        for c in str:gmatch(".") do
+        for c in string.gmatch(s, '.') do
             t[#t + 1] = c
         end
     return t
 end
 
-local function console_purge_history(command)
-    for i = #input.history, 1, -1 do
-        if input.history[i] == command then
-            table.remove(input.history, i)
+function console.input.purge(command)
+    for index = #t_history, 1, -1 do
+        if t_history[index] == command then
+            table.remove(t_history, index)
         end
     end
 end
 
-local function console_keypressed_event(key, code)
-    if key ~= 'tab' then
-        input.completenext = nil
-    end
+function console.input.current()
+    return table.concat(m_commandline)
+end
 
-    if input.hooks[key] then
-        input.hooks[key]()
+function console.input.position()
+    return m_cursor - #m_commandline - 1
+end
+
+function console.input.push(key, code)
+    if t_hooks[key] then
+        t_hooks[key]()
     elseif code > 31 and code < 256 then
-        table.insert(input.lines, input.cursor, string.char(code))
-        input.cursor = input.cursor + 1
+        table.insert(m_commandline, m_cursor, string.char(code))
+        m_cursor = m_cursor + 1
     end
 end
 
-local function get_current_line()
-    return table.concat(input.lines)
-end
+function console.input.initialize(executer)
+    f_executer = executer or function(...) end
 
-local function get_relative_position()
-    return input.cursor - #input.lines - 1
-end
-
-local function initialize_input_stream()
-    input.hooks['return'] = function()
-        local command = table.concat(input.lines)
-        console_purge_history(command)
-        input.history[#input.history + 1] = command
-        input.selected = #input.history + 1
-        input.cursor = 1
-        input.lines = {}
-        input.console_command_execute(command)
+    t_hooks['return'] = function()
+        local command = table.concat(m_commandline)
+        console.input.purge(command)
+        m_commandline = {}
+        m_cursor = 1
+        m_selected = #t_history + 1
+        t_history[#t_history + 1] = command
+        f_executer(command)
     end
-    input.hooks.kpenter = input.hooks['return']
+    t_hooks['kpenter'] = t_hooks['return']
 
-    input.hooks.backspace = function()
-        if input.cursor > 1 then
-            input.cursor = input.cursor - 1
-            table.remove(input.lines, input.cursor)
+    t_hooks['backspace'] = function()
+        if m_cursor > 1 then
+            m_cursor = m_cursor - 1
+            table.remove(m_commandline, m_cursor)
         else
-            input.cursor = 1
+            m_cursor = 1
         end
     end
 
-    input.hooks.delete = function()
-        table.remove(input.lines, input.cursor)
+    t_hooks['delete'] = function()
+        table.remove(m_commandline, m_cursor)
     end
 
-    input.hooks.left = function()
-        input.cursor = math.max(1, input.cursor - 1)
+    t_hooks['left'] = function()
+        m_cursor = math.max(1, m_cursor - 1)
     end
 
-    input.hooks.right = function()
-        input.cursor = math.min(#input.lines + 1, input.cursor + 1)
+    t_hooks['right'] = function()
+        m_cursor = math.min(#m_commandline + 1, m_cursor + 1)
     end
 
-    input.hooks.up = function()
-        input.selected = math.max(1, input.selected - 1)
-        input.lines = chars(input.history[input.selected] or '')
-        input.cursor = #input.lines + 1
+    t_hooks['up'] = function()
+        m_selected = math.max(1, m_selected - 1)
+        m_commandline = chars(t_history[m_selected] or '')
+        m_cursor = #m_commandline + 1
     end
 
-    input.hooks.down = function()
-        input.selected = math.min(#input.history + 1, input.selected + 1)
-        input.line = chars(input.history[input.selected] or '')
-        input.cursor = #input.lines + 1
+    t_hooks['down'] = function()
+        m_selected = math.min(#t_history + 1, m_selected + 1)
+        m_commandline = chars(t_history[m_selected] or '')
+        m_cursor = #m_commandline + 1
     end
 
-    input.hooks.home = function()
-        input.cursor = 1
+    t_hooks['home'] = function()
+        m_cursor = 1
     end
 
-    input.hooks['end'] = function()
-        input.cursor = #input.lines + 1
+    t_hooks['end'] = function()
+        m_cursor = #m_commandline + 1
     end
 
-	input.hooks.tab = function()
-        if input.completenext then
-            return input.completenext()
+	t_hooks['tab'] = function()
+        if f_autocomplete then
+            return f_autocomplete()
         end
 
-        local inp = get_current_line()
+        local inp = console.input.current()
         local left = 0
         local right = 0
 
         repeat
             left, right = string.find(inp, '[^%s%[%]%(%)%+%-%*/%%,=]+', right + 1)
-        until not right or right >= input.cursor - 1
+        until not right or right >= m_cursor - 1
 
         if not left or not right then
             return
@@ -169,7 +171,7 @@ local function initialize_input_stream()
 
         tables[#tables] = nil
 
-        local search = self.complete_base
+        local search = t_functions
         for _, key in ipairs(tables) do
             if not search[key] then
                 return
@@ -188,59 +190,69 @@ local function initialize_input_stream()
             return
         end
 
-        input.completenext = coroutine.wrap(function()
+        f_autocomplete = coroutine.wrap(function()
             while true do
                 for _, c in ipairs(completions) do
                     local advance = #c.key
-                    for char in c.key:gmatch(".") do
-                        table.insert(input.lines, input.cursor, char)
+                    for char in c.key:gmatch('.') do
+                        table.insert(m_commandline, m_cursor, char)
                     end
-                    input.cursor = input.cursor + advance
-                    if input.complete_add_parens and c.type == 'function' then
-                        table.insert(input.lines, input.cursor, '(')
-                        table.insert(input.lines, input.cursor + 1, ')')
-                        input.cursor = input.cursor + 1
+                    m_cursor = m_cursor + advance
+                    if c.type == 'function' then
+                        table.insert(m_commandline, m_cursor, '(')
+                        table.insert(m_commandline, m_cursor + 1, ')')
+                        m_cursor = m_cursor + 1
                     end
                     coroutine.yield()
 
-                    if input.complete_add_parens and c.type == 'function' then
-                        table.remove(input.lines, input.cursor)
-                        input.cursor = input.cursor - 1
+                    if c.type == 'function' then
+                        table.remove(m_commandline, m_cursor)
+                        m_cursor = m_cursor - 1
                     end
 
                     for i = 0, advance do
-                        table.remove(input.lines, input.cursor - i)
+                        table.remove(m_commandline, m_cursor - i)
                     end
-                    input.cursor = input.cursor - advance
+                    m_cursor = m_cursor - advance
                 end
             end
         end)
-        return input.completenext()
+        return f_autocomplete()
     end
 end
 
-local output = {
-    font = nil,
-    width = nil,
-    height = nil,
-    spacing = nil,
-    lines = {},
-    char_width = 0,
-    char_height = 0,
-    line_height = 0,
-    lines_per_screen = 0,
-    chars_per_line = 0
-}
+-- / ---------------------------------------------------------------------- \ --
+-- | The submodule output of the nexus.console                              | --
+-- \ ---------------------------------------------------------------------- / --
+local m_font = nil
 
-local function output_stream_draw(ox, oy, position)
+local m_width = nil
+
+local m_height = nil
+
+local m_spacing = nil
+
+local m_character_width = 0
+
+local m_character_height = 0
+
+local m_line_height = 0
+
+local m_lines_per_screen = 0
+
+local m_characters_per_line = 0
+
+local t_lines = {}
+
+function console.output.render(ox, oy, position)
     assert(ox and oy)
     if not position then return end
 
-    local current_font = love.graphics.getFont() or output.font
-    love.graphics.setFont(output.font)
-    local lines_to_display = output.lines_per_screen - math.floor((output.height - oy) / output.line_height)
-    for i = #output.lines, math.max(1, #output.lines - lines_to_display), -1 do
-    love.graphics.print(output.lines[i], ox, oy - (#output.lines - i + 1) * output.line_height)
+    local current_font = love.graphics.getFont() or m_font
+    love.graphics.setFont(m_font)
+    local lines_to_display = m_lines_per_screen - math.floor((m_height - oy) / m_line_height)
+    for i = #t_lines, math.max(1, #t_lines - lines_to_display), -1 do
+    love.graphics.print(t_lines[i], ox, oy - (#t_lines - i + 1) * m_line_height)
     end
     love.graphics.setFont(current_font)
 
@@ -248,171 +260,281 @@ local function output_stream_draw(ox, oy, position)
 
     love.graphics.setColor(color[1], color[2], color[3], color[4] / 3)
 
-    position = output.lines[#output.lines]:len() + position - 1
-    local char_offset = position % output.chars_per_line
-    local line_offset = math.floor(position / output.chars_per_line)
+    position = t_lines[#t_lines]:len() + position - 1
+    local char_offset = position % m_characters_per_line
+    local line_offset = math.floor(position / m_characters_per_line)
 
     local cur = {}
-    cur.w = output.char_width + 1
-    cur.h = output.char_height + 1
-    cur.x = ox + output.char_width * char_offset
-    cur.y = oy - cur.h + output.line_height * line_offset - 1
+    cur.w = m_character_width + 1
+    cur.h = m_character_height + 1
+    cur.x = ox + m_character_width * char_offset
+    cur.y = oy - cur.h + m_line_height * line_offset - 1
     love.graphics.rectangle('fill', cur.x, cur.y, cur.w, cur.h)
     love.graphics.setColor(unpack(color))
 end
 
-local function output_stream_push(...)
+function console.output.push(...)
     local str = table.concat{...}
     local added = 0
     for line in str:gmatch('[^\n]+') do
-        while string.len(line) > output.chars_per_line do
-            output.lines[#output.lines + 1] = line:sub(1, output.chars_per_line)
-            line = line:sub(output.chars_per_line+1)
+        while string.len(line) > m_characters_per_line do
+            t_lines[#t_lines + 1] = line:sub(1, m_characters_per_line)
+            line = line:sub(m_characters_per_line+1)
             added = added + 1
         end
-        output.lines[#output.lines + 1] = line
+        t_lines[#t_lines + 1] = line
         added = added + 1
     end
     return added
 end
 
-local function output_stream_pop(n)
+function console.output.pushc(c, ...)
+    if not c then return end
+    local line = t_lines[#t_lines]
+    if line:len() + 1 < m_characters_per_line then
+        line = line .. c
+    else
+        line = c
+    end
+
+    t_lines[#t_lines] = line
+    return console.output.pushc(...)
+end
+
+function console.output.pop(n)
     local n = n or 1
     if n < 1 then
         return nil
     end
-    return table.remove(output.lines), output_stream_pop(n - 1)
+    return table.remove(t_lines), console.output.pop(n - 1)
 end
 
-local function initialize_output_stream(font, width, height, spacing)
-    output.font = font or love.graphics.getFont()
-    output.width = width or love.graphics.getWidth()
-    output.height = height or love.graphics.getHeight()
-    output.spacing = spacing or 4
+function console.output.reset(font, width, height, spacing)
+    m_font = font or love.graphics.getFont()
+    m_width = width or love.graphics.getWidth()
+    m_height = height or love.graphics.getHeight()
+    m_spacing = spacing or 4
 
-    output.char_width = output.font.getWidth(output.font, '_')
-    output.char_height = output.font:getHeight('|')
-    output.line_height = output.char_height + output.spacing
+    m_character_width = m_font.getWidth(m_font, '_')
+    m_character_height = m_font:getHeight('|')
+    m_line_height = m_character_height + m_spacing
 
-    output.lines_per_screen = math.floor(output.height / output.line_height) - 1
-    output.chars_per_line = math.floor(output.width / output.char_width) - 1
+    m_lines_per_screen = math.floor(m_height / m_line_height) - 1
+    m_characters_per_line = math.floor(m_width / m_character_width) - 1
 end
 
-function initialize_console_object(font, width, height, spacing)
-    initialize_input_stream()
-    initialize_output_stream(font, width, height, spacing)
+function console.output.initialize(font, width, height, spacing)
+    console.output.reset(font, width, height, spacing)
+end
 
-    input.console_command_execute = function(command)
-        output_stream_push(prompt, command)
-        command = command:gsub('^=%s?', 'return '):gsub('^return%s+(.*)(%s*)$', 'print(%1)%2')
-        chunk = chunk and table.concat({chunk, command}, ' ') or command
-        local ok, out = pcall(function() assert(loadstring(chunk))() end)
-        if not ok and out:match('\'<eof>\'') then
-            prompt = prompt2
-            input.history[#input.history] = nil
-        else
-            prompt = prompt1
-            if out and out:len() > 0 then
-                output_stream_push(out)
-            end
-            input.history[#input.history] = chunk
-            chunk = nil
+-- / ---------------------------------------------------------------------- \ --
+-- | The main module of the nexus.console                                   | --
+-- \ ---------------------------------------------------------------------- / --
+function console.initialize(executer, font, width, height, spacing)
+    console.input.initialize(executer)
+    console.output.initialize(font, width, height, spacing)
+
+    console.print([[
+/ ******************************************************************************** \
+|                                  [ CODE NEXUS ]                                  |
+|                           == Console for Code Nexus ==                           |
+|                                                                      Version 0.3 |
+| -------------------------------------------------------------------------------- |
+| Use <F9> to toggle the console window. Call quit() or exit() to exit the game.   |
+| Try hitting <Tab> to complete your current input.                                |
+| A leading '=' prints the calling result.                                         |
+| -------------------------------------------------------------------------------- |
+|                           !!!   N  O  T  I  C  E   !!!                           |
+| Use console to control code nexus might cause the game behaves abnormal. Please  |
+| understand clearly what you are doing now. You can type 'help' to see the notes. |
+\ ******************************************************************************** /
+]])
+    console.print()
+end
+
+function nexus.console.toggleConsole()
+    if nexus.settings.console then
+        nexus.scene.leave()
+    else
+        nexus.scene.enter(nexus.scene.console.new())
+    end
+end
+
+function console.print(...)
+    local argc, args = select('#', ...), {...}
+    for i = 1, argc do
+        args[i] = (args[i] == nil) and 'nil' or tostring(args[i])
+    end
+    if argc == 0 then args = {' '} end
+    console.output.push(table.concat(args, ' '))
+end
+
+if nexus.system.debug then
+    function console.showErrorMessage(...)
+        if nexus.settings.level > 0 then
+            console.print('[ ERROR ]', ...)
         end
     end
-end
 
-local function output_push_message(...)
-    local n_args, s = select('#', ...), {...}
-    for i = 1, n_args do
-        s[i] = (s[i] == nil) and 'nil' or tostring(s[i])
+    function console.showWarningMessage(...)
+        if nexus.settings.level > 1 then
+            console.print('[WARNING]', ...)
+        end
     end
-    if n_args == 0 then s = {' '} end
-    output_stream_push(table.concat(s, ' '))
-end
 
-function nexus.scene.console.draw(ox, oy)
-    assert(ox and oy)
-    local s = table.concat{prompt, get_current_line(), ' '}
-    local n = output_stream_push(s)
-    output_stream_draw(4, love.graphics.getHeight() - 4, get_relative_position())
-    output_stream_pop(n)
-end
-
-function nexus.scene.console.focus()
-    if focus then
-        focus.unfocus(focus)
+    function console.showInformationMessage(...)
+        if nexus.settings.level > 2 then
+            console.print('[I N F O]', ...)
+        end
     end
-    love.keypressed = function(...)
-        nexus.scene.console.keypressed(...)
+
+    function console.showLogMessage(...)
+        if nexus.settings.level > 3 then
+            console.print('[ L O G ]', ...)
+        end
     end
-    focus = nexus.scene.console
-end
 
-function nexus.scene.console.unfocus(key)
-    love.keypressed = lk
-    focus = nil
-    love.keypressed(key)
-end
-
-function nexus.scene.console.keypressed(...)
-    console_keypressed_event(...)
-end
-
-function nexus.scene.console.showErrorMessage(...)
-    if nexus.system.level > 0 then
-        output_push_message('[ ERROR ]', ...)
+    function console.showDebugMessage(...)
+        if nexus.settings.level > 4 then
+            console.print('[ DEBUG ]', ...)
+        end
     end
+else
+    function console.showErrorMessage(...) end
+    function console.showWarningMessage(...) end
+    function console.showInformationMessage(...) end
+    function console.showLogMessage(...) end
+    function console.showDebugMessage(...) end
 end
 
-function nexus.scene.console.showWarningMessage(...)
-    if nexus.system.level > 1 then
-        output_push_message('[WARNING]', ...)
-    end
-end
+-- / ---------------------------------------------------------------------- \ --
+-- | The scene of console                                                   | --
+-- \ ---------------------------------------------------------------------- / --
+local m_prompt = '> '
 
-function nexus.scene.console.showInformationMessage(...)
-    if nexus.system.level > 2 then
-        output_push_message('[I N F O]', ...)
-    end
-end
+local m_chunk = nil
 
-function nexus.scene.console.showLogMessage(...)
-    if nexus.system.level > 3 then
-        output_push_message('[ L O G ]', ...)
+local t_instance = nil
+
+local function executer(command)
+    console.output.push(m_prompt, command)
+    command = string.gsub(command, '^=%s?', 'return ')
+    command = string.gsub(command, '^return%s+(.*)(%s*)$', 'print(%1)%2')
+    m_chunk = m_chunk and table.concat({m_chunk, command}, ' ') or command
+    local ok, out = pcall(function() assert(loadstring(m_chunk))() end)
+    if not ok and string.match(out, '\'<eof>\'') then
+        m_prompt = '| '
+        t_history[#t_history] = nil
+    else
+        m_prompt = '> '
+        if out and string.len(out) > 0 then
+            console.output.push(out)
+        end
+        t_history[#t_history] = m_chunk
+        m_chunk = nil
     end
 end
 
-function nexus.scene.console.showDebugMessage(...)
-    if nexus.system.level > 4 then
-        output_push_message('[ DEBUG ]', ...)
+local function enter(instance)
+    instance.ld = love.draw
+    instance.lk = love.keypressed
+    instance.print = print
+    instance.printf = printf
+    instance.reset = reset
+    instance.quit = quit
+    instance.exit = exit
+
+    love.draw = function()
+        if instance.ld then instance.ld() end
+
+        local color = {love.graphics.getColor()}
+        love.graphics.setColor(34, 34, 34, 180)
+        love.graphics.rectangle('fill', 2, 2, love.graphics.getWidth() - 4, love.graphics.getHeight() - 4)
+        love.graphics.setColor(240, 240, 0, 255)
+
+        -- assert(ox and oy)
+        local s = table.concat{m_prompt, console.input.current(), ' '}
+        local n = console.output.push(s)
+        console.output.render(4, love.graphics.getHeight() - 4, console.input.position())
+        console.output.pop(n)
+
+        love.graphics.setColor(unpack(color))
     end
+
+    love.keypressed = function(key, code)
+        if key ~= 'tab' then
+            f_autocomplete = nil
+        end
+
+        if key == 'escape' then
+            nexus.scene.leave()
+        end
+
+        console.input.push(key, code)
+
+        if instance.lk then instance.lk(key, code) end
+    end
+
+    print = function(...)
+        return console.print(...)
+    end
+
+    printf = function(format, ...)
+        return print(string.format(format, ...))
+    end
+
+    reset = function()
+        nexus.game.reload()
+    end
+
+    quit = function()
+        nexus.scene.leave()
+    end
+
+    exit = function()
+        love.event.quit()
+    end
+
+    love.keyboard.setKeyRepeat(0.15, 0.025)
+
+    nexus.settings.console = true
 end
 
-function nexus.scene.console.initialize()
-    local font = nexus.resource.loadFont('inconsolata.otf', 16)
+local function leave(instance)
+    exit = instance.exit
+    quit = instance.quit
+    reset = instance.reset
+    printf = instance.printf
+    print = instance.print
+    love.keypressed = instance.lk
+    love.draw = instance.ld
 
-    initialize_console_object(font)
+    instance.exit = nil
+    instance.quit = nil
+    instance.reset = nil
+    instance.printf = nil
+    instance.print = nil
+    instance.lk = nil
+    instance.ld = nil
+
+    love.keyboard.setKeyRepeat(0, 0)
+
+    nexus.settings.console = false
 end
 
-function nexus.scene.console.finalize()
+function nexus.scene.console.new()
+    if not t_instance then
+        local font = nexus.resource.loadFont('inconsolata.otf', 16)
+        local instance = {
+            enter   = enter,
+            leave   = leave
+        }
+        console.initialize(executer, font)
+        t_instance = nexus.scene.base.new(instance)
+    end
+    return t_instance
 end
 
-function nexus.scene.console.update(dt)
-end
-
-function nexus.scene.console.render()
-    -- if nexus.settings.console then
-        -- local color = {love.graphics.getColor()}
-        -- love.graphics.setColor(34, 34, 34, 180)
-        -- love.graphics.rectangle('fill', 2, 2, love.graphics.getWidth() - 4, love.graphics.getHeight() - 4)
-        -- love.graphics.setColor(240, 240, 0, 255)
-        -- nexus.scene.console.draw(4, love.graphics.getHeight() - 4)
-        -- love.graphics.setColor(unpack(color))
-    -- end
-end
-
-function nexus.scene.console.pause()
-end
-
-function nexus.scene.console.resume()
+if nexus.system.debug then
+    nexus.scene.console.new()
 end

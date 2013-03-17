@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-17                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -107,7 +107,8 @@ NEXUS_KEY = {
 nexus = {
     settings    = {
         showfps     = true,
-        console     = true
+        console     = false,
+        level       = 5
     },
     configures  = {
         audios      = {
@@ -166,7 +167,6 @@ nexus = {
             logical_grid_size       = 16
         },
         debug       = true,
-        level       = 5,
         firstrun    = false,
         error       = nil
     }

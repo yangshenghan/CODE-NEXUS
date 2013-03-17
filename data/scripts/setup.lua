@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-17                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -30,6 +30,7 @@
 return {
     control = {
         levels          = 0x0000,
+        chips           = 0x0000
     },
     status = {
         N = {
@@ -48,6 +49,7 @@ return {
     system = {
         savingcount     = 0,
         killedcount     = 0,
+        framecount      = 0,
         gameversion     = nexus.core.getGameVersion()
     }
 }

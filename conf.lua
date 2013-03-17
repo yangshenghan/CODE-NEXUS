@@ -164,7 +164,9 @@ nexus = {
         },
         parameters  = {
             saving_slot_size        = 15,
-            logical_grid_size       = 16
+            logical_grid_size       = 16,
+            logical_canvas_width    = 1280,
+            logical_canvas_height   = 720
         },
         debug       = true,
         firstrun    = false,

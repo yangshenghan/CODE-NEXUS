@@ -29,6 +29,7 @@
 --[[ ********************************************************************** ]]--
 nexus.game = {}
 
+nexus.base = {}
 nexus.scene = {}
 nexus.object = {}
 nexus.window = {}

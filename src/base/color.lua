@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,32 +27,37 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'src.game'
+nexus.base.color = {}
 
-require 'src.core.audio'
-require 'src.core.database'
-require 'src.core.graphics'
-require 'src.core.input'
-require 'src.core.message'
-require 'src.core.resource'
-require 'src.core.scene'
+local function set_correct_value(value)
+    if not value then return 0 end
+    if value < 0 then return 0 end
+    if value > 255 then return 255 end
+    return value
+end
 
-require 'src.base.color'
-require 'src.base.scene'
-require 'src.base.object'
-require 'src.base.window'
+function nexus.base.color.new(...)
+    return nexus.base.color.set({}, ...)
+end
 
-require 'src.scene.error'
-require 'src.scene.console'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'
+function nexus.base.color.set(instance, ...)
+    if type(...) == 'table' then
+        local rgba = ...
+        instance.red = set_correct_value(rgba.red or rgba[1])
+        instance.green = set_correct_value(rgba.green or rgba[2])
+        instance.blue = set_correct_value(rgba.blue or rgba[3])
+        instance.alpha = set_correct_value(rgba.alpha or rgba[4])
+    else
+        local red, green, blue, alpha = unpack({...})
+        instance.red = set_correct_value(red)
+        instance.green = set_correct_value(green)
+        instance.blue = set_correct_value(blue)
+        instance.alpha = set_correct_value(alpha)
+    end
+    return instance
+end
 
-require 'src.object.player'
+function nexus.base.color.get(instance)
+    return instance.red, instance.green, instance.blue, instance.alpha
+end
 
-require 'src.window.command'

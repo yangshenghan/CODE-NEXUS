@@ -27,41 +27,41 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
 
-nexus.base = {}
-nexus.scene = {}
-nexus.object = {}
-nexus.sprite = {}
-nexus.window = {}
+nexus.base.viewport = {}
 
-require 'src.game'
+function nexus.base.viewport.dispose(instance)
+end
 
-require 'src.core.audio'
-require 'src.core.database'
-require 'src.core.graphics'
-require 'src.core.input'
-require 'src.core.message'
-require 'src.core.resource'
-require 'src.core.scene'
+function nexus.base.viewport.isDisposed(instance)
+end
 
-require 'src.base.color'
-require 'src.base.rectangle'
-require 'src.base.viewport'
-require 'src.base.scene'
-require 'src.base.object'
-require 'src.base.window'
+function nexus.base.viewport.flash(instance, color, duration)
+end
 
-require 'src.scene.error'
-require 'src.scene.console'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'
+function nexus.base.viewport.update(instance)
+end
 
-require 'src.object.player'
-
-require 'src.window.command'
+function nexus.base.viewport.new(...)
+    local instance = {}
+    if ... == nil then
+        instance.ox = 0
+        instance.oy = 0
+        instance.z = 0
+        instance.rectangle = nexus.base.rectangle.new(0, 0, nexus.graphics.getScreenWidth(), nexus.graphics.getScreenHeight())
+    elseif type(...) == 'table' then
+        local args = ...
+        instance.ox = args.ox or 0
+        instance.oy = args.oy or 0
+        instance.z = args.z or 0
+        instance.rectangle = args.rectangle or nexus.base.rectangle.new(0, 0, nexus.graphics.getScreenWidth(), nexus.graphics.getScreenHeight())
+    else
+        local ox, oy, z, rectangle = unpack({...})
+        instance.ox = ox
+        instance.oy = oy
+        instance.z = z
+        instance.rectangle = rectangle
+    end
+    return instance
+end

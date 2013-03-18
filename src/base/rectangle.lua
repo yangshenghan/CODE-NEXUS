@@ -27,40 +27,40 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
 
-nexus.base = {}
-nexus.scene = {}
-nexus.object = {}
-nexus.sprite = {}
-nexus.window = {}
+nexus.base.rectangle = {}
 
-require 'src.game'
+function nexus.base.rectangle.empty(instance)
+    instance.x = 0
+    instance.y = 0
+    instance.width = 0
+    instance.height = 0
+end
 
-require 'src.core.audio'
-require 'src.core.database'
-require 'src.core.graphics'
-require 'src.core.input'
-require 'src.core.message'
-require 'src.core.resource'
-require 'src.core.scene'
+function nexus.base.rectangle.set(instance, ...)
+    if ... == nil then
+        nexus.base.rectangle.empty(instance)
+    elseif type(...) == 'table' then
+        local xywh = ...
+        instance.x = xywh.x or xywh[1] or 0
+        instance.y = xywh.y or xywh[2] or 0
+        instance.width = xywh.width or xywh[3] or 0
+        instance.height = xywh.height or xywh[4] or 0
+    else
+        local x, y, width, height = unpack({...})
+        instance.x = x
+        instance.y = y
+        instance.width = width
+        instance.height = height
+    end
+    return instance
+end
 
-require 'src.base.color'
-require 'src.base.rectangle'
-require 'src.base.scene'
-require 'src.base.object'
-require 'src.base.window'
+function nexus.base.rectangle.get(instance)
+    return instance.x, instance.y, instance.width, instance.height
+end
 
-require 'src.scene.error'
-require 'src.scene.console'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'
-
-require 'src.object.player'
-
-require 'src.window.command'
+function nexus.base.rectangle.new(...)
+    return nexus.base.rectangle.set({}, ...)
+end

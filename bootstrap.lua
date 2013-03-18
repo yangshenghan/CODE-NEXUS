@@ -27,6 +27,13 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+
+nexus.base = {}
+nexus.scene = {}
+nexus.object = {}
+nexus.sprite = {}
+nexus.window = {}
+
 require 'src.game'
 
 require 'src.core.audio'

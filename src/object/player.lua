@@ -27,19 +27,11 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.object.player = {}
 
 local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
-
-local function create(instance)
-    nexus.base.object.move(instance, 10, 10)
-end
-
-local function delete(instance)
-    instance.object.rushing = nil
-    instance.object.jumping = nil
-    instance.object.attacking = nil
-end
 
 local function update(instance, dt)
     if instance.object.rushing then
@@ -110,12 +102,10 @@ end
 
 function nexus.object.player.new(world)
     local instance = {
-        create  = create,
-        delete  = delete,
         update  = update,
         render  = render
     }
     instance.object = nexus.core.database.loadObjectData('player')
+    nexus.base.object.move(instance, 10, 10)
     return nexus.base.object.new(instance)
 end
-

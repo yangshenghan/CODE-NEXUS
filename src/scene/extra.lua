@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.extra = {}
 
 local function enter(instance)
@@ -45,12 +47,10 @@ local function render(instance)
 end
 
 function nexus.scene.extra.new()
-    local instance = {
+    return nexus.base.scene.new({
         enter   = enter,
         leave   = leave,
         update  = update, 
         render  = render
-    }
-    return nexus.base.scene.new(instance)
+    })
 end
-

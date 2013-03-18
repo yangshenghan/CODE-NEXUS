@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.window.common = {}
 
 function nexus.window.common.drawCharacterHealth(character, x, y, width)
@@ -48,10 +50,8 @@ local function render(instance)
 end
 
 function nexus.window.common.new()
-    local instance = {
+    return nexus.base.window.new({
         update          = update,
         render          = render
-    }
-    return nexus.base.window.new(instance)
+    })
 end
-

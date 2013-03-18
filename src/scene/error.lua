@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.error = {}
 
 local m_message = 'There is an error occured!' 
@@ -36,10 +38,8 @@ local function render(instance)
 end
 
 function nexus.scene.error.new(message)
-    local instance = {
-        render  = render
-    }
     m_message = message
-    return nexus.base.scene.new(instance)
+    return nexus.base.scene.new({
+        render  = render
+    })
 end
-

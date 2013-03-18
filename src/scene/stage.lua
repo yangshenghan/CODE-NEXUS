@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.stage = {}
 
 local function enter(instance)
@@ -47,8 +49,6 @@ local function enter(instance)
         object.render = data.render or function(...) end
         table.insert(instance.objects, object)
     end
-
-    -- love.graphics.setBackgroundColor(104, 136, 248)
 end
 
 local function leave(instance)
@@ -92,7 +92,6 @@ local function update(instance, dt)
         nexus.object.player.down(instance.player)
     end
 
-    -- instance.player.update(instance.player, dt)
     for _, object in pairs(instance.objects) do
         object.update(object, dt)
     end
@@ -118,14 +117,11 @@ function nexus.scene.stage.getCurrentStage()
 end
 
 function nexus.scene.stage.new(name)
-    local instance = {
+    return nexus.scene.loading.new({
         enter   = enter,
         leave   = leave,
         update  = update,
         render  = render,
         name    = name
-    }
-
-    return nexus.scene.loading.new(instance)
+    })
 end
-

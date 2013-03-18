@@ -27,9 +27,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.core.scene = {}
+local nexus = nexus
 
-local t_current = nil
+nexus.core.scene = {}
 
 local t_scenes = {}
 
@@ -37,71 +37,52 @@ function nexus.core.scene.initialize()
 end
 
 function nexus.core.scene.finalize()
-    t_current = nil
-
     nexus.core.scene.clear()
 end
 
 function nexus.core.scene.update(dt)
-    if t_current then
-        t_current.update(t_current, dt)
-    end
-
     for _, scene in ipairs(t_scenes) do
-        if not nexus.base.scene.isIdle(scene) then
-            scene.update(scene, dt)
-        end
+        if not nexus.base.scene.isIdle(scene) then scene.update(scene, dt) end
     end
 end
 
 function nexus.core.scene.render()
-    if t_current then
-        t_current.render(t_current)
-    end
-
     for _, scene in ipairs(t_scenes) do
         scene.render(scene)
     end
 end
 
 function nexus.core.scene.pause()
-    nexus.base.scene.setIdle(t_current, true)
+    nexus.base.scene.setIdle(nexus.core.scene.getCurrentScene(), true)
 end
 
 function nexus.core.scene.resume()
-    nexus.base.scene.setIdle(t_current, false)
+    nexus.base.scene.setIdle(nexus.core.scene.getCurrentScene(), false)
 end
 
 function nexus.core.scene.clear()
-    while #t_scenes > 0 do
-        nexus.core.scene.leave()
-    end
-
+    while #t_scenes > 0 do nexus.core.scene.leave() end
     t_scenes = {}
 end
 
 function nexus.core.scene.getCurrentScene()
-    return t_current
+    return table.last(t_scenes)
+end
+
+function nexus.core.scene.change(scene)
+    t_scenes[#t_scenes] = scene
 end
 
 function nexus.core.scene.goto(scene)
-    if t_current then
-        t_current.leave(t_current)
-    end
-    t_current = scene
-    if t_current then
-        t_current.enter(t_current)
-    end
+    if #t_scenes > 0 then nexus.core.scene.leave() end
+    nexus.core.scene.enter(scene)
 end
 
 function nexus.core.scene.enter(scene)
     if #t_scenes > 0 then
-        local last = table.last(t_scenes)
-        nexus.base.scene.setIdle(last, true)
-        last.idleIn(last)
-    elseif t_current then
-        nexus.base.scene.setIdle(t_current, true)
-        t_current.idleIn(t_current)
+        local current = nexus.core.scene.getCurrentScene()
+        nexus.base.scene.setIdle(current, true)
+        current.idleIn(current)
     end
 
     table.insert(t_scenes, scene)
@@ -109,20 +90,14 @@ function nexus.core.scene.enter(scene)
 end
 
 function nexus.core.scene.leave()
-    if #t_scenes == 0 then
-        return
-    end
+    if #t_scenes == 0 then return end
 
-    local popped = table.remove(t_scenes)
-    popped.leave(popped)
+    local last = table.remove(t_scenes)
+    last.leave(last)
 
     if #t_scenes > 0 then
-        local last = table.last(t_scenes)
-        nexus.base.scene.setIdle(last, false)
-        last.idleOut(last)
-    elseif t_current then
-        nexus.base.scene.setIdle(t_current, false)
-        t_current.idleOut(t_current)
+        local current = nexus.core.scene.getCurrentScene()
+        nexus.base.scene.setIdle(current, false)
+        current.idleOut(current)
     end
 end
-

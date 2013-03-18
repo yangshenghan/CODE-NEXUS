@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.core.database = {
     fonts       = {},
     texts       = {},
@@ -104,4 +106,3 @@ end
 function nexus.core.database.changeOptionConfigures()
     nexus.game.saveGameConfigure()
 end
-

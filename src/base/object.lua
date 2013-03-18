@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.base.object = {}
 
 local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
@@ -37,10 +39,10 @@ local t_default = {
     update  = function(...) end,
     render  = function(...) end,
     object  = {
-        x           = 0,        -- logical x position
-        y           = 0,        -- logical y position
-        rx          = 0,        -- real x position (logical x * LOGICAL_GRID_SIZE)
-        ry          = 0         -- real y potition (logical y * LOGICAL_GRID_SIZE)
+        x           = 0,    -- logical x position
+        y           = 0,    -- logical y position
+        rx          = 0,    -- real x position (logical x * LOGICAL_GRID_SIZE)
+        ry          = 0     -- real y potition (logical y * LOGICAL_GRID_SIZE)
     }
 }
 
@@ -73,4 +75,3 @@ function nexus.base.object.new(instance)
     instance.create(instance)
     return instance
 end
-

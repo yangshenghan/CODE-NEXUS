@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.newgame = {}
 
 local function enter(instance)
@@ -42,12 +44,10 @@ local function render(instance)
 end
 
 function nexus.scene.newgame.new()
-    local instance = {
+    return nexus.scene.loading.new({
         enter   = enter,
         leave   = leave,
         update  = update, 
         render  = render
-    }
-    return nexus.scene.loading.new(instance)
+    })
 end
-

@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.console = {}
 
 -- / ---------------------------------------------------------------------- \ --
@@ -525,12 +527,12 @@ end
 function nexus.scene.console.new()
     if not t_instance then
         local font = nexus.core.resource.loadFont('inconsolata.otf', 16)
-        local instance = {
+        console.initialize(executer, font)
+
+        t_instance = nexus.base.scene.new({
             enter   = enter,
             leave   = leave
-        }
-        console.initialize(executer, font)
-        t_instance = nexus.base.scene.new(instance)
+        })
     end
     return t_instance
 end

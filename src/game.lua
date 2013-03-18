@@ -27,14 +27,13 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.game = {}
 
-nexus.base = {}
-
-nexus.scene = {}
-nexus.object = {}
-nexus.window = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
 local m_loaded = false
 
 local function adjust_screen_mode()

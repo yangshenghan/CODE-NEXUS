@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.core.graphics = {}
 
 local m_caption = love.graphics.getCaption()
@@ -103,4 +105,3 @@ function nexus.core.graphics.changeGraphicsConfigures(width, height, fullscreen,
 
     nexus.game.saveGameConfigure()
 end
-

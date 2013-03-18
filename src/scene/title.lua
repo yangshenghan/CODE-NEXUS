@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.title = {}
 
 local f_update_coroutine = function(instance, dt, timer)
@@ -57,14 +59,14 @@ local f_update_coroutine = function(instance, dt, timer)
 
     -- Show main menu
     while true do
-        nexus.base.window.update(instance.window.command, dt)
+        nexus.base.window.update(instance.windows.command, dt)
         coroutine.yield()
     end
 end
 
 local function enter(instance)
-    instance.coroutine.update = coroutine.create(f_update_coroutine)
-    instance.window.command = nexus.window.command.new(320, 240, {
+    instance.coroutines.update = coroutine.create(f_update_coroutine)
+    instance.windows.command = nexus.window.command.new(320, 240, {
         {
             text    = nexus.core.database.getTranslatedText('New Game'),
             handler = function(...)
@@ -98,30 +100,28 @@ local function enter(instance)
 end
 
 local function leave(instance)
-    instance.window.command = nil
-    instance.coroutine.update = nil
+    instance.windows.command = nil
+    instance.coroutines.update = nil
 end
 
 local function update(instance, dt)
     if instance.idle then return end
 
-    coroutine.resume(instance.coroutine.update, instance, dt, love.timer.getMicroTime())
+    coroutine.resume(instance.coroutines.update, instance, dt, love.timer.getMicroTime())
 end
 
 local function render(instance)
-    instance.window.command.render(instance.window.command)
+    instance.windows.command.render(instance.windows.command)
 end
 
 function nexus.scene.title.new(skip)
-    local instance = {
+    return nexus.base.scene.new({
         enter       = enter,
         leave       = leave,
         update      = update, 
         render      = render,
         skip        = skip,
-        window      = {},
-        coroutine   = {}
-    }
-    return nexus.base.scene.new(instance)
+        windows     = {},
+        coroutines  = {}
+    })
 end
-

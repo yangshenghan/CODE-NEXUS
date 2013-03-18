@@ -27,53 +27,43 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.scene.loading = {}
 
 local function enter(instance)
-    instance.loading.progress = 0
-    instance.loading.coroutine = coroutine.create(instance.loading.enter)
+    instance.progress = 0
+    instance.coroutine = coroutine.create(instance.scene.enter)
+    instance.scene.loading = instance
+
+    instance.render(instance)
+    love.graphics.present()
 end
 
-local function update(instance)
-    coroutine.resume(instance.loading.coroutine, instance)
+local function update(instance, dt)
+    _, instance.progress = coroutine.resume(instance.coroutine, instance.scene, dt)
 
-    if coroutine.status(instance.loading.coroutine) == 'dead' then
-        -- local start = love.timer.getTime()
-        -- while love.timer.getTime() - start < 1 do end
-        instance.enter = instance.loading.enter
-        instance.update = instance.loading.update
-        instance.render = instance.loading.render
-        instance.loading.routing = nil
+    if coroutine.status(instance.coroutine) == 'dead' then
+        nexus.core.scene.change(instance.scene)
+        instance.scene = nil
     end
 end
 
 local function render(instance)
-    love.graphics.print(instance.loading.progress, 240, 240)
+    love.graphics.print(instance.progress, 240, 240)
 end
 
-function nexus.scene.loading.setProgress(instance, value)
-    if value < 0 then
-        value = 0
-    end
-    if value > 1 then
-        value = 1
-    end
-    instance.loading.progress = value
-
-    coroutine.yield()
+function nexus.scene.loading.setProgress(value)
+    if value < 0 then value = 0 end
+    if value > 1 then value = 1 end
+    coroutine.yield(value)
 end
 
 function nexus.scene.loading.new(instance)
-    instance.loading = {
-        screen          = instance,
-        enter           = instance.enter or function(...) end,
-        update          = instance.update or function(...) end,
-        render          = instance.render or function(...) end,
-        progress        = 0
-    }
-    instance.enter = enter
-    instance.update = update
-    instance.render = render
-    return nexus.base.scene.new(instance)
+    return nexus.base.scene.new({
+        enter   = enter,
+        update  = update,
+        render  = render,
+        scene   = nexus.base.scene.new(instance)
+    })
 end
-

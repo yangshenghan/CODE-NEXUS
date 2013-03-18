@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.core.audio = {}
 
 function nexus.core.audio.initialize()
@@ -55,4 +57,3 @@ function nexus.core.audio.playCancel()
     local source = nexus.core.resource.loadSoundSource('cancel')
     source.play(source)
 end
-

@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.core.input = {}
 
 local m_system_f1 = false
@@ -164,4 +166,3 @@ end
 function nexus.core.input.isKeyRepeat(key)
     return t_pressed[key] and t_counter[key] == 0
 end
-

@@ -27,9 +27,13 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.base.window = {}
 
 local t_default = {
+    create      = function(...) end,
+    delete      = function(...) end,
     update      = function(...) end,
     render      = function(...) end,
     active      = true,
@@ -62,6 +66,6 @@ end
 
 function nexus.base.window.new(instance)
     instance = table.merge(t_default, instance)
+    instance.create(instance)
     return instance
 end
-

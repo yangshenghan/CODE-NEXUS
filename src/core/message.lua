@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.core.message = {}
 
 function nexus.core.message.initialize()
@@ -50,4 +52,3 @@ end
 
 function nexus.core.message.clear()
 end
-

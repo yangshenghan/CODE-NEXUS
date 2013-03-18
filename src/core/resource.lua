@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.core.resource = {}
 
 local t_fonts = {}
@@ -126,4 +128,3 @@ end
 function nexus.core.resource.loadFont(filename, size)
     return load_font_resource('res/fonts/', filename, size)
 end
-

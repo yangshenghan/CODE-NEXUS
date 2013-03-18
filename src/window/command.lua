@@ -27,21 +27,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.window.command = {}
-
-function nexus.window.command.moveCursorUp(instance, wrap)
-    instance.cursor = instance.cursor - 1
-    if instance.cursor < 1 then
-        instance.cursor = wrap and instance.size or 1 
-    end
-end
-
-function nexus.window.command.moveCursorDown(instance, wrap)
-    instance.cursor = instance.cursor + 1
-    if instance.cursor > instance.size then
-        instance.cursor = wrap and 1 or instance.size
-    end
-end
 
 local function update(instance, dt)
     if nexus.core.input.isKeyRepeat(NEXUS_KEY.UP) then
@@ -66,6 +54,20 @@ local function render(instance)
             love.graphics.setColor(255, 255, 0)
         end
         love.graphics.print(command.text, instance.x, instance.y + index * 20) 
+    end
+end
+
+function nexus.window.command.moveCursorUp(instance, wrap)
+    instance.cursor = instance.cursor - 1
+    if instance.cursor < 1 then
+        instance.cursor = wrap and instance.size or 1 
+    end
+end
+
+function nexus.window.command.moveCursorDown(instance, wrap)
+    instance.cursor = instance.cursor + 1
+    if instance.cursor > instance.size then
+        instance.cursor = wrap and 1 or instance.size
     end
 end
 
@@ -99,18 +101,18 @@ function nexus.window.command.addCommands(instance, commands)
 end
 
 function nexus.window.command.new(x, y, commands)
-    local instance = {
-        x               = x,
-        y               = y,
-        size            = 0,
-        cursor          = 1,
-        commands        = {}
-    }
-    if commands then
-        nexus.window.command.addCommands(instance, commands)
-    end
-    instance.update = update
-    instance.render = render
-    return nexus.base.window.new(instance)
+    return nexus.base.window.new({
+        create      = function(instance)
+            if commands then
+                nexus.window.command.addCommands(instance, commands)
+            end
+        end,
+        update      = update,
+        render      = render,
+        x           = x,
+        y           = y,
+        size        = 0,
+        cursor      = 1,
+        commands    = {}
+    })
 end
-

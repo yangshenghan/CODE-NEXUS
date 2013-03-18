@@ -27,6 +27,8 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+local nexus = nexus
+
 nexus.base.color = {}
 
 local function set_correct_value(value)
@@ -60,4 +62,3 @@ end
 function nexus.base.color.new(...)
     return nexus.base.color.set({}, ...)
 end
-

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-17                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -354,9 +354,9 @@ end
 
 function nexus.console.toggleConsole()
     if nexus.settings.console then
-        nexus.scene.leave()
+        nexus.core.scene.leave()
     else
-        nexus.scene.enter(nexus.scene.console.new())
+        nexus.core.scene.enter(nexus.scene.console.new())
     end
 end
 
@@ -467,7 +467,7 @@ local function enter(instance)
         end
 
         if key == 'escape' then
-            nexus.scene.leave()
+            nexus.core.scene.leave()
         end
 
         console.input.push(key, code)
@@ -488,7 +488,7 @@ local function enter(instance)
     end
 
     quit = function()
-        nexus.scene.leave()
+        nexus.core.scene.leave()
     end
 
     exit = function()
@@ -524,13 +524,13 @@ end
 
 function nexus.scene.console.new()
     if not t_instance then
-        local font = nexus.resource.loadFont('inconsolata.otf', 16)
+        local font = nexus.core.resource.loadFont('inconsolata.otf', 16)
         local instance = {
             enter   = enter,
             leave   = leave
         }
         console.initialize(executer, font)
-        t_instance = nexus.scene.base.new(instance)
+        t_instance = nexus.base.scene.new(instance)
     end
     return t_instance
 end
@@ -538,3 +538,4 @@ end
 if nexus.system.debug then
     nexus.scene.console.new()
 end
+

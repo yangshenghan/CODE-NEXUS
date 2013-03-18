@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,7 +27,7 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.database = {
+nexus.core.database = {
     fonts       = {},
     texts       = {},
     formats     = {}
@@ -45,62 +45,63 @@ local function load_data_resource(folder, filename)
     return t_caches[path]
 end
 
-function nexus.database.loadDatabaseData(filename)
+function nexus.core.database.loadDatabaseData(filename)
     return load_data_resource('data/databases/', filename)
 end
 
-function nexus.database.loadExtraData(filename)
+function nexus.core.database.loadExtraData(filename)
     return load_data_resource('data/extras/', filename)
 end
 
-function nexus.database.loadMapData(filename)
+function nexus.core.database.loadMapData(filename)
     return load_data_resource('data/maps/', filename)
 end
 
-function nexus.database.loadObjectData(filename)
+function nexus.core.database.loadObjectData(filename)
     return load_data_resource('data/objects/', filename)
 end
 
-function nexus.database.loadScriptData(filename)
+function nexus.core.database.loadScriptData(filename)
     return load_data_resource('data/scripts/', filename)
 end
 
-function nexus.database.loadStageData(filename)
+function nexus.core.database.loadStageData(filename)
     return load_data_resource('data/stages/', filename)
 end
 
-function nexus.database.loadTextData(filename)
+function nexus.core.database.loadTextData(filename)
     return load_data_resource('data/texts/', filename)
 end
 
-function nexus.database.getTextsList()
+function nexus.core.database.getTextsList()
     
 end
 
-function nexus.database.getTranslatedText(text)
-    return nexus.database.texts[text] or text
+function nexus.core.database.getTranslatedText(text)
+    return nexus.core.database.texts[text] or text
 end
 
-function nexus.database.initialize()
-    local texts = nexus.database.loadTextData(nexus.configures.options.language)
+function nexus.core.database.initialize()
+    local texts = nexus.core.database.loadTextData(nexus.configures.options.language)
 
-    nexus.database.fonts = texts.fonts
-    nexus.database.texts = texts.texts
-    nexus.database.formats = texts.formats
+    nexus.core.database.fonts = texts.fonts
+    nexus.core.database.texts = texts.texts
+    nexus.core.database.formats = texts.formats
 end
 
-function nexus.database.finalize()
-    nexus.database.formats = {}
-    nexus.database.texts = {}
-    nexus.database.fonts = {}
+function nexus.core.database.finalize()
+    nexus.core.database.formats = {}
+    nexus.core.database.texts = {}
+    nexus.core.database.fonts = {}
 
-    nexus.database.clear()
+    nexus.core.database.clear()
 end
 
-function nexus.database.clear()
+function nexus.core.database.clear()
     t_caches = {}
 end
 
-function nexus.database.changeOptionConfigures()
+function nexus.core.database.changeOptionConfigures()
     nexus.game.saveGameConfigure()
 end
+

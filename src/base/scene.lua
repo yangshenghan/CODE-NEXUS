@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,9 +27,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.scene.base = {}
+nexus.base.scene = {}
 
-local default = {
+local t_default = {
     enter   = function(...) end,
     leave   = function(...) end,
     idleIn  = function(...) end,
@@ -40,23 +40,20 @@ local default = {
     idle    = false
 }
 
-function nexus.scene.base.new(instance)
-    for k, v in pairs(default) do
-        if instance[k] == nil then
-            instance[k] = v
-        end
-    end
-    return instance
-end
-
-function nexus.scene.base.isIdle(instance)
+function nexus.base.scene.isIdle(instance)
     return instance.idle
 end
 
-function nexus.scene.base.setIdle(instance, idle)
+function nexus.base.scene.setIdle(instance, idle)
     instance.idle = idle
 end
 
-function nexus.scene.base.toggleIdle(instance)
+function nexus.base.scene.toggleIdle(instance)
     instance.idle = not instance.idle
 end
+
+function nexus.base.scene.new(instance)
+    instance = table.merge(t_default, instance)
+    return instance
+end
+

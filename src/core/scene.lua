@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-17                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,34 +27,34 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.scene = {}
+nexus.core.scene = {}
 
 local t_current = nil
 
 local t_scenes = {}
 
-function nexus.scene.initialize()
+function nexus.core.scene.initialize()
 end
 
-function nexus.scene.finalize()
+function nexus.core.scene.finalize()
     t_current = nil
 
-    nexus.scene.clear()
+    nexus.core.scene.clear()
 end
 
-function nexus.scene.update(dt)
+function nexus.core.scene.update(dt)
     if t_current then
         t_current.update(t_current, dt)
     end
 
     for _, scene in ipairs(t_scenes) do
-        if not nexus.scene.base.isIdle(scene) then
+        if not nexus.base.scene.isIdle(scene) then
             scene.update(scene, dt)
         end
     end
 end
 
-function nexus.scene.render()
+function nexus.core.scene.render()
     if t_current then
         t_current.render(t_current)
     end
@@ -64,27 +64,27 @@ function nexus.scene.render()
     end
 end
 
-function nexus.scene.pause()
-    nexus.scene.base.setIdle(t_current, true)
+function nexus.core.scene.pause()
+    nexus.base.scene.setIdle(t_current, true)
 end
 
-function nexus.scene.resume()
-    nexus.scene.base.setIdle(t_current, false)
+function nexus.core.scene.resume()
+    nexus.base.scene.setIdle(t_current, false)
 end
 
-function nexus.scene.clear()
+function nexus.core.scene.clear()
     while #t_scenes > 0 do
-        nexus.scene.leave()
+        nexus.core.scene.leave()
     end
 
     t_scenes = {}
 end
 
-function nexus.scene.getCurrentScene()
+function nexus.core.scene.getCurrentScene()
     return t_current
 end
 
-function nexus.scene.goto(scene)
+function nexus.core.scene.goto(scene)
     if t_current then
         t_current.leave(t_current)
     end
@@ -94,13 +94,13 @@ function nexus.scene.goto(scene)
     end
 end
 
-function nexus.scene.enter(scene)
+function nexus.core.scene.enter(scene)
     if #t_scenes > 0 then
         local last = table.last(t_scenes)
-        nexus.scene.base.setIdle(last, true)
+        nexus.base.scene.setIdle(last, true)
         last.idleIn(last)
     elseif t_current then
-        nexus.scene.base.setIdle(t_current, true)
+        nexus.base.scene.setIdle(t_current, true)
         t_current.idleIn(t_current)
     end
 
@@ -108,7 +108,7 @@ function nexus.scene.enter(scene)
     scene.enter(scene)
 end
 
-function nexus.scene.leave()
+function nexus.core.scene.leave()
     if #t_scenes == 0 then
         return
     end
@@ -118,10 +118,11 @@ function nexus.scene.leave()
 
     if #t_scenes > 0 then
         local last = table.last(t_scenes)
-        nexus.scene.base.setIdle(last, false)
+        nexus.base.scene.setIdle(last, false)
         last.idleOut(last)
     elseif t_current then
-        nexus.scene.base.setIdle(t_current, false)
+        nexus.base.scene.setIdle(t_current, false)
         t_current.idleOut(t_current)
     end
 end
+

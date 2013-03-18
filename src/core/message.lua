@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,26 +27,27 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.message = {}
+nexus.core.message = {}
 
-function nexus.message.initialize()
+function nexus.core.message.initialize()
 end
 
-function nexus.message.finalize()
-    nexus.message.clear()
+function nexus.core.message.finalize()
+    nexus.core.message.clear()
 end
 
-function nexus.message.update(dt)
+function nexus.core.message.update(dt)
 end
 
-function nexus.message.render()
+function nexus.core.message.render()
 end
 
-function nexus.message.pause()
+function nexus.core.message.pause()
 end
 
-function nexus.message.resume()
+function nexus.core.message.resume()
 end
 
-function nexus.message.clear()
+function nexus.core.message.clear()
 end
+

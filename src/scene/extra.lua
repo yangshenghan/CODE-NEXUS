@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -36,8 +36,8 @@ local function leave(instance)
 end
 
 local function update(instance, dt)
-    if nexus.input.isKeyDown(NEXUS_KEY.CONFIRM) or nexus.input.isKeyDown(NEXUS_KEY.CANCEL) then
-        nexus.scene.leave()
+    if nexus.core.input.isKeyDown(NEXUS_KEY.CONFIRM) or nexus.core.input.isKeyDown(NEXUS_KEY.CANCEL) then
+        nexus.core.scene.leave()
     end
 end
 
@@ -51,5 +51,6 @@ function nexus.scene.extra.new()
         update  = update, 
         render  = render
     }
-    return nexus.scene.base.new(instance)
+    return nexus.base.scene.new(instance)
 end
+

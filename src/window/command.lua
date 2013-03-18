@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -44,15 +44,15 @@ function nexus.window.command.moveCursorDown(instance, wrap)
 end
 
 local function update(instance, dt)
-    if nexus.input.isKeyRepeat(NEXUS_KEY.UP) then
-        nexus.window.command.moveCursorUp(instance, nexus.input.isKeyTrigger(NEXUS_KEY.UP))
+    if nexus.core.input.isKeyRepeat(NEXUS_KEY.UP) then
+        nexus.window.command.moveCursorUp(instance, nexus.core.input.isKeyTrigger(NEXUS_KEY.UP))
     end
 
-    if nexus.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        nexus.window.command.moveCursorDown(instance, nexus.input.isKeyTrigger(NEXUS_KEY.DOWN))
+    if nexus.core.input.isKeyRepeat(NEXUS_KEY.DOWN) then
+        nexus.window.command.moveCursorDown(instance, nexus.core.input.isKeyTrigger(NEXUS_KEY.DOWN))
     end
 
-    if nexus.input.isKeyDown(NEXUS_KEY.C) then
+    if nexus.core.input.isKeyDown(NEXUS_KEY.C) then
         local command = instance.commands[instance.cursor]
         command.handler()
         return instance.cursor 
@@ -111,5 +111,6 @@ function nexus.window.command.new(x, y, commands)
     end
     instance.update = update
     instance.render = render
-    return nexus.window.base.new(instance)
+    return nexus.base.window.new(instance)
 end
+

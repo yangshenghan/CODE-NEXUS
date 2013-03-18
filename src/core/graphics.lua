@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,66 +27,66 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.graphics = {}
+nexus.core.graphics = {}
 
 local m_caption = love.graphics.getCaption()
 
-function nexus.graphics.initialize()
-    -- local icon = nexus.resource.loadImage('icon.png')
+function nexus.core.graphics.initialize()
+    -- local icon = nexus.core.resource.loadImage('icon.png')
 
     -- love.graphics.setIcon(icon)
     love.graphics.reset()
 end
 
-function nexus.graphics.finalize()
-    nexus.graphics.clear()
+function nexus.core.graphics.finalize()
+    nexus.core.graphics.clear()
 end
 
-function nexus.graphics.update(dt)
+function nexus.core.graphics.update(dt)
     if nexus.settings.showfps then
         local fps = love.timer.getFPS()
         love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)
     end
 end
 
-function nexus.graphics.render()
+function nexus.core.graphics.render()
 end
 
-function nexus.graphics.pause()
+function nexus.core.graphics.pause()
 end
 
-function nexus.graphics.resume()
+function nexus.core.graphics.resume()
 end
 
-function nexus.graphics.clear()
+function nexus.core.graphics.clear()
 end
 
-function nexus.graphics.toggleFullscreen()
+function nexus.core.graphics.toggleFullscreen()
     love.graphics.toggleFullscreen()
 end
 
-function nexus.graphics.toggleFPS()
+function nexus.core.graphics.toggleFPS()
     nexus.settings.showfps = not nexus.settings.showfps
     if not nexus.settings.showfps then
         love.graphics.setCaption(m_caption)
     end
 end
 
-function nexus.graphics.getScreenModes()
+function nexus.core.graphics.getScreenModes()
     local modes = love.graphics.getModes()
     table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)
     return modes
 end
 
-function nexus.graphics.getBestScreenMode()
-    return table.last(nexus.graphics.getScreenModes())
+function nexus.core.graphics.getBestScreenMode()
+    return table.last(nexus.core.graphics.getScreenModes())
 end
 
-function nexus.graphics.screenshot()
+function nexus.core.graphics.screenshot()
     return love.graphics.newScreenshot()
 end
 
-function nexus.graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
+function nexus.core.graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
     width = width or nexus.configures.graphics.width
     height = height or nexus.configures.graphics.height
     fullscreen = fullscreen or nexus.configures.graphics.fullscreen
@@ -103,3 +103,4 @@ function nexus.graphics.changeGraphicsConfigures(width, height, fullscreen, vsyn
 
     nexus.game.saveGameConfigure()
 end
+

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -57,7 +57,7 @@ local f_update_coroutine = function(instance, dt, timer)
 
     -- Show main menu
     while true do
-        nexus.window.base.update(instance.window.command, dt)
+        nexus.base.window.update(instance.window.command, dt)
         coroutine.yield()
     end
 end
@@ -66,32 +66,32 @@ local function enter(instance)
     instance.coroutine.update = coroutine.create(f_update_coroutine)
     instance.window.command = nexus.window.command.new(320, 240, {
         {
-            text    = nexus.database.getTranslatedText('New Game'),
+            text    = nexus.core.database.getTranslatedText('New Game'),
             handler = function(...)
                 nexus.data.setup()
-                nexus.scene.goto(nexus.scene.stage.new('prologue'))
-                -- nexus.scene.goto(nexus.scene.newgame.new())
+                nexus.core.scene.goto(nexus.scene.stage.new('prologue'))
+                -- nexus.core.scene.goto(nexus.scene.newgame.new())
             end
         }, {
-            text    = nexus.database.getTranslatedText('Continue'),
+            text    = nexus.core.database.getTranslatedText('Continue'),
             handler = function(...)
-                nexus.scene.enter(nexus.scene.continue.new())
+                nexus.core.scene.enter(nexus.scene.continue.new())
             end,
             enabled = nexus.data.exists()
         }, {
-            text    = nexus.database.getTranslatedText('Extra'),
+            text    = nexus.core.database.getTranslatedText('Extra'),
             handler = function(...)
-                nexus.scene.enter(nexus.scene.extra.new())
+                nexus.core.scene.enter(nexus.scene.extra.new())
             end
         }, {
-            text    = nexus.database.getTranslatedText('Option'),
+            text    = nexus.core.database.getTranslatedText('Option'),
             handler = function(...)
-                nexus.scene.enter(nexus.scene.option.new())
+                nexus.core.scene.enter(nexus.scene.option.new())
             end
         }, {
-            text    = nexus.database.getTranslatedText('Exit'),
+            text    = nexus.core.database.getTranslatedText('Exit'),
             handler = function(...)
-                nexus.scene.goto(nexus.scene.exit.new())
+                nexus.core.scene.goto(nexus.scene.exit.new())
             end
         }
     })
@@ -122,5 +122,6 @@ function nexus.scene.title.new(skip)
         window      = {},
         coroutine   = {}
     }
-    return nexus.scene.base.new(instance)
+    return nexus.base.scene.new(instance)
 end
+

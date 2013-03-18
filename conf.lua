@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-17                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -72,16 +72,6 @@ function table.merge(t, s)
     end
 
     return r
-end
-
-function table.recursiveMerge(t, s)
-    for key, value in pairs(t) do
-        if type(value) == 'table' then
-            table.recursiveMerge(s[key], value)
-        else
-            s[key] = value
-        end
-    end
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -278,7 +268,7 @@ local function on_before_save()
 end
 
 function nexus.data.setup()
-    nexus.game.data = nexus.database.loadScriptData('setup')
+    nexus.game.data = nexus.core.database.loadScriptData('setup')
 end
 
 function nexus.data.load(index)
@@ -340,3 +330,4 @@ function love.conf(game)
         game.screen.fsaa = nexus.configures.graphics.fsaa
     end
 end
+

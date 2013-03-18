@@ -36,10 +36,6 @@ local function set_correct_value(value)
     return value
 end
 
-function nexus.base.color.new(...)
-    return nexus.base.color.set({}, ...)
-end
-
 function nexus.base.color.set(instance, ...)
     if type(...) == 'table' then
         local rgba = ...
@@ -59,5 +55,9 @@ end
 
 function nexus.base.color.get(instance)
     return instance.red, instance.green, instance.blue, instance.alpha
+end
+
+function nexus.base.color.new(...)
+    return nexus.base.color.set({}, ...)
 end
 

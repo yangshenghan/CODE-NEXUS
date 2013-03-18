@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,11 +27,11 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.object.base = {}
+nexus.base.object = {}
 
 local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
 
-local default = {
+local t_default = {
     create  = function(...) end,
     delete  = function(...) end,
     update  = function(...) end,
@@ -44,7 +44,7 @@ local default = {
     }
 }
 
-function nexus.object.base.move(instance, x, y)
+function nexus.base.object.move(instance, x, y)
     if x then
         instance.object.x = x
         instance.object.rx = x * LOGICAL_GRID_SIZE
@@ -55,21 +55,22 @@ function nexus.object.base.move(instance, x, y)
     end
 end
 
-function nexus.object.base.isMoving(instance)
+function nexus.base.object.isMoving(instance)
     if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
     if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
     return false
 end
 
-function nexus.object.base.isPassable(instance, x, y)
+function nexus.base.object.isPassable(instance, x, y)
     local stage = nexus.scene.stage.getCurrentStage()
     if x < 0 or y < 0 then return false end
     if x > stage.width / LOGICAL_GRID_SIZE or y > stage.height / LOGICAL_GRID_SIZE then return false end
     return true
 end
 
-function nexus.object.base.new(instance)
-    table.recursiveMerge(instance, default)
+function nexus.base.object.new(instance)
+    instance = table.merge(t_default, instance)
     instance.create(instance)
     return instance
 end
+

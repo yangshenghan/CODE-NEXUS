@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -32,7 +32,7 @@ nexus.object.player = {}
 local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
 
 local function create(instance)
-    nexus.object.base.move(instance, 10, 10)
+    nexus.base.object.move(instance, 10, 10)
 end
 
 local function delete(instance)
@@ -93,19 +93,19 @@ function nexus.object.player.attack(instance)
 end
 
 function nexus.object.player.up(instance)
-    nexus.object.base.move(instance, false, instance.object.y + 1)
+    nexus.base.object.move(instance, false, instance.object.y + 1)
 end
 
 function nexus.object.player.right(instance)
-    nexus.object.base.move(instance, instance.object.x + 1, false)
+    nexus.base.object.move(instance, instance.object.x + 1, false)
 end
 
 function nexus.object.player.down(instance)
-    nexus.object.base.move(instance, false, instance.object.y - 1)
+    nexus.base.object.move(instance, false, instance.object.y - 1)
 end
 
 function nexus.object.player.left(instance)
-    nexus.object.base.move(instance, instance.object.x - 1, false)
+    nexus.base.object.move(instance, instance.object.x - 1, false)
 end
 
 function nexus.object.player.new(world)
@@ -115,6 +115,7 @@ function nexus.object.player.new(world)
         update  = update,
         render  = render
     }
-    instance.object = nexus.database.loadObjectData('player')
-    return nexus.object.base.new(instance)
+    instance.object = nexus.core.database.loadObjectData('player')
+    return nexus.base.object.new(instance)
 end
+

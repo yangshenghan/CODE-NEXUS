@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,31 +27,32 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.audio = {}
+nexus.core.audio = {}
 
-function nexus.audio.initialize()
+function nexus.core.audio.initialize()
 end
 
-function nexus.audio.finalize()
+function nexus.core.audio.finalize()
     love.audio.stop()
 end
 
-function nexus.audio.update(dt)
+function nexus.core.audio.update(dt)
 end
 
-function nexus.audio.pause()
+function nexus.core.audio.pause()
     love.audio.pause()
 end
 
-function nexus.audio.resume()
+function nexus.core.audio.resume()
     love.audio.resume()
 end
 
-function nexus.audio.changeAudioConfigures()
+function nexus.core.audio.changeAudioConfigures()
     nexus.game.saveGameConfigure()
 end
 
-function nexus.audio.playCancel()
-    local source = nexus.resource.loadSoundSource('cancel')
+function nexus.core.audio.playCancel()
+    local source = nexus.core.resource.loadSoundSource('cancel')
     source.play(source)
 end
+

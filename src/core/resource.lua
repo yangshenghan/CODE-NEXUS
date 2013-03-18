@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-16                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,7 +27,7 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.resource = {}
+nexus.core.resource = {}
 
 local t_fonts = {}
 
@@ -69,60 +69,61 @@ local function load_source_resource(folder, filename)
     return t_sources[path]
 end
 
-function nexus.resource.initialize()
+function nexus.core.resource.initialize()
 end
 
-function nexus.resource.finalize()
-    nexus.resource.clear()
+function nexus.core.resource.finalize()
+    nexus.core.resource.clear()
 end
 
-function nexus.resource.clear()
+function nexus.core.resource.clear()
     t_fonts = {}
     t_images = {}
     t_sources = {}
     collectgarbage()
 end
 
-function nexus.resource.loadEffectSource(filename)
+function nexus.core.resource.loadEffectSource(filename)
     return load_source_resource('res/audios/effects/', filename)
 end
 
-function nexus.resource.loadMusicSource(filename)
+function nexus.core.resource.loadMusicSource(filename)
     return load_source_resource('res/audios/musics/', filename)
 end
 
-function nexus.resource.loadSoundSource(filename)
+function nexus.core.resource.loadSoundSource(filename)
     return load_source_resource('res/audios/sounds/', filename)
 end
 
-function nexus.resource.loadAnimationIamge(filename)
+function nexus.core.resource.loadAnimationIamge(filename)
     return load_image_resource('res/graphics/animations/', filename)
 end
 
-function nexus.resource.loadCharacterImage(filename)
+function nexus.core.resource.loadCharacterImage(filename)
     return load_image_resource('res/graphics/characters/', filename)
 end
 
-function nexus.resource.loadIconImage(filename)
+function nexus.core.resource.loadIconImage(filename)
     return load_image_resource('res/graphics/icons/', filename)
 end
 
-function nexus.resource.loadMapImage(filename)
+function nexus.core.resource.loadMapImage(filename)
     return load_image_resource('res/graphics/maps/', filename)
 end
 
-function nexus.resource.loadObjectImage(filename)
+function nexus.core.resource.loadObjectImage(filename)
     return load_image_resource('res/graphics/objects/', filename)
 end
 
-function nexus.resource.loadPictureImage(filename)
+function nexus.core.resource.loadPictureImage(filename)
     return load_image_resource('res/graphics/pictures/', filename)
 end
 
-function nexus.resource.loadSystemImage(filename)
+function nexus.core.resource.loadSystemImage(filename)
     return load_image_resource('res/graphics/systems/', filename)
 end
 
-function nexus.resource.loadFont(filename, size)
+function nexus.core.resource.loadFont(filename, size)
     return load_font_resource('res/fonts/', filename, size)
 end
+

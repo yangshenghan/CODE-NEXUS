@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-15                                                    ]]--
+--[[ Updates: 2013-03-18                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -27,9 +27,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.window.base = {}
+nexus.base.window = {}
 
-local default = {
+local t_default = {
     update      = function(...) end,
     render      = function(...) end,
     active      = true,
@@ -43,28 +43,25 @@ local default = {
     z           = 1000
 }
 
-function nexus.window.base.new(instance)
-    for k, v in pairs(default) do
-        if instance[k] == nil then
-            instance[k] = v
-        end
-    end
-    return instance
-end
-
-function nexus.window.base.dispose(instance)
+function nexus.base.window.dispose(instance)
     nexus.manager.window.removeWindow(instance)
 end
 
-function nexus.window.base.update(instance, dt, ...)
+function nexus.base.window.update(instance, dt, ...)
     if instance.active then
         return instance.update(instance, dt, ...)
     end
     return true
 end
 
-function nexus.window.base.render(instance, ...)
+function nexus.base.window.render(instance, ...)
     if instance.visible then
         instance.render(instance, ...)
     end
 end
+
+function nexus.base.window.new(instance)
+    instance = table.merge(t_default, instance)
+    return instance
+end
+

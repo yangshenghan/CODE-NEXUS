@@ -30,6 +30,7 @@
 nexus.game = {}
 
 nexus.base = {}
+
 nexus.scene = {}
 nexus.object = {}
 nexus.window = {}
@@ -37,7 +38,7 @@ nexus.window = {}
 local m_loaded = false
 
 local function adjust_screen_mode()
-    local best_screen_mode = nexus.graphics.getBestScreenMode()
+    local best_screen_mode = nexus.core.graphics.getBestScreenMode()
 
     local ow = nexus.configures.graphics.width
     local oh = nexus.configures.graphics.height
@@ -46,21 +47,21 @@ local function adjust_screen_mode()
 
     if ow > bw or oh > bh or ow * oh > bw * bh then
         if bw > bh then
-            nexus.graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
+            nexus.core.graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
         else
-            nexus.graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
+            nexus.core.graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
         end
     end
 end
 
 function nexus.game.initialize()
-    nexus.audio.initialize()
-    nexus.database.initialize()
-    nexus.graphics.initialize()
-    nexus.input.initialize()
-    nexus.message.initialize()
-    nexus.resource.initialize()
-    nexus.scene.initialize()
+    nexus.core.audio.initialize()
+    nexus.core.database.initialize()
+    nexus.core.graphics.initialize()
+    nexus.core.input.initialize()
+    nexus.core.message.initialize()
+    nexus.core.resource.initialize()
+    nexus.core.scene.initialize()
 
     nexus.game.data = nil
 
@@ -68,29 +69,29 @@ function nexus.game.initialize()
         if nexus.system.firstrun then
             adjust_screen_mode()
         end
-        nexus.scene.goto(nexus.scene.title.new(m_loaded))
-        -- nexus.scene.goto(nexus.scene.stage.new('prologue'))
+        nexus.core.scene.goto(nexus.scene.title.new(m_loaded))
+        -- nexus.core.scene.goto(nexus.scene.stage.new('prologue'))
         if nexus.settings.console then
-            nexus.scene.enter(nexus.scene.console.new())
+            nexus.core.scene.enter(nexus.scene.console.new())
         end
         m_loaded = true
     else
-        nexus.scene.goto(nexus.scene.error.new(nexus.database.getTranslatedText('Your game version is older than saving data!')))
+        nexus.core.scene.goto(nexus.scene.error.new(nexus.core.database.getTranslatedText('Your game version is older than saving data!')))
     end
 end
 
 function nexus.game.update(dt)
-    nexus.audio.update(dt)
-    nexus.graphics.update(dt)
-    nexus.input.update(dt)
-    nexus.message.update(dt)
-    nexus.scene.update(dt)
+    nexus.core.audio.update(dt)
+    nexus.core.graphics.update(dt)
+    nexus.core.input.update(dt)
+    nexus.core.message.update(dt)
+    nexus.core.scene.update(dt)
 end
 
 function nexus.game.render()
-    nexus.graphics.render()
-    nexus.message.render()
-    nexus.scene.render()
+    nexus.core.graphics.render()
+    nexus.core.message.render()
+    nexus.core.scene.render()
 end
 
 function nexus.game.reload()
@@ -100,28 +101,28 @@ function nexus.game.reload()
 end
 
 function nexus.game.finalize()
-    nexus.scene.finalize()
-    nexus.resource.finalize()
-    nexus.message.finalize()
-    nexus.input.finalize()
-    nexus.graphics.finalize()
-    nexus.database.finalize()
-    nexus.audio.finalize()
+    nexus.core.scene.finalize()
+    nexus.core.resource.finalize()
+    nexus.core.message.finalize()
+    nexus.core.input.finalize()
+    nexus.core.graphics.finalize()
+    nexus.core.database.finalize()
+    nexus.core.audio.finalize()
 end
 
 function nexus.game.focus(focus)
     if focus then
-        nexus.scene.resume()
-        nexus.message.resume()
-        nexus.input.resume()
-        nexus.graphics.resume()
-        nexus.audio.resume()
+        nexus.core.scene.resume()
+        nexus.core.message.resume()
+        nexus.core.input.resume()
+        nexus.core.graphics.resume()
+        nexus.core.audio.resume()
     else
-        nexus.audio.pause()
-        nexus.graphics.pause()
-        nexus.input.pause()
-        nexus.message.pause()
-        nexus.scene.pause()
+        nexus.core.audio.pause()
+        nexus.core.graphics.pause()
+        nexus.core.input.pause()
+        nexus.core.message.pause()
+        nexus.core.scene.pause()
     end
 end
 

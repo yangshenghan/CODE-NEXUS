@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -77,18 +77,18 @@ local function enter(instance)
         }, {
             text    = nexus.core.database.getTranslatedText('Continue'),
             handler = function(...)
-                nexus.core.scene.enter(nexus.scene.continue.new())
+                nexus.core.scene.goto(nexus.scene.continue.new())
             end,
             enabled = nexus.data.exists()
         }, {
             text    = nexus.core.database.getTranslatedText('Extra'),
             handler = function(...)
-                nexus.core.scene.enter(nexus.scene.extra.new())
+                nexus.core.scene.goto(nexus.scene.extra.new())
             end
         }, {
             text    = nexus.core.database.getTranslatedText('Option'),
             handler = function(...)
-                nexus.core.scene.enter(nexus.scene.option.new())
+                nexus.core.scene.goto(nexus.scene.option.new())
             end
         }, {
             text    = nexus.core.database.getTranslatedText('Exit'),
@@ -100,6 +100,8 @@ local function enter(instance)
 end
 
 local function leave(instance)
+    nexus.base.window.dispose(instance.windows.command)
+
     instance.windows.command = nil
     instance.coroutines.update = nil
 end
@@ -110,16 +112,11 @@ local function update(instance, dt)
     coroutine.resume(instance.coroutines.update, instance, dt, love.timer.getMicroTime())
 end
 
-local function render(instance)
-    instance.windows.command.render(instance.windows.command)
-end
-
 function nexus.scene.title.new(skip)
     return nexus.base.scene.new({
         enter       = enter,
         leave       = leave,
-        update      = update, 
-        render      = render,
+        update      = update,
         skip        = skip,
         windows     = {},
         coroutines  = {}

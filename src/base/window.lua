@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -48,7 +48,7 @@ local t_default = {
 }
 
 function nexus.base.window.dispose(instance)
-    nexus.manager.window.removeWindow(instance)
+    nexus.base.viewport.removeDrawable(nexus.core.graphics.getWindowViewport(), instance)
 end
 
 function nexus.base.window.update(instance, dt, ...)
@@ -67,5 +67,6 @@ end
 function nexus.base.window.new(instance)
     instance = table.merge(t_default, instance)
     instance.create(instance)
+    nexus.base.viewport.addDrawable(nexus.core.graphics.getWindowViewport(), instance)
     return instance
 end

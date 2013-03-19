@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -43,14 +43,10 @@ local function update(instance, dt)
     end
 end
 
-local function render(instance)
-end
-
 function nexus.scene.extra.new()
     return nexus.base.scene.new({
         enter   = enter,
         leave   = leave,
-        update  = update, 
-        render  = render
+        update  = update
     })
 end

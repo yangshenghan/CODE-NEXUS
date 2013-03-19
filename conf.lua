@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -45,11 +45,11 @@ function table.last(t)
     return t[table.maxn(t)]
 end
 
-function table.clone(t, metatable)
+function table.clone(t, m)
     local u = {}
 
-    if metatable then
-        setmetatable(u, metatable)
+    if m then
+        setmetatable(u, m)
     else
         setmetatable(u, getmetatable(t))
     end
@@ -72,6 +72,24 @@ function table.merge(t, s)
     end
 
     return r
+end
+
+function table.indexOf(t, v)
+    for key, value in pairs(t) do
+        if type(v) == 'function' then
+            if v(value) then return key end
+        else
+            if value == v then return key end
+        end
+    end
+
+    return nil
+end
+
+function table.removeValue(t, v)
+    local index = table.indexOf(t, v)
+    if index then table.remove(t, index) end
+    return t
 end
 
 -- / ---------------------------------------------------------------------- \ --

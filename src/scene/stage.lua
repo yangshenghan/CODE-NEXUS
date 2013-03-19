@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -32,6 +32,9 @@ local nexus = nexus
 nexus.scene.stage = {}
 
 local function enter(instance)
+    local canvas = love.graphics.newCanvas()
+    local background = nexus.core.graphics.getBackgroundViewport()
+
     -- Load stage data
     instance.map = nexus.core.database.loadMapData(instance.name)
     instance.stage = nexus.core.database.loadStageData(instance.name)
@@ -39,20 +42,52 @@ local function enter(instance)
 
     -- Initialize stage
     instance.player = nexus.object.player.new()
+    instance.player.z = 30
     instance.objects = { instance.player }
+    instance.viewports = {
+        nexus.base.viewport.new({z = 10}),
+        nexus.base.viewport.new({z = 20}),
+        nexus.base.viewport.new({z = 30})
+    }
+
+    -- Draw basic grid for easy developing
+    background.render = function(instance)
+        local mode = love.graphics.getColorMode()
+        love.graphics.setColorMode('replace')
+        love.graphics.draw(canvas)
+        love.graphics.setColorMode(mode)
+    end
+    love.graphics.setCanvas(canvas)
+    love.graphics.setBlendMode('premultiplied')
+    love.graphics.setColor(255, 255, 255, 32)
+    for j = 0, 45 do
+        for i = 0, 80 do
+            love.graphics.rectangle('line', 16 * i, 16 * j, 16, 16)
+        end
+    end
+    love.graphics.setBlendMode('alpha')
+    love.graphics.setCanvas()
+    nexus.base.viewport.addDrawable(instance.viewports[1], instance.player)
+    nexus.base.viewport.addDrawable(nexus.core.graphics.getBackgroundViewport(), background)
 
     -- Create objects
     for _, data in pairs(instance.stage.objects) do
         local object = {}
         object = data
+        object.z = 10
         object.update = data.update or function(...) end
         object.render = data.render or function(...) end
+        nexus.base.viewport.addDrawable(instance.viewports[1], object)
         table.insert(instance.objects, object)
     end
 end
 
 local function leave(instance)
     instance.player.delete(instance.player)
+
+    for _, viewport in pairs(instance.viewports) do
+        nexus.base.viewport.dispose(viewport)
+    end
 
     instance.objects = nil
     instance.player = nil
@@ -97,20 +132,6 @@ local function update(instance, dt)
     end
 end
 
-local function render(instance)
-    -- Draw basic grid for easy developing
-    for j = 0, 45 do
-        for i = 0, 80 do
-            love.graphics.setColor(255, 255, 255, 32)
-            love.graphics.rectangle('line', 16 * i, 16 * j, 16, 16)
-        end
-    end
-
-    for _, object in pairs(instance.objects) do
-        object.render(object)
-    end
-end
-
 function nexus.scene.stage.getCurrentStage()
     local scene = nexus.core.scene.getCurrentScene()
     return scene.stage
@@ -121,7 +142,6 @@ function nexus.scene.stage.new(name)
         enter   = enter,
         leave   = leave,
         update  = update,
-        render  = render,
         name    = name
     })
 end

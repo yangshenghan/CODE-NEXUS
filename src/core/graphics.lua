@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -33,6 +33,16 @@ nexus.core.graphics = {}
 
 local m_caption = love.graphics.getCaption()
 
+local t_viewports = {}
+
+local t_background_viewport = nil
+
+local t_window_viewport = nil
+
+local function viewport_zorder_sorter(a, b)
+    return a.z < b.z
+end
+
 function nexus.core.graphics.initialize()
     -- local icon = nexus.core.resource.loadImage('icon.png')
 
@@ -49,9 +59,18 @@ function nexus.core.graphics.update(dt)
         local fps = love.timer.getFPS()
         love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)
     end
+
+    table.sort(t_viewports, viewport_zorder_sorter)
+
+    for _, viewport in pairs(t_viewports) do
+        nexus.base.viewport.update(viewport, dt)
+    end
 end
 
 function nexus.core.graphics.render()
+    for _, viewport in pairs(t_viewports) do
+        nexus.base.viewport.render(viewport)
+    end
 end
 
 function nexus.core.graphics.pause()
@@ -61,6 +80,49 @@ function nexus.core.graphics.resume()
 end
 
 function nexus.core.graphics.clear()
+    for _, viewport in pairs(t_viewports) do
+        nexus.base.viewport.dispose(viewport)
+    end
+
+    t_viewports = {}
+    t_window_viewport = nil
+    t_background_viewport = nil
+end
+
+function nexus.core.graphics.getScreenWidth()
+    return nexus.configures.graphics.width
+end
+
+function nexus.core.graphics.getScreenHeight()
+    return nexus.configures.graphics.height
+end
+
+function nexus.core.graphics.getScreenModes()
+    local modes = love.graphics.getModes()
+    table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)
+    return modes
+end
+
+function nexus.core.graphics.getBestScreenMode()
+    return table.last(nexus.core.graphics.getScreenModes())
+end
+
+function nexus.core.graphics.getBackgroundViewport()
+    if not t_background_viewport then
+        t_background_viewport = nexus.base.viewport.new({z = 0})
+    end
+    return t_background_viewport
+end
+
+function nexus.core.graphics.getWindowViewport()
+    if not t_window_viewport then
+        t_window_viewport = nexus.base.viewport.new({z = 40})
+    end
+    return t_window_viewport
+end
+
+function nexus.core.graphics.screenshot()
+    return love.graphics.newScreenshot()
 end
 
 function nexus.core.graphics.toggleFullscreen()
@@ -74,18 +136,12 @@ function nexus.core.graphics.toggleFPS()
     end
 end
 
-function nexus.core.graphics.getScreenModes()
-    local modes = love.graphics.getModes()
-    table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)
-    return modes
+function nexus.core.graphics.addViewport(viewport)
+    table.insert(t_viewports, viewport)
 end
 
-function nexus.core.graphics.getBestScreenMode()
-    return table.last(nexus.core.graphics.getScreenModes())
-end
-
-function nexus.core.graphics.screenshot()
-    return love.graphics.newScreenshot()
+function nexus.core.graphics.removeViewport(viewport)
+    table.removeValue(t_viewports, viewport)
 end
 
 function nexus.core.graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -41,14 +41,10 @@ end
 local function update(instance, dt)
 end
 
-local function render(instance)
-end
-
 function nexus.scene.exit.new()
     return nexus.base.scene.new({
         enter   = enter,
         leave   = leave,
-        update  = update, 
-        render  = render
+        update  = update
     })
 end

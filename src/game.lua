@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-17                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -39,8 +39,8 @@ local m_loaded = false
 local function adjust_screen_mode()
     local best_screen_mode = nexus.core.graphics.getBestScreenMode()
 
-    local ow = nexus.configures.graphics.width
-    local oh = nexus.configures.graphics.height
+    local ow = nexus.graphics.getScreenWidth()
+    local oh = nexus.graphics.getScreenHeight()
     local bw = best_screen_mode.width
     local bh = best_screen_mode.height
 
@@ -64,7 +64,7 @@ function nexus.game.initialize()
 
     nexus.game.data = nil
 
-    if nexus.configures and not nexus.system.error then
+    if nexus.configures and not nexus.system.error and love.graphics.isSupported('canvas') then
         if nexus.system.firstrun then
             adjust_screen_mode()
         end

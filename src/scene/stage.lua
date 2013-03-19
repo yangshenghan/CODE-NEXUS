@@ -45,10 +45,13 @@ local function enter(instance)
     instance.player.z = 30
     instance.objects = { instance.player }
     instance.viewports = {
-        nexus.base.viewport.new({z = 10}),
-        nexus.base.viewport.new({z = 20}),
-        nexus.base.viewport.new({z = 30})
+        nexus.base.viewport.new(),
+        nexus.base.viewport.new(),
+        nexus.base.viewport.new()
     }
+    instance.viewports[1].z = 10
+    instance.viewports[2].z = 20
+    instance.viewports[3].z = 30
 
     -- Draw basic grid for easy developing
     background.render = function(instance)

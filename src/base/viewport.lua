@@ -73,24 +73,19 @@ end
 function nexus.base.viewport.new(...)
     local instance = {}
     if ... == nil then
-        instance.ox = 0
-        instance.oy = 0
-        instance.z = 0
         instance.rectangle = nexus.base.rectangle.new(0, 0, nexus.core.graphics.getScreenWidth(), nexus.core.graphics.getScreenHeight())
     elseif type(...) == 'table' then
         local args = ...
-        instance.ox = args.ox or 0
-        instance.oy = args.oy or 0
-        instance.z = args.z or 0
-        instance.rectangle = args.rectangle or nexus.base.rectangle.new(0, 0, nexus.core.graphics.getScreenWidth(), nexus.core.graphics.getScreenHeight())
+        instance.rectangle = args.rectangle or nexus.base.rectangle.new(args.x or 0, args.y or 0, args.width or nexus.core.graphics.getScreenWidth(), args.height or nexus.core.graphics.getScreenHeight())
     else
-        local ox, oy, z, rectangle = unpack({...})
-        instance.ox = ox or 0
-        instance.oy = oy or 0
-        instance.z = z or 0
-        instance.rectangle = rectangle or nexus.base.rectangle.new(0, 0, nexus.core.graphics.getScreenWidth(), nexus.core.graphics.getScreenHeight())
+        local x, y, width, height = unpack({...})
+        instance.rectangle = nexus.base.rectangle.new(x, y, width, height)
     end
 
+    instance.z = 0
+    instance.ox = 0
+    instance.oy = 0
+    instance.visible = true
     instance.drawables = {}
 
     nexus.core.graphics.addViewport(instance)

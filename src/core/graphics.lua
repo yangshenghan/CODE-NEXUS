@@ -109,14 +109,16 @@ end
 
 function nexus.core.graphics.getBackgroundViewport()
     if not t_background_viewport then
-        t_background_viewport = nexus.base.viewport.new({z = 0})
+        t_background_viewport = nexus.base.viewport.new()
+        t_background_viewport.z = 0
     end
     return t_background_viewport
 end
 
 function nexus.core.graphics.getWindowViewport()
     if not t_window_viewport then
-        t_window_viewport = nexus.base.viewport.new({z = 40})
+        t_window_viewport = nexus.base.viewport.new()
+        t_window_viewport.z = 40
     end
     return t_window_viewport
 end

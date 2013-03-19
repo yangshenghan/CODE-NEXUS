@@ -29,36 +29,48 @@
 --[[ ********************************************************************** ]]--
 local nexus = nexus
 
-nexus.scene.loading = {}
+nexus.window.progressbar = {}
 
-local function enter(instance)
-    instance.scene.loading = instance
-    instance.scene.progress = nexus.window.progressbar.new()
-    instance.scene.coroutine = coroutine.create(instance.scene.enter)
+local function render(instance)
+    local rectangle = love.graphics.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)
+    love.graphics.setColor(128, 128, 128, 255)
+    love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+    love.graphics.drawq(instance.image, rectangle, instance.x, instance.y)
 end
 
-local function update(instance, dt)
-    local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
-    nexus.window.progressbar.setProgressValue(instance.scene.progress, progress)
-
-    if coroutine.status(instance.scene.coroutine) == 'dead' then
-        nexus.base.window.dispose(instance.scene.progress)
-
-        nexus.core.scene.change(instance.scene)
-        instance.scene = nil
-    end
+function nexus.window.progressbar.getProgressValue(instance)
+    return instance.progress
 end
 
-function nexus.scene.loading.setProgress(value)
+function nexus.window.progressbar.setProgressValue(instance, value)
+    if not value then value = 0 end
     if value < 0 then value = 0 end
     if value > 1 then value = 1 end
-    coroutine.yield(value)
+    instance.progress = value
 end
 
-function nexus.scene.loading.new(instance)
-    return nexus.base.scene.new({
-        enter   = enter,
-        update  = update,
-        scene   = nexus.base.scene.new(instance)
+function nexus.window.progressbar.new(x, y, width, height)
+    return nexus.base.window.new({
+        create      = function(instance)
+            local image = love.image.newImageData(instance.width, instance.height)
+            local l = nexus.base.color.new(128, 255, 128, 255)
+            local r = nexus.base.color.new(255, 128, 128, 255)
+            for x = 0, instance.width - 1 do
+                local rr = x / instance.width
+                local lr = 1 - rr
+                for y = 0, instance.height - 1 do
+                    image.setPixel(image, x, y, l.red * lr + r.red * rr, l.green * lr + r.green * rr, l.blue * lr + r.blue * rr, l.alpha * lr + r.alpha * rr)
+                end
+            end
+
+            instance.progress = 0
+            instance.image = love.graphics.newImage(image)
+            instance.image.setFilter(instance.image, 'linear', 'linear')
+        end,
+        render      = render,
+        x           = x or nexus.core.graphics.getScreenWidth() * 0.15,
+        y           = y or nexus.core.graphics.getScreenHeight() * 0.8 - 60,
+        width       = width or nexus.core.graphics.getScreenWidth() * 0.7,
+        height      = height or 60
     })
 end

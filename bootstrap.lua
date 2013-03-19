@@ -153,3 +153,4 @@ require 'src.scene.exit'
 require 'src.object.player'
 
 require 'src.window.command'
+require 'src.window.progressbar'

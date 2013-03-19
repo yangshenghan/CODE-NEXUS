@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -43,7 +43,9 @@ local t_default = {
         y           = 0,    -- logical y position
         rx          = 0,    -- real x position (logical x * LOGICAL_GRID_SIZE)
         ry          = 0     -- real y potition (logical y * LOGICAL_GRID_SIZE)
-    }
+    },
+    x       = 0,
+    y       = 0
 }
 
 function nexus.base.object.move(instance, x, y)

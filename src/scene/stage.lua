@@ -54,6 +54,8 @@ local function enter(instance)
     instance.viewports[3].z = 30
 
     -- Draw basic grid for easy developing
+    background.x = 0
+    background.y = 0
     background.render = function(instance)
         nexus.core.graphics.clear()
         love.graphics.draw(canvas)

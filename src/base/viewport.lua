@@ -60,12 +60,20 @@ function nexus.base.viewport.update(instance, dt)
 end
 
 function nexus.base.viewport.render(instance)
+    local w = instance.rectangle.width
+    local h = instance.rectangle.height
+    local u = instance.rectangle.x
+    local v = instance.rectangle.y
     table.sort(instance.drawables, drawable_zorder_sorter)
 
     love.graphics.push()
     love.graphics.translate(instance.ox, instance.oy)
     for _, drawable in pairs(instance.drawables) do
-        drawable.render(drawable)
+        local dx = drawable.x - u
+        local dy = drawable.y - v
+        if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
+            drawable.render(drawable)
+        end
     end
     love.graphics.pop()
 end

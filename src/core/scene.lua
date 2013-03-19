@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -37,7 +37,7 @@ function nexus.core.scene.initialize()
 end
 
 function nexus.core.scene.finalize()
-    nexus.core.scene.clear()
+    nexus.core.scene.reset()
 end
 
 function nexus.core.scene.update(dt)
@@ -60,7 +60,7 @@ function nexus.core.scene.resume()
     nexus.base.scene.setIdle(nexus.core.scene.getCurrentScene(), false)
 end
 
-function nexus.core.scene.clear()
+function nexus.core.scene.reset()
     while #t_scenes > 0 do nexus.core.scene.leave() end
     t_scenes = {}
 end

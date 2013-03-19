@@ -39,8 +39,8 @@ local m_loaded = false
 local function adjust_screen_mode()
     local best_screen_mode = nexus.core.graphics.getBestScreenMode()
 
-    local ow = nexus.graphics.getScreenWidth()
-    local oh = nexus.graphics.getScreenHeight()
+    local ow = nexus.core.graphics.getScreenWidth()
+    local oh = nexus.core.graphics.getScreenHeight()
     local bw = best_screen_mode.width
     local bh = best_screen_mode.height
 
@@ -54,8 +54,12 @@ local function adjust_screen_mode()
 end
 
 function nexus.game.initialize()
+    local databases = {
+        colors  = 'color'
+    }
+
     nexus.core.audio.initialize()
-    nexus.core.database.initialize()
+    nexus.core.database.initialize(databases)
     nexus.core.graphics.initialize()
     nexus.core.input.initialize()
     nexus.core.message.initialize()
@@ -63,6 +67,7 @@ function nexus.game.initialize()
     nexus.core.scene.initialize()
 
     nexus.game.data = nil
+    nexus.core.database.loadTextData(nexus.configures.options.language)
 
     if nexus.configures and not nexus.system.error and love.graphics.isSupported('canvas') then
         if nexus.system.firstrun then
@@ -75,7 +80,7 @@ function nexus.game.initialize()
         end
         m_loaded = true
     else
-        nexus.core.scene.goto(nexus.scene.error.new(nexus.core.database.getTranslatedText('Your game version is older than saving data!')))
+        nexus.core.scene.goto(nexus.scene.error.new(nexus.core.database.getTranslatedText(nexus.system.error)))
     end
 end
 

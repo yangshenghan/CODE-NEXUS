@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -67,7 +67,7 @@ function nexus.core.input.finalize()
     love.mouse.setVisible(true)
     love.mouse.setGrab(false)
 
-    nexus.core.input.clear()
+    nexus.core.input.reset()
 end
 
 function nexus.core.input.update(dt)
@@ -137,7 +137,7 @@ end
 function nexus.core.input.reload()
 end
 
-function nexus.core.input.clear()
+function nexus.core.input.reset()
     t_counter = {}
     t_triggered = {}
     t_released = {}

@@ -31,87 +31,15 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Basic functions of the game                                            | --
 -- \ ---------------------------------------------------------------------- / --
-local serialize         = require 'src.system.serialize'
-local deserialize       = require 'src.system.deserialize'
-local compress          = require 'src.system.compress'
-local decompress        = require 'src.system.decompress'
-local dump              = require 'src.system.dump'
-
-function table.first(t)
-    return t[1]
-end
-
-function table.last(t)
-    return t[table.maxn(t)]
-end
-
-function table.clone(t, m)
-    local u = {}
-
-    if m then
-        setmetatable(u, m)
-    else
-        setmetatable(u, getmetatable(t))
-    end
-
-    for key, value in pairs(t) do
-        if type(value) == 'table' then
-            u[key] = table.clone(value)
-        else
-            u[key] = value
-        end
-    end
-    return u
-end
-
-function table.merge(t, s)
-    local r = table.clone(t)
-
-    for key, value in pairs(s) do
-        r[key] = value
-    end
-
-    return r
-end
-
-function table.indexOf(t, v)
-    for key, value in pairs(t) do
-        if type(v) == 'function' then
-            if v(value) then return key end
-        else
-            if value == v then return key end
-        end
-    end
-
-    return nil
-end
-
-function table.removeValue(t, v)
-    local index = table.indexOf(t, v)
-    if index then table.remove(t, index) end
-    return t
-end
+local serialize             = require 'src.system.serialize'
+local deserialize           = require 'src.system.deserialize'
+local compress              = require 'src.system.compress'
+local decompress            = require 'src.system.decompress'
+local dump                  = require 'src.system.dump'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Construction of base nexus table                                       | --
 -- \ ---------------------------------------------------------------------- / --
-NEXUS_KEY = {
-    Z           = 'z',
-    X           = 'x',
-    C           = 'c',
-    V           = 'v',
-    A           = 'a',
-    S           = 's',
-    D           = 'd',
-    F           = 'f',
-    UP          = 'up',
-    RIGHT       = 'right',
-    DOWN        = 'down',
-    LEFT        = 'left',
-    CONFIRM     = 'confirm',
-    CANCEL      = 'cancel'
-}
-
 nexus = {
     settings    = {
         showfps     = true,
@@ -213,8 +141,8 @@ function nexus.core.serialize(data)
     return serialize(data)
 end
 
-function nexus.core.decompress(data)
-    return decompress(data)
+function nexus.core.compress(data)
+    return compress(data)
 end
 
 function nexus.core.deserialize(data)
@@ -244,6 +172,7 @@ function nexus.core.read(filename)
         local data = nexus.core.upgradeGameData(chunk.identifier, chunk) 
         nexus.core.save(filename, data, chunk.identifier)
     elseif chunk.version > nexus.core.getGameVersion() then
+        nexus.system.error = 'Your game version is older than saving data!'
         return nil
     end
     return chunk.data
@@ -348,4 +277,3 @@ function love.conf(game)
         game.screen.fsaa = nexus.configures.graphics.fsaa
     end
 end
-

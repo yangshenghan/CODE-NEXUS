@@ -55,10 +55,8 @@ local function enter(instance)
 
     -- Draw basic grid for easy developing
     background.render = function(instance)
-        local mode = love.graphics.getColorMode()
-        love.graphics.setColorMode('replace')
+        nexus.core.graphics.clear()
         love.graphics.draw(canvas)
-        love.graphics.setColorMode(mode)
     end
     love.graphics.setCanvas(canvas)
     love.graphics.setBlendMode('premultiplied')

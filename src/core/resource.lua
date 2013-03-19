@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -75,10 +75,10 @@ function nexus.core.resource.initialize()
 end
 
 function nexus.core.resource.finalize()
-    nexus.core.resource.clear()
+    nexus.core.resource.reset()
 end
 
-function nexus.core.resource.clear()
+function nexus.core.resource.reset()
     t_fonts = {}
     t_images = {}
     t_sources = {}

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-19                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -35,7 +35,7 @@ function nexus.core.message.initialize()
 end
 
 function nexus.core.message.finalize()
-    nexus.core.message.clear()
+    nexus.core.message.reset()
 end
 
 function nexus.core.message.update(dt)
@@ -50,5 +50,5 @@ end
 function nexus.core.message.resume()
 end
 
-function nexus.core.message.clear()
+function nexus.core.message.reset()
 end

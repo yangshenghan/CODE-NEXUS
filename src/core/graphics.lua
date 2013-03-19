@@ -51,7 +51,7 @@ function nexus.core.graphics.initialize()
 end
 
 function nexus.core.graphics.finalize()
-    nexus.core.graphics.clear()
+    nexus.core.graphics.reset()
 end
 
 function nexus.core.graphics.update(dt)
@@ -79,7 +79,7 @@ end
 function nexus.core.graphics.resume()
 end
 
-function nexus.core.graphics.clear()
+function nexus.core.graphics.reset()
     for _, viewport in pairs(t_viewports) do
         nexus.base.viewport.dispose(viewport)
     end
@@ -87,6 +87,10 @@ function nexus.core.graphics.clear()
     t_viewports = {}
     t_window_viewport = nil
     t_background_viewport = nil
+end
+
+function nexus.core.graphics.clear()
+    love.graphics.setColor(nexus.core.database.getColor('base'))
 end
 
 function nexus.core.graphics.getScreenWidth()

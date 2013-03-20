@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-18                                                    ]]--
+--[[ Updates: 2013-03-20                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -42,14 +42,18 @@ local function update(instance, dt)
 
     if nexus.core.input.isKeyDown(NEXUS_KEY.C) then
         local command = instance.commands[instance.cursor]
-        command.handler()
+        if command.enabled then command.handler() end
         return instance.cursor 
     end
 end
 
 local function render(instance)
     for index, command in ipairs(instance.commands) do
-        love.graphics.setColor(255, 255, 255)
+        if command.enabled then
+            love.graphics.setColor(255, 255, 255)
+        else
+            love.graphics.setColor(255, 255, 255, 128)
+        end
         if instance.cursor == index then
             love.graphics.setColor(255, 255, 0)
         end
@@ -87,7 +91,7 @@ function nexus.window.command.addCommand(instance, text, enabled, handler)
     instance.size = instance.size + 1
     instance.commands[instance.size] = {
         text    = text,
-        enabled = enabled ~= nil or false and true,
+        enabled = enabled == nil or true and false,
         handler = handler or function(...) end
     }
 end

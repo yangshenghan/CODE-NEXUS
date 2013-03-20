@@ -43,7 +43,7 @@ function table.first(t)
 end
 
 function table.last(t)
-    return t[table.maxn(t)]
+    return t[#t]
 end
 
 function table.clone(t, m)

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-20                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -31,6 +31,12 @@ local nexus = nexus
 
 nexus.core.graphics = {}
 
+local m_framerate = 60
+
+local m_framecount = 0
+
+local m_brightness = 255
+
 local m_caption = love.graphics.getCaption()
 
 local t_viewports = {}
@@ -45,6 +51,10 @@ end
 
 function nexus.core.graphics.initialize()
     -- local icon = nexus.core.resource.loadImage('icon.png')
+
+    m_framerate = 60
+    m_framecount = 0
+    m_brightness = 255
 
     -- love.graphics.setIcon(icon)
     love.graphics.reset()
@@ -91,6 +101,15 @@ end
 
 function nexus.core.graphics.clear()
     love.graphics.setColor(nexus.core.database.getColor('base'))
+end
+
+function nexus.core.graphics.fadeIn(duration)
+end
+
+function nexus.core.graphics.fadeOut(duration)
+end
+
+function nexus.core.graphics.transition(duration, transition, vague)
 end
 
 function nexus.core.graphics.getScreenWidth()

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-20                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -116,7 +116,18 @@ NEXUS_KEY = {
     DOWN        = 'down',
     LEFT        = 'left',
     CONFIRM     = 'confirm',
-    CANCEL      = 'cancel'
+    CANCEL      = 'cancel',
+    SHIFT       = 'shift',
+    ALTERNATIVE = 'alternative',
+    CONTROL     = 'control',
+    F1          = 'f1',
+    F2          = 'f2',
+    F3          = 'f3',
+    F4          = 'f4',
+    F5          = 'f5',
+    F6          = 'f6',
+    F7          = 'f7',
+    F8          = 'f8'
 }
 
 -- / ---------------------------------------------------------------------- \ --

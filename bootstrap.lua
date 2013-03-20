@@ -145,6 +145,7 @@ require 'src.core.scene'
 
 require 'src.base.color'
 require 'src.base.rectangle'
+require 'src.base.tone'
 require 'src.base.viewport'
 require 'src.base.scene'
 require 'src.base.object'

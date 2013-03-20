@@ -102,7 +102,8 @@ nexus = {
             saving_slot_size        = 15,
             logical_grid_size       = 16,
             logical_canvas_width    = 1280,
-            logical_canvas_height   = 720
+            logical_canvas_height   = 720,
+            configure_identifier    = 'configure'
         },
         debug       = true,
         firstrun    = false,
@@ -249,7 +250,7 @@ function love.conf(game)
 
     love.filesystem.setIdentity(identity)
     if not nexus.core.exists(filename) then
-        nexus.core.save(filename, nexus.configures)
+        nexus.core.save(filename, nexus.configures, nexus.system.parameters.configure_identifier)
         nexus.system.firstrun = true
     end
     nexus.configures = nexus.core.read(filename)

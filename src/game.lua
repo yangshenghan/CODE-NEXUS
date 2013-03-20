@@ -139,5 +139,5 @@ function nexus.game.changeGameplayConfigures()
 end
 
 function nexus.game.saveGameConfigure()
-    nexus.core.save(nexus.system.paths.configure, nexus.configures, 'configure')
+    nexus.core.save(nexus.system.paths.configure, nexus.configures, nexus.system.parameters.configure_identifier)
 end

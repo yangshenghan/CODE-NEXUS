@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-20                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -54,7 +54,7 @@ end
 local function load_image_resource(folder, filename)
     local path = folder .. filename
 
-    if not t_images[path] or t_images[path].isDisposed() then
+    if not t_images[path] then
         t_images[path] = love.graphics.newImage(path)
     end
 

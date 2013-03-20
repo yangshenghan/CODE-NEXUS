@@ -148,6 +148,7 @@ require 'src.base.rectangle'
 require 'src.base.tone'
 require 'src.base.viewport'
 require 'src.base.scene'
+require 'src.base.sprite'
 require 'src.base.object'
 require 'src.base.window'
 

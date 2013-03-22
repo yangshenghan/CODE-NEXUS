@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -32,32 +32,57 @@ local nexus = nexus
 nexus.scene.title = {}
 
 local f_update_coroutine = function(instance, dt, timer)
-    --[[
     local wait = function(microsecond, callback)
         local wakeup = love.timer.getMicroTime() + microsecond / 1000
-        repeat callback() until select(2, coroutine.yield()) > wakeup
+        repeat callback(dt) until select(3, coroutine.yield()) > wakeup
     end
 
-    -- Show splash screen
+    -- Show splash screens
     if not instance.skip then
-        wait(500, function()
+        local splash = nexus.base.sprite.new({
+            x       = nexus.configures.graphics.width / 2,
+            y       = nexus.configures.graphics.height / 2
+        }, nexus.core.graphics.getWindowViewport())
+        nexus.base.sprite.setImage(splash, nexus.core.resource.loadSystemImage('splash1.png'))
+        splash.opacity = 0
+        wait(1000, function(dt)
+            splash.opacity = splash.opacity + dt
         end)
 
-        wait(500, function()
-        end)
+        wait(1000, function() end)
 
-        wait(500, function()
+        wait(1000, function(dt)
+            splash.opacity = splash.opacity - dt
         end)
+        nexus.base.sprite.dispose(splash)
     end
 
     -- Start animation of PRESS TO START message
-    wait(500, function()
-    end)
+    local waiting = nexus.base.sprite.new({
+        x       = nexus.configures.graphics.width / 2,
+        y       = nexus.configures.graphics.height / 2
+    }, nexus.core.graphics.getWindowViewport())
+    nexus.base.sprite.setImage(waiting, nexus.core.resource.loadSystemImage('press_any_key_to_continue.png'))
+    while true do
+        local cycle, phase = math.modf((timer - 0.5) / 0.75)
+        if nexus.core.input.isKeyTrigger(NEXUS_KEY.C) then break end
+        if cycle % 2 == 0 then
+            waiting.opacity = 1 - phase
+        else
+            waiting.opacity = phase
+        end
+        timer = select(3, coroutine.yield())
+    end
+    nexus.base.sprite.dispose(waiting)
 
-    nexus.window.command.open(instnace.command)
-    ]]--
+    while waiting.opacity < 1 do
+        waiting.opacity = waiting.opacity + dt
+        coroutine.yield()
+    end
+    wait(100, function() end)
 
     -- Show main menu
+    nexus.base.window.open(instance.windows.command)
     while true do
         nexus.base.window.update(instance.windows.command, dt)
         coroutine.yield()

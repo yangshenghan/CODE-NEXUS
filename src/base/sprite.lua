@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-20                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -32,6 +32,7 @@ local nexus = nexus
 nexus.base.sprite = {}
 
 local t_default = {
+    color       = nil,
     render      = nil,
     angle       = 0,
     mx          = false,
@@ -52,6 +53,12 @@ local t_default = {
     zy          = 1
 }
 
+local function transform_opacity_color(color, opacity)
+    if opacity < 0 then opacity = 0 end
+    if opacity > 1 then opacity = 1 end
+    return color.red, color.green, color.blue, color.alpha * opacity
+end
+
 function nexus.base.sprite.dispose(instance)
     instance.render = nil
     nexus.base.viewport.removeDrawable(instance.viewport, instance)
@@ -63,6 +70,8 @@ end
 
 function nexus.base.sprite.setImage(instance, image)
     instance.image = image
+    instance.rectangle.width = image.getWidth(image)
+    instance.rectangle.height = image.getHeight(image)
 end
 
 function nexus.base.sprite.getWidth(instance)
@@ -78,8 +87,8 @@ function nexus.base.sprite.render(instance)
         local src = instance.image
         local rect = instance.rectangle
         local quad = love.graphics.newQuad(rect.x, rect.y, rect.width, rect.height, src.getWidth(src), src.getHeight(src))
-        love.graphics.setColor(nexus.base.color.get(instance.color))
-        love.graphics.drawq(instance.image, quad, instance.x, instance.y, instance.angle, instance.zx, instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
+        love.graphics.setColor(transform_opacity_color(instance.color, instance.opacity))
+        love.graphics.drawq(instance.image, quad, instance.x - rect.width / 2, instance.y - rect.height / 2, instance.angle, instance.zx, instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
     end
 end
 

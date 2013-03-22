@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -36,11 +36,11 @@ local t_default = {
     delete      = function(...) end,
     update      = function(...) end,
     render      = function(...) end,
-    active      = true,
+    active      = false,
     height      = nil,
     openness    = 1,
     padding     = 12,
-    visible     = true,
+    visible     = false,
     width       = nil,
     x           = nil,
     y           = nil,
@@ -62,6 +62,16 @@ function nexus.base.window.render(instance, ...)
     if instance.visible then
         instance.render(instance, ...)
     end
+end
+
+function nexus.base.window.open(instance)
+    instance.active = true
+    instance.visible = true
+end
+
+function nexus.base.window.close(instance)
+    instance.active = false
+    instance.visible = false
 end
 
 function nexus.base.window.new(instance)

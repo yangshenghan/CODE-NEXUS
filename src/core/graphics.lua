@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-20                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -79,7 +79,9 @@ end
 
 function nexus.core.graphics.render()
     for _, viewport in pairs(t_viewports) do
-        if viewport.visible then nexus.base.viewport.render(viewport) end
+        if not nexus.base.viewport.isDisposed(viewport) and viewport.visible then
+            nexus.base.viewport.render(viewport)
+        end
     end
 end
 

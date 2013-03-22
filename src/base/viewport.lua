@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -69,10 +69,12 @@ function nexus.base.viewport.render(instance)
     love.graphics.push()
     love.graphics.translate(instance.ox, instance.oy)
     for _, drawable in pairs(instance.drawables) do
-        local dx = drawable.x - u
-        local dy = drawable.y - v
-        if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
-            drawable.render(drawable)
+        if not nexus.base.sprite.isDisposed(drawable) and drawable.visible then
+            local dx = drawable.x - u
+            local dy = drawable.y - v
+            if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
+                drawable.render(drawable)
+            end
         end
     end
     love.graphics.pop()

@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -43,6 +43,7 @@ local function enter(instance)
     -- Initialize stage
     instance.player = nexus.object.player.new()
     instance.player.z = 30
+    instance.player.visible = true
     instance.objects = { instance.player }
     instance.viewports = {
         nexus.base.viewport.new(),
@@ -56,6 +57,7 @@ local function enter(instance)
     -- Draw basic grid for easy developing
     background.x = 0
     background.y = 0
+    background.visible = true
     background.render = function(instance)
         nexus.core.graphics.clear()
         love.graphics.draw(canvas)
@@ -78,6 +80,7 @@ local function enter(instance)
         local object = {}
         object = data
         object.z = 10
+        object.visible = true
         object.update = data.update or function(...) end
         object.render = data.render or function(...) end
         nexus.base.viewport.addDrawable(instance.viewports[1], object)

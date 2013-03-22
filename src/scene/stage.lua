@@ -44,6 +44,8 @@ local function enter(instance)
     instance.player = nexus.object.player.new()
     instance.player.z = 30
     instance.player.visible = true
+    instance.player.dispose = function(...) end
+    instance.player.disposed = function(...) end
     instance.objects = { instance.player }
     instance.viewports = {
         nexus.base.viewport.new(),
@@ -58,6 +60,8 @@ local function enter(instance)
     background.x = 0
     background.y = 0
     background.visible = true
+    background.dispose = function(...) end
+    background.disposed = function(...) end
     background.render = function(instance)
         nexus.core.graphics.clear()
         love.graphics.draw(canvas)
@@ -81,6 +85,8 @@ local function enter(instance)
         object = data
         object.z = 10
         object.visible = true
+        object.dispose = function(...) end
+        object.disposed = function(...) end
         object.update = data.update or function(...) end
         object.render = data.render or function(...) end
         nexus.base.viewport.addDrawable(instance.viewports[1], object)

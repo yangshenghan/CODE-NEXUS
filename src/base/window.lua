@@ -31,24 +31,13 @@ local nexus = nexus
 
 nexus.base.window = {}
 
-local t_default = {
-    create      = function(...) end,
-    delete      = function(...) end,
-    update      = function(...) end,
-    render      = function(...) end,
-    active      = false,
-    height      = nil,
-    openness    = 1,
-    padding     = 12,
-    visible     = false,
-    width       = nil,
-    x           = nil,
-    y           = nil,
-    z           = 1000
-}
-
-function nexus.base.window.dispose(instance)
+local function dispose(instance)
+    instance.render = nil
     nexus.base.viewport.removeDrawable(nexus.core.graphics.getWindowViewport(), instance)
+end
+
+local function disposed(instance)
+    return instance.render == nil
 end
 
 function nexus.base.window.update(instance, dt, ...)
@@ -73,6 +62,24 @@ function nexus.base.window.close(instance)
     instance.active = false
     instance.visible = false
 end
+
+local t_default = {
+    dispose     = dispose,
+    disposed    = disposed,
+    create      = function(...) end,
+    delete      = function(...) end,
+    update      = function(...) end,
+    render      = function(...) end,
+    active      = false,
+    height      = nil,
+    openness    = 1,
+    padding     = 12,
+    visible     = false,
+    width       = nil,
+    x           = nil,
+    y           = nil,
+    z           = 1000
+}
 
 function nexus.base.window.new(instance)
     instance = table.merge(t_default, instance)

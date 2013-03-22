@@ -79,7 +79,7 @@ end
 
 function nexus.core.graphics.render()
     for _, viewport in pairs(t_viewports) do
-        if not nexus.base.viewport.isDisposed(viewport) and viewport.visible then
+        if not nexus.base.viewport.disposed(viewport) and viewport.visible then
             nexus.base.viewport.render(viewport)
         end
     end

@@ -31,40 +31,18 @@ local nexus = nexus
 
 nexus.base.sprite = {}
 
-local t_default = {
-    color       = nil,
-    render      = nil,
-    angle       = 0,
-    mx          = false,
-    my          = false,
-    image       = nil,
-    opacity     = 1,
-    ox          = 0,
-    oy          = 0,
-    rectangle   = nil,
-    sx          = 0,
-    sy          = 0,
-    visible     = true,
-    viewport    = nil,
-    x           = 0,
-    y           = 0,
-    z           = 0,
-    zx          = 1,
-    zy          = 1
-}
-
 local function transform_opacity_color(color, opacity)
     if opacity < 0 then opacity = 0 end
     if opacity > 1 then opacity = 1 end
     return color.red, color.green, color.blue, color.alpha * opacity
 end
 
-function nexus.base.sprite.dispose(instance)
+local function dispose(instance)
     instance.render = nil
     nexus.base.viewport.removeDrawable(instance.viewport, instance)
 end
 
-function nexus.base.sprite.isDisposed(instance)
+local function disposed(instance)
     return instance.render == nil
 end
 
@@ -83,7 +61,7 @@ function nexus.base.sprite.getHeight(instance)
 end
 
 function nexus.base.sprite.render(instance)
-    if not nexus.base.sprite.isDisposed(instance) and instance.image then
+    if not instance.disposed(instance) and instance.image then
         local src = instance.image
         local rect = instance.rectangle
         local quad = love.graphics.newQuad(rect.x, rect.y, rect.width, rect.height, src.getWidth(src), src.getHeight(src))
@@ -91,6 +69,30 @@ function nexus.base.sprite.render(instance)
         love.graphics.drawq(instance.image, quad, instance.x - rect.width / 2, instance.y - rect.height / 2, instance.angle, instance.zx, instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
     end
 end
+
+local t_default = {
+    dispose     = dispose,
+    disposed    = disposed,
+    render      = nil,
+    color       = nil,
+    angle       = 0,
+    mx          = false,
+    my          = false,
+    image       = nil,
+    opacity     = 1,
+    ox          = 0,
+    oy          = 0,
+    rectangle   = nil,
+    sx          = 0,
+    sy          = 0,
+    visible     = true,
+    viewport    = nil,
+    x           = 0,
+    y           = 0,
+    z           = 0,
+    zx          = 1,
+    zy          = 1
+}
 
 function nexus.base.sprite.new(instance, viewport)
     instance = table.merge(t_default, instance)

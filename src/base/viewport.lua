@@ -49,7 +49,7 @@ function nexus.base.viewport.dispose(instance)
     nexus.core.graphics.removeViewport(instance)
 end
 
-function nexus.base.viewport.isDisposed(instance)
+function nexus.base.viewport.disposed(instance)
     return instance.drawables == nil
 end
 
@@ -69,7 +69,7 @@ function nexus.base.viewport.render(instance)
     love.graphics.push()
     love.graphics.translate(instance.ox, instance.oy)
     for _, drawable in pairs(instance.drawables) do
-        if not nexus.base.sprite.isDisposed(drawable) and drawable.visible then
+        if not drawable.disposed(drawable) and drawable.visible then
             local dx = drawable.x - u
             local dy = drawable.y - v
             if dx >= 0 and dx <= w and dy >= 0 and dy <= h then

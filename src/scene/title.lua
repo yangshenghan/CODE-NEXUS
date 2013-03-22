@@ -54,7 +54,7 @@ local f_update_coroutine = function(instance, dt, timer)
         wait(1000, function(dt)
             splash.opacity = splash.opacity - dt
         end)
-        nexus.base.sprite.dispose(splash)
+        splash.dispose(splash)
     end
 
     -- Start animation of PRESS TO START message
@@ -73,7 +73,7 @@ local f_update_coroutine = function(instance, dt, timer)
         end
         timer = select(3, coroutine.yield())
     end
-    nexus.base.sprite.dispose(waiting)
+    waiting.dispose(waiting)
 
     while waiting.opacity < 1 do
         waiting.opacity = waiting.opacity + dt
@@ -125,7 +125,7 @@ local function enter(instance)
 end
 
 local function leave(instance)
-    nexus.base.window.dispose(instance.windows.command)
+    instance.windows.command.dispose(instance.windows.command)
 
     instance.windows.command = nil
     instance.coroutines.update = nil

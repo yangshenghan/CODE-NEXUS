@@ -3,7 +3,7 @@
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
+--[[ Updates: 2013-03-22                                                    ]]--
 --[[ License: zlib/libpng License                                           ]]--
 --[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
@@ -42,7 +42,7 @@ local function update(instance, dt)
     nexus.window.progressbar.setProgressValue(instance.scene.progress, progress)
 
     if coroutine.status(instance.scene.coroutine) == 'dead' then
-        nexus.base.window.dispose(instance.scene.progress)
+        instance.scene.progress.dispose(instance.scene.progress)
 
         nexus.core.scene.change(instance.scene)
         instance.scene = nil

@@ -27,88 +27,129 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l             = love
+local le            = l.event
+local lg            = l.graphics
+
 local Nexus         = nexus
 local NexusCore     = Nexus.core
+
+local Data          = require 'src.core.data'
+local Scene         = require 'src.core.scene'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.scene     = {}
+NexusCore.game      = {}
 
-local Scene         = NexusCore.scene
+local Game          = NexusCore.game
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local t_scenes      = {}
+local t_saving_data = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function on_after_load()
+end
+
+local function on_before_save()
+    t_saving_data.system.savingcount = t_saving_data.system.savingcount + 1
+end
+
+local function adjust_screen_mode()
+    local best_screen_mode = Graphics.getBestScreenMode()
+
+    local ow = Graphics.getScreenWidth()
+    local oh = Graphics.getScreenHeight()
+    local bw = best_screen_mode.width
+    local bh = best_screen_mode.height
+
+    if ow > bw or oh > bh or ow * oh > bw * bh then
+        if bw > bh then
+            Graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
+        else
+            Graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
+        end
+    end
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function Scene.initialize()
+function Game.initialize()
+    t_saving_data = Data.loadScriptData('setup')
 end
 
-function Scene.finalize()
-    while #t_scenes > 0 do Scene.leave() end
-
-    t_scenes = {}
+function Game.finalize()
+    t_saving_data = {}
 end
 
-function Scene.update(dt)
-    for _, scene in ipairs(t_scenes) do
-        if not nexus.base.scene.isIdle(scene) then scene.update(scene, dt) end
+function Game.update(dt)
+end
+
+function Game.render()
+end
+
+function Game.start()
+    Data.loadTextData(nexus.configures.options.language)
+    if nexus.configures and not nexus.system.error and lg.isSupported('canvas') then
+        if nexus.system.firstrun then adjust_screen_mode() end
+        Scene.goto(nexus.scene.title.new(m_loaded))
+        -- Scene.goto(nexus.scene.stage.new('prologue'))
+        if nexus.settings.console then
+            Scene.enter(nexus.scene.console.new())
+        end
+        m_loaded = true
+    else
+        Scene.goto(nexus.scene.error.new(Data.getTranslatedText(nexus.system.error)))
     end
 end
 
-function Scene.render()
-    for _, scene in ipairs(t_scenes) do
-        scene.render(scene)
+function Game.terminate()
+end
+
+-- function Game.changeGameplayConfigures()
+    -- nexus.game.saveGameConfigure()
+-- end
+
+-- function Game.saveGameConfigure()
+    -- nexus.core.save(nexus.system.paths.configure, nexus.configures, nexus.system.parameters.configure_identifier)
+-- end
+
+function Game.setup()
+end
+
+function Game.load(index)
+    on_after_load()
+    return false
+end
+
+function Game.save(index)
+    on_before_save()
+    return false
+end
+
+function Game.delete(index)
+    return false
+end
+
+function Game.exists()
+    for index = 1, nexus.system.parameters.saving_slot_size do
+        local filename = string.format(nexus.system.paths.saving, index)
+        if nexus.core.exists(filename) then return true end
     end
+    return false
 end
 
-function Scene.pause()
-    nexus.base.scene.setIdle(Scene.getCurrentScene(), true)
+function Game.reload()
+    le.push('reload')
 end
 
-function Scene.resume()
-    nexus.base.scene.setIdle(Scene.getCurrentScene(), false)
+function Game.quit()
+    le.push('quit')
 end
 
-function Scene.getCurrentScene()
-    return table.last(t_scenes)
-end
-
-function Scene.change(scene)
-    t_scenes[#t_scenes] = scene
-end
-
-function Scene.goto(scene)
-    if #t_scenes > 0 then Scene.leave() end
-    Scene.enter(scene)
-end
-
-function Scene.enter(scene)
-    if #t_scenes > 0 then
-        local current = Scene.getCurrentScene()
-        nexus.base.scene.setIdle(current, true)
-        current.idleIn(current)
-    end
-
-    table.insert(t_scenes, scene)
-    scene.enter(scene)
-end
-
-function Scene.leave()
-    if #t_scenes == 0 then return end
-
-    local last = table.remove(t_scenes)
-    last.leave(last)
-
-    if #t_scenes > 0 then
-        local current = Scene.getCurrentScene()
-        nexus.base.scene.setIdle(current, false)
-        current.idleOut(current)
-    end
-end
-
-return Scene
+return Game

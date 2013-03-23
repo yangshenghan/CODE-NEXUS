@@ -27,14 +27,14 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l         = love
-local lt        = l.timer
-local lg        = l.graphics
+local l             = love
+local lt            = l.timer
+local lg            = l.graphics
 
-local Nexus     = nexus
-local NexusCore = Nexus.core
+local Nexus         = nexus
+local NexusCore     = Nexus.core
 
-local Game      = Nexus.game
+local Scene         = require 'src.core.scene'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

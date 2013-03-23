@@ -27,12 +27,12 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l         = love
-local la        = l.audio
-local lg        = l.graphics
+local l             = love
+local la            = l.audio
+local lg            = l.graphics
 
-local Nexus     = nexus
-local NexusCore = Nexus.core
+local Nexus         = nexus
+local NexusCore     = Nexus.core
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -144,7 +144,7 @@ function Resource.loadSystemImage(filename)
     return load_image_resource('res/graphics/systems/', filename)
 end
 
-function Resource.loadFont(filename, size)
+function Resource.loadFontData(filename, size)
     return load_font_resource('res/fonts/', filename, size)
 end
 

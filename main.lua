@@ -32,179 +32,110 @@ local le            = l.event
 local lt            = l.timer
 local lg            = l.graphics
 
-local Nexus         = nexus
-
--- / ---------------------------------------------------------------------- \ --
--- | Declare object                                                         | --
--- \ ---------------------------------------------------------------------- / --
-Nexus.game          = {}
-
-local Game          = Nexus.game
-
 local Audio         = require 'src.core.audio'
 local Data          = require 'src.core.data'
+local Game          = require 'src.core.game'
 local Graphics      = require 'src.core.graphics'
 local Input         = require 'src.core.input'
 local Resource      = require 'src.core.resource'
+local Scene         = require 'src.core.scene'
 
 require 'bootstrap'
-
-local MessageManager        = Nexus.core.message
-local SceneManager          = Nexus.core.scene
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_loaded = false
+local m_loaded      = false
 
-local m_loading = true
+local m_loading     = true
 
-local m_running = true
+local m_running     = true
 
--- / ---------------------------------------------------------------------- \ --
--- | Private functions                                                      | --
--- \ ---------------------------------------------------------------------- / --
-local function adjust_screen_mode()
-    local best_screen_mode = Graphics.getBestScreenMode()
-
-    local ow = Graphics.getScreenWidth()
-    local oh = Graphics.getScreenHeight()
-    local bw = best_screen_mode.width
-    local bh = best_screen_mode.height
-
-    if ow > bw or oh > bh or ow * oh > bw * bh then
-        if bw > bh then
-            Graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
+local HANDLERS      = {
+    focus           = function(focus)
+        if focus then
+            Scene.resume()
+            Input.resume()
+            Graphics.resume()
+            Game.resume()
+            Audio.resume()
         else
-            Graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
+            Audio.pause()
+            Game.pause()
+            Graphics.pause()
+            Input.pause()
+            Scene.pause()
         end
+    end,
+    resize          = function(width, height)
+        Graphics.changeGraphicsConfigures(width, height)
+    end,
+    reload          = function()
+        m_loading = true
+        m_running = false
+    end,
+    quit            = function()
+        m_running = false
     end
-end
+}
 
 -- / ---------------------------------------------------------------------- \ --
--- | Member functions                                                       | --
+-- | Execution section                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-function Game.initialize()
-    nexus.core.database = Data
-    -- nexus.core = {
-        -- audio = require 'src.core.audio'
-    -- }
-
-    Audio.initialize()
-    Data.initialize()
-    Graphics.initialize()
-    Input.initialize()
-    MessageManager.initialize()
-    Resource.initialize()
-    SceneManager.initialize()
-
-    -- nexus.game.data = nil
-    Data.loadTextData(nexus.configures.options.language)
-
-    if nexus.configures and not nexus.system.error and lg.isSupported('canvas') then
-        if nexus.system.firstrun then adjust_screen_mode() end
-        SceneManager.goto(nexus.scene.title.new(m_loaded))
-        -- SceneManager.goto(nexus.scene.stage.new('prologue'))
-        if nexus.settings.console then
-            SceneManager.enter(nexus.scene.console.new())
-        end
-        m_loaded = true
-    else
-        SceneManager.goto(nexus.scene.error.new(Data.getTranslatedText(nexus.system.error)))
-    end
-end
-
-function Game.finalize()
-    SceneManager.finalize()
-    Resource.finalize()
-    nexus.core.message.finalize()
-    Input.finalize()
-    Graphics.finalize()
-    Data.finalize()
-    Audio.finalize()
-end
-
-function Game.update(dt)
-    Audio.update(dt)
-    Graphics.update(dt)
-    Input.update(dt)
-    nexus.core.message.update(dt)
-    SceneManager.update(dt)
-end
-
-function Game.render()
-    Graphics.render()
-    nexus.core.message.render()
-    SceneManager.render()
-end
-
-function Game.pause()
-    Audio.pause()
-    Graphics.pause()
-    Input.pause()
-    nexus.core.message.pause()
-    SceneManager.pause()
-end
-
-function Game.resume()
-    SceneManager.resume()
-    nexus.core.message.resume()
-    Input.resume()
-    Graphics.resume()
-    Audio.resume()
-end
-
-function Game.focus(focus)
-    if focus then Game.resume() else Game.pause() end
-end
-
-function Game.resize(width, height)
-    Graphics.changeGraphicsConfigures(width, height)
-end
-
-function Game.reload()
-    m_loading = true
-    m_running = false
-end
-
-function Game.quit()
-    m_running = false
-end
-
--- function Game.changeGameplayConfigures()
-    -- nexus.game.saveGameConfigure()
--- end
-
--- function Game.saveGameConfigure()
-    -- nexus.core.save(nexus.system.paths.configure, nexus.configures, nexus.system.parameters.configure_identifier)
--- end
-
 function love.run()
+    local dt = 0
+
     math.randomseed(os.time())
     math.random()
     math.random()
 
-    while m_loading do
-        Game.initialize()
+    nexus.core.database = Data
 
+    while m_loading do
         m_running = true
         m_loading = false
+
+        Audio.initialize()
+        Data.initialize()
+        Game.initialize()
+        Graphics.initialize()
+        Input.initialize()
+        Resource.initialize()
+        Scene.initialize()
+
+        Game.start()
         while m_running do
             le.pump()
             for e, a, b, c, d in le.poll() do
-                local handler = Game[e]
+                local handler = HANDLERS[e]
                 if handler then handler(a, b, c, d) end
             end
 
             lt.step()
-            Game.update(lt.getDelta())
+            dt = lt.getDelta()
+
+            Audio.update(dt)
+            Game.update(dt)
+            Graphics.update(dt)
+            Input.update(dt)
+            Scene.update(dt)
 
             lg.clear()
             Game.render()
+            Graphics.render()
+            Scene.render()
             lg.present()
 
             lt.sleep(0.001)
         end
+        Game.terminate()
+
+        Scene.finalize()
+        Resource.finalize()
+        Input.finalize()
+        Graphics.finalize()
         Game.finalize()
+        Data.finalize()
+        Audio.finalize()
     end
 end

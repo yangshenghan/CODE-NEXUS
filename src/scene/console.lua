@@ -482,7 +482,7 @@ local function enter(instance)
     end
 
     reset = function()
-        nexus.game.reload()
+        nexus.core.game.reload()
     end
 
     quit = function()
@@ -522,7 +522,7 @@ end
 
 function nexus.scene.console.new()
     if not t_instance then
-        local font = nexus.core.resource.loadFont('inconsolata.otf', 16)
+        local font = nexus.core.resource.loadFontData('inconsolata.otf', 16)
         console.initialize(executer, font)
 
         t_instance = nexus.base.scene.new({

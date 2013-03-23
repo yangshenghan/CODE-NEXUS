@@ -91,7 +91,7 @@ local function enter(instance)
         {
             text    = nexus.core.database.getTranslatedText('New Game'),
             handler = function(...)
-                nexus.data.setup()
+                nexus.core.game.setup()
                 nexus.core.scene.goto(nexus.scene.stage.new('prologue'))
                 -- nexus.core.scene.goto(nexus.scene.newgame.new())
             end
@@ -100,7 +100,7 @@ local function enter(instance)
             handler = function(...)
                 nexus.core.scene.goto(nexus.scene.continue.new())
             end,
-            enabled = nexus.data.exists()
+            enabled = nexus.core.game.exists()
         }, {
             text    = nexus.core.database.getTranslatedText('Extra'),
             handler = function(...)

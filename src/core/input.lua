@@ -34,7 +34,7 @@ local lk            = l.keyboard
 local Nexus         = nexus
 local NexusCore     = Nexus.core
 
-local Game          = Nexus.game
+local Game          = require 'src.core.game'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

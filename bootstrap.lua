@@ -2,10 +2,6 @@
 --[[ [CODE NEXUS]                                                           ]]--
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
---[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-20                                                    ]]--
---[[ License: zlib/libpng License                                           ]]--
---[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
 --[[                                                                        ]]--
 --[[ This software is provided 'as-is', without any express or implied      ]]--
@@ -133,8 +129,6 @@ NEXUS_KEY = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Actually load the game                                                 | --
 -- \ ---------------------------------------------------------------------- / --
-require 'src.game'
-
 require 'src.core.audio'
 require 'src.core.database'
 require 'src.core.graphics'
@@ -167,3 +161,5 @@ require 'src.object.player'
 
 require 'src.window.command'
 require 'src.window.progressbar'
+
+require 'src.game'

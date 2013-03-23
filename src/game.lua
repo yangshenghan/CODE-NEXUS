@@ -2,10 +2,6 @@
 --[[ [CODE NEXUS]                                                           ]]--
 --[[                                                                        ]]--
 --[[ ---------------------------------------------------------------------- ]]--
---[[ Atuhor: Yang Sheng Han <shenghan.yang@gmail.com>                       ]]--
---[[ Updates: 2013-03-19                                                    ]]--
---[[ License: zlib/libpng License                                           ]]--
---[[ ---------------------------------------------------------------------- ]]--
 --[[ Copyright (c) 2012-2013 CODE NEXUS Development Team                    ]]--
 --[[                                                                        ]]--
 --[[ This software is provided 'as-is', without any express or implied      ]]--
@@ -27,9 +23,17 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
-
 nexus.game = {}
+
+local Nexus                 = nexus
+local NexusCore             = Nexus.core
+local AudioManager          = NexusCore.audio
+local DatabaseManager       = NexusCore.database
+local GraphicsManager       = NexusCore.graphics
+local InputManager          = NexusCore.input
+local MessageManager        = NexusCore.message
+local ResourceManager       = NexusCore.resource
+local SceneManager          = NexusCore.scene
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -37,18 +41,18 @@ nexus.game = {}
 local m_loaded = false
 
 local function adjust_screen_mode()
-    local best_screen_mode = nexus.core.graphics.getBestScreenMode()
+    local best_screen_mode = GraphicsManager.getBestScreenMode()
 
-    local ow = nexus.core.graphics.getScreenWidth()
-    local oh = nexus.core.graphics.getScreenHeight()
+    local ow = GraphicsManager.getScreenWidth()
+    local oh = GraphicsManager.getScreenHeight()
     local bw = best_screen_mode.width
     local bh = best_screen_mode.height
 
     if ow > bw or oh > bh or ow * oh > bw * bh then
         if bw > bh then
-            nexus.core.graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
+            GraphicsManager.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
         else
-            nexus.core.graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
+            GraphicsManager.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
         end
     end
 end
@@ -58,44 +62,44 @@ function nexus.game.initialize()
         colors  = 'color'
     }
 
-    nexus.core.audio.initialize()
-    nexus.core.database.initialize(databases)
-    nexus.core.graphics.initialize()
-    nexus.core.input.initialize()
-    nexus.core.message.initialize()
-    nexus.core.resource.initialize()
-    nexus.core.scene.initialize()
+    AudioManager.initialize()
+    DatabaseManager.initialize(databases)
+    GraphicsManager.initialize()
+    InputManager.initialize()
+    MessageManager.initialize()
+    ResourceManager.initialize()
+    SceneManager.initialize()
 
     nexus.game.data = nil
-    nexus.core.database.loadTextData(nexus.configures.options.language)
+    DatabaseManager.loadTextData(nexus.configures.options.language)
 
     if nexus.configures and not nexus.system.error and love.graphics.isSupported('canvas') then
         if nexus.system.firstrun then
             adjust_screen_mode()
         end
-        nexus.core.scene.goto(nexus.scene.title.new(m_loaded))
-        -- nexus.core.scene.goto(nexus.scene.stage.new('prologue'))
+        SceneManager.goto(nexus.scene.title.new(m_loaded))
+        -- SceneManager.goto(nexus.scene.stage.new('prologue'))
         if nexus.settings.console then
-            nexus.core.scene.enter(nexus.scene.console.new())
+            SceneManager.enter(nexus.scene.console.new())
         end
         m_loaded = true
     else
-        nexus.core.scene.goto(nexus.scene.error.new(nexus.core.database.getTranslatedText(nexus.system.error)))
+        SceneManager.goto(nexus.scene.error.new(DatabaseManager.getTranslatedText(nexus.system.error)))
     end
 end
 
 function nexus.game.update(dt)
-    nexus.core.audio.update(dt)
-    nexus.core.graphics.update(dt)
-    nexus.core.input.update(dt)
+    AudioManager.update(dt)
+    GraphicsManager.update(dt)
+    InputManager.update(dt)
     nexus.core.message.update(dt)
-    nexus.core.scene.update(dt)
+    SceneManager.update(dt)
 end
 
 function nexus.game.render()
-    nexus.core.graphics.render()
+    GraphicsManager.render()
     nexus.core.message.render()
-    nexus.core.scene.render()
+    SceneManager.render()
 end
 
 function nexus.game.reload()
@@ -105,28 +109,28 @@ function nexus.game.reload()
 end
 
 function nexus.game.finalize()
-    nexus.core.scene.finalize()
-    nexus.core.resource.finalize()
+    SceneManager.finalize()
+    ResourceManager.finalize()
     nexus.core.message.finalize()
-    nexus.core.input.finalize()
-    nexus.core.graphics.finalize()
-    nexus.core.database.finalize()
-    nexus.core.audio.finalize()
+    InputManager.finalize()
+    GraphicsManager.finalize()
+    DatabaseManager.finalize()
+    AudioManager.finalize()
 end
 
 function nexus.game.focus(focus)
     if focus then
-        nexus.core.scene.resume()
+        SceneManager.resume()
         nexus.core.message.resume()
-        nexus.core.input.resume()
-        nexus.core.graphics.resume()
-        nexus.core.audio.resume()
+        InputManager.resume()
+        GraphicsManager.resume()
+        AudioManager.resume()
     else
-        nexus.core.audio.pause()
-        nexus.core.graphics.pause()
-        nexus.core.input.pause()
+        AudioManager.pause()
+        GraphicsManager.pause()
+        InputManager.pause()
         nexus.core.message.pause()
-        nexus.core.scene.pause()
+        SceneManager.pause()
     end
 end
 

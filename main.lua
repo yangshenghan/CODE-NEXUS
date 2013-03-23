@@ -43,12 +43,12 @@ local Game          = Nexus.game
 
 local Audio         = require 'src.core.audio'
 local Data          = require 'src.core.data'
+local Graphics      = require 'src.core.graphics'
 local Input         = require 'src.core.input'
 local Resource      = require 'src.core.resource'
 
 require 'bootstrap'
 
-local GraphicsManager       = Nexus.core.graphics
 local MessageManager        = Nexus.core.message
 local SceneManager          = Nexus.core.scene
 
@@ -65,18 +65,18 @@ local m_running = true
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function adjust_screen_mode()
-    local best_screen_mode = GraphicsManager.getBestScreenMode()
+    local best_screen_mode = Graphics.getBestScreenMode()
 
-    local ow = GraphicsManager.getScreenWidth()
-    local oh = GraphicsManager.getScreenHeight()
+    local ow = Graphics.getScreenWidth()
+    local oh = Graphics.getScreenHeight()
     local bw = best_screen_mode.width
     local bh = best_screen_mode.height
 
     if ow > bw or oh > bh or ow * oh > bw * bh then
         if bw > bh then
-            GraphicsManager.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
+            Graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
         else
-            GraphicsManager.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
+            Graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
         end
     end
 end
@@ -92,7 +92,7 @@ function Game.initialize()
 
     Audio.initialize()
     Data.initialize()
-    GraphicsManager.initialize()
+    Graphics.initialize()
     Input.initialize()
     MessageManager.initialize()
     Resource.initialize()
@@ -101,7 +101,7 @@ function Game.initialize()
     -- nexus.game.data = nil
     Data.loadTextData(nexus.configures.options.language)
 
-    if nexus.configures and not nexus.system.error and love.graphics.isSupported('canvas') then
+    if nexus.configures and not nexus.system.error and lg.isSupported('canvas') then
         if nexus.system.firstrun then adjust_screen_mode() end
         SceneManager.goto(nexus.scene.title.new(m_loaded))
         -- SceneManager.goto(nexus.scene.stage.new('prologue'))
@@ -119,28 +119,28 @@ function Game.finalize()
     Resource.finalize()
     nexus.core.message.finalize()
     Input.finalize()
-    GraphicsManager.finalize()
+    Graphics.finalize()
     Data.finalize()
     Audio.finalize()
 end
 
 function Game.update(dt)
     Audio.update(dt)
-    GraphicsManager.update(dt)
+    Graphics.update(dt)
     Input.update(dt)
     nexus.core.message.update(dt)
     SceneManager.update(dt)
 end
 
 function Game.render()
-    GraphicsManager.render()
+    Graphics.render()
     nexus.core.message.render()
     SceneManager.render()
 end
 
 function Game.pause()
     Audio.pause()
-    GraphicsManager.pause()
+    Graphics.pause()
     Input.pause()
     nexus.core.message.pause()
     SceneManager.pause()
@@ -150,7 +150,7 @@ function Game.resume()
     SceneManager.resume()
     nexus.core.message.resume()
     Input.resume()
-    GraphicsManager.resume()
+    Graphics.resume()
     Audio.resume()
 end
 
@@ -159,8 +159,7 @@ function Game.focus(focus)
 end
 
 function Game.resize(width, height)
-    local ow, oh, flags = lg.getMode()
-    lg.setMode(width, height, flags)
+    Graphics.changeGraphicsConfigures(width, height)
 end
 
 function Game.reload()

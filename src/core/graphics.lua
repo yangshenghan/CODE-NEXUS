@@ -23,71 +23,69 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
 
-nexus.core.graphics = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l         = love
+local lt        = l.timer
+local lg        = l.graphics
 
-local m_framerate = 60
+local Nexus     = nexus
+local NexusCore = Nexus.core
 
-local m_framecount = 0
+local Game      = Nexus.game
 
-local m_brightness = 255
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+NexusCore.graphics  = {}
 
-local m_caption = love.graphics.getCaption()
+local Graphics      = NexusCore.graphics
 
-local t_viewports = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local m_framerate   = 60
+
+local m_framecount  = 0
+
+local m_brightness  = 255
+
+local m_caption     = lg.getCaption()
+
+local t_viewports   = {}
 
 local t_background_viewport = nil
 
 local t_window_viewport = nil
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function viewport_zorder_sorter(a, b)
     return a.z < b.z
 end
 
-function nexus.core.graphics.initialize()
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Graphics.initialize()
     -- local icon = nexus.core.resource.loadImage('icon.png')
 
     m_framerate = 60
     m_framecount = 0
     m_brightness = 255
 
-    -- love.graphics.setIcon(icon)
-    love.graphics.reset()
+    -- lg.setIcon(icon)
+    lg.reset()
 end
 
-function nexus.core.graphics.finalize()
-    nexus.core.graphics.reset()
+function Graphics.finalize()
+    Graphics.reset()
 end
 
-function nexus.core.graphics.update(dt)
-    if nexus.settings.showfps then
-        local fps = love.timer.getFPS()
-        love.graphics.setCaption(m_caption .. ' - FPS: ' .. fps)
-    end
-
-    table.sort(t_viewports, viewport_zorder_sorter)
-
-    for _, viewport in pairs(t_viewports) do
-        nexus.base.viewport.update(viewport, dt)
-    end
-end
-
-function nexus.core.graphics.render()
-    for _, viewport in pairs(t_viewports) do
-        if not nexus.base.viewport.disposed(viewport) and viewport.visible then
-            nexus.base.viewport.render(viewport)
-        end
-    end
-end
-
-function nexus.core.graphics.pause()
-end
-
-function nexus.core.graphics.resume()
-end
-
-function nexus.core.graphics.reset()
+function Graphics.reset()
     for _, viewport in pairs(t_viewports) do
         nexus.base.viewport.dispose(viewport)
     end
@@ -97,38 +95,65 @@ function nexus.core.graphics.reset()
     t_background_viewport = nil
 end
 
-function nexus.core.graphics.clear()
-    love.graphics.setColor(nexus.core.database.getColor('base'))
+function Graphics.update(dt)
+    if nexus.settings.showfps then
+        local fps = lt.getFPS()
+        lg.setCaption(m_caption .. ' - FPS: ' .. fps)
+    end
+
+    table.sort(t_viewports, viewport_zorder_sorter)
+
+    for _, viewport in pairs(t_viewports) do
+        nexus.base.viewport.update(viewport, dt)
+    end
 end
 
-function nexus.core.graphics.fadeIn(duration)
+function Graphics.render()
+    for _, viewport in pairs(t_viewports) do
+        if not nexus.base.viewport.disposed(viewport) and viewport.visible then
+            nexus.base.viewport.render(viewport)
+        end
+    end
 end
 
-function nexus.core.graphics.fadeOut(duration)
+function Graphics.pause()
 end
 
-function nexus.core.graphics.transition(duration, transition, vague)
+function Graphics.resume()
 end
 
-function nexus.core.graphics.getScreenWidth()
+function Graphics.clear()
+    lg.setColor(nexus.core.database.getColor('base'))
+end
+
+function Graphics.fadeIn(duration)
+end
+
+function Graphics.fadeOut(duration)
+end
+
+function Graphics.transition(duration, transition, vague)
+end
+
+function Graphics.getScreenWidth()
     return nexus.configures.graphics.width
 end
 
-function nexus.core.graphics.getScreenHeight()
+function Graphics.getScreenHeight()
     return nexus.configures.graphics.height
 end
 
-function nexus.core.graphics.getScreenModes()
-    local modes = love.graphics.getModes()
+function Graphics.getScreenModes()
+    local modes = lg.getModes()
     table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)
     return modes
 end
 
-function nexus.core.graphics.getBestScreenMode()
-    return table.last(nexus.core.graphics.getScreenModes())
+function Graphics.getBestScreenMode()
+    return table.last(Graphics.getScreenModes())
 end
 
-function nexus.core.graphics.getBackgroundViewport()
+function Graphics.getBackgroundViewport()
     if not t_background_viewport then
         t_background_viewport = nexus.base.viewport.new()
         t_background_viewport.z = 0
@@ -136,7 +161,7 @@ function nexus.core.graphics.getBackgroundViewport()
     return t_background_viewport
 end
 
-function nexus.core.graphics.getWindowViewport()
+function Graphics.getWindowViewport()
     if not t_window_viewport then
         t_window_viewport = nexus.base.viewport.new()
         t_window_viewport.z = 40
@@ -144,37 +169,35 @@ function nexus.core.graphics.getWindowViewport()
     return t_window_viewport
 end
 
-function nexus.core.graphics.screenshot()
-    return love.graphics.newScreenshot()
+function Graphics.screenshot()
+    return lg.newScreenshot()
 end
 
-function nexus.core.graphics.toggleFullscreen()
-    love.graphics.toggleFullscreen()
+function Graphics.toggleFullscreen()
+    lg.toggleFullscreen()
 end
 
-function nexus.core.graphics.toggleFPS()
+function Graphics.toggleFPS()
     nexus.settings.showfps = not nexus.settings.showfps
-    if not nexus.settings.showfps then
-        love.graphics.setCaption(m_caption)
-    end
+    if not nexus.settings.showfps then lg.setCaption(m_caption) end
 end
 
-function nexus.core.graphics.addViewport(viewport)
+function Graphics.addViewport(viewport)
     table.insert(t_viewports, viewport)
 end
 
-function nexus.core.graphics.removeViewport(viewport)
+function Graphics.removeViewport(viewport)
     table.removeValue(t_viewports, viewport)
 end
 
-function nexus.core.graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
+function Graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
     width = width or nexus.configures.graphics.width
     height = height or nexus.configures.graphics.height
     fullscreen = fullscreen or nexus.configures.graphics.fullscreen
     vsync = vsync or nexus.configures.graphics.vsync
     fsaa = fsaa or nexus.configures.graphics.fsaa
 
-    love.graphics.setMode(width, height, fullscreen, vsync, fsaa)
+    lg.setMode(width, height, fullscreen, vsync, fsaa)
 
     nexus.configures.graphics.width = width
     nexus.configures.graphics.height = height
@@ -182,5 +205,7 @@ function nexus.core.graphics.changeGraphicsConfigures(width, height, fullscreen,
     nexus.configures.graphics.vsync = vsync
     nexus.configures.graphics.fsaa = fsaa
 
-    nexus.game.saveGameConfigure()
+    -- Game.saveGameConfigure()
 end
+
+return Graphics

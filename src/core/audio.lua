@@ -23,7 +23,22 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local Audio = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l         = love
+local la        = l.audio
+
+local Nexus     = nexus
+local NexusCore = Nexus.core
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+NexusCore.audio = {}
+
+local Audio     = NexusCore.audio
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -32,18 +47,18 @@ function Audio.initialize()
 end
 
 function Audio.finalize()
-    love.audio.stop()
+    la.stop()
 end
 
 function Audio.update(dt)
 end
 
 function Audio.pause()
-    love.audio.pause()
+    la.pause()
 end
 
 function Audio.resume()
-    love.audio.resume()
+    la.resume()
 end
 
 -- function Audio.changeAudioConfigures()

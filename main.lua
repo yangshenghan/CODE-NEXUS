@@ -23,26 +23,34 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local Game                  = {}
 
-local l = love
-local le = l.event
-local lt = l.timer
-local lg = l.graphics
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l         = love
+local le        = l.event
+local lt        = l.timer
+local lg        = l.graphics
 
-local Nexus                 = nexus
-local NexusCore             = Nexus.core
+local Nexus     = nexus
 
-local Audio                 = require 'src.core.audio'
-local Data                  = require 'src.core.data'
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+Nexus.game      = {}
+
+local Game      = Nexus.game
+
+local Audio     = require 'src.core.audio'
+local Data      = require 'src.core.data'
+local Input     = require 'src.core.input'
 
 require 'bootstrap'
 
-local GraphicsManager       = NexusCore.graphics
-local InputManager          = NexusCore.input
-local MessageManager        = NexusCore.message
-local ResourceManager       = NexusCore.resource
-local SceneManager          = NexusCore.scene
+local GraphicsManager       = Nexus.core.graphics
+local MessageManager        = Nexus.core.message
+local ResourceManager       = Nexus.core.resource
+local SceneManager          = Nexus.core.scene
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -77,8 +85,6 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Game.initialize()
-    nexus.core.audio = Audio
-    -- nexus.core.data = Data
     nexus.core.database = Data
     -- nexus.core = {
         -- audio = require 'src.core.audio'
@@ -87,7 +93,7 @@ function Game.initialize()
     Audio.initialize()
     Data.initialize()
     GraphicsManager.initialize()
-    InputManager.initialize()
+    Input.initialize()
     MessageManager.initialize()
     ResourceManager.initialize()
     SceneManager.initialize()
@@ -112,7 +118,7 @@ function Game.finalize()
     SceneManager.finalize()
     ResourceManager.finalize()
     nexus.core.message.finalize()
-    InputManager.finalize()
+    Input.finalize()
     GraphicsManager.finalize()
     Data.finalize()
     Audio.finalize()
@@ -121,7 +127,7 @@ end
 function Game.update(dt)
     Audio.update(dt)
     GraphicsManager.update(dt)
-    InputManager.update(dt)
+    Input.update(dt)
     nexus.core.message.update(dt)
     SceneManager.update(dt)
 end
@@ -135,7 +141,7 @@ end
 function Game.pause()
     Audio.pause()
     GraphicsManager.pause()
-    InputManager.pause()
+    Input.pause()
     nexus.core.message.pause()
     SceneManager.pause()
 end
@@ -143,7 +149,7 @@ end
 function Game.resume()
     SceneManager.resume()
     nexus.core.message.resume()
-    InputManager.resume()
+    Input.resume()
     GraphicsManager.resume()
     Audio.resume()
 end

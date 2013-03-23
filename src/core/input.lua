@@ -23,17 +23,34 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
 
-nexus.core.input = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l         = love
+local lm        = l.mouse
+local lk        = l.keyboard
 
+local Nexus     = nexus
+local NexusCore = Nexus.core
+
+local Game      = Nexus.game
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+NexusCore.input = {}
+
+local Input     = NexusCore.input
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
 local m_system_f1 = false
 
 local m_system_f9 = false
 
 local m_system_f12 = false
-
-local f_isdown = love.keyboard.isDown
 
 local t_pressed = {}
 
@@ -45,11 +62,14 @@ local t_counter = {}
 
 local t_controls = nexus.configures.controls
 
-function nexus.core.input.initialize()
-    -- love.mouse.setGrab(true)
-    love.mouse.setVisible(false)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Input.initialize()
+    -- lm.setGrab(true)
+    lm.setVisible(false)
 
-    nexus.core.input.reload()
+    Input.reload()
 
     for key, _ in pairs(t_controls) do
         t_pressed[key] = false
@@ -59,17 +79,27 @@ function nexus.core.input.initialize()
     end
 end
 
-function nexus.core.input.finalize()
-    love.mouse.setVisible(true)
-    love.mouse.setGrab(false)
+function Input.finalize()
+    lm.setVisible(true)
+    lm.setGrab(false)
 
-    nexus.core.input.reset()
+    Input.reset()
 end
 
-function nexus.core.input.update(dt)
+function Input.reset()
+    t_counter = {}
+    t_triggered = {}
+    t_released = {}
+    t_pressed = {}
+    m_system_f1 = false
+    m_system_f9 = false
+    m_system_f12 = false
+end
+
+function Input.update(dt)
     for key, keys in pairs(t_controls) do
         for _, keycode in pairs(keys) do
-            if f_isdown(keycode) then
+            if lk.isDown(keycode) then
                 if t_pressed[key] then
                     t_triggered[key] = false
                     t_counter[key] = t_counter[key] + 1
@@ -91,7 +121,7 @@ function nexus.core.input.update(dt)
         end
     end
 
-    if f_isdown('f1') then
+    if lk.isDown('f1') then
         if not m_system_f1 then
             m_system_f1 = true
             nexus.core.graphics.toggleFPS()
@@ -100,7 +130,7 @@ function nexus.core.input.update(dt)
         m_system_f1 = false
     end
 
-    if f_isdown('f9') then
+    if lk.isDown('f9') then
         if not m_system_f9 then
             m_system_f9 = true
             nexus.console.toggleConsole()
@@ -109,7 +139,7 @@ function nexus.core.input.update(dt)
         m_system_f9 = false
     end
 
-    if f_isdown('f12') then
+    if lk.isDown('f12') then
         if not m_system_f12 then
             m_system_f12 = true
             nexus.game.reload()
@@ -118,47 +148,39 @@ function nexus.core.input.update(dt)
         m_system_f12 = false
     end
 
-    if f_isdown('lalt') or f_isdown('ralt') then
-        if f_isdown('f4') then love.event.quit() end
-        if f_isdown('return') then nexus.core.graphics.toggleFullscreen() end
+    if lk.isDown('lalt') or lk.isDown('ralt') then
+        if lk.isDown('f4') then Game.quit() end
+        if lk.isDown('return') then nexus.core.graphics.toggleFullscreen() end
     end
 end
 
-function nexus.core.input.pause()
+function Input.pause()
 end
 
-function nexus.core.input.resume()
+function Input.resume()
 end
 
-function nexus.core.input.reload()
+function Input.reload()
 end
 
-function nexus.core.input.reset()
-    t_counter = {}
-    t_triggered = {}
-    t_released = {}
-    t_pressed = {}
-    m_system_f1 = false
-    m_system_f9 = false
-    m_system_f12 = false
-end
+-- function Input.changeInputConfigures()
+    -- nexus.game.saveGameConfigure()
+-- end
 
-function nexus.core.input.changeInputConfigures()
-    nexus.game.saveGameConfigure()
-end
-
-function nexus.core.input.isKeyDown(key)
+function Input.isKeyDown(key)
     return t_pressed[key] 
 end
 
-function nexus.core.input.isKeyUp(key)
+function Input.isKeyUp(key)
     return t_released[key]
 end
 
-function nexus.core.input.isKeyTrigger(key)
+function Input.isKeyTrigger(key)
     return t_triggered[key]
 end
 
-function nexus.core.input.isKeyRepeat(key)
+function Input.isKeyRepeat(key)
     return t_pressed[key] and t_counter[key] == 0
 end
+
+return Input

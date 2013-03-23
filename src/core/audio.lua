@@ -27,18 +27,18 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l         = love
-local la        = l.audio
+local l             = love
+local la            = l.audio
 
-local Nexus     = nexus
-local NexusCore = Nexus.core
+local Nexus         = nexus
+local NexusCore     = Nexus.core
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.audio = {}
+NexusCore.audio     = {}
 
-local Audio     = NexusCore.audio
+local Audio         = NexusCore.audio
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --

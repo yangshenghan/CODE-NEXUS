@@ -27,28 +27,28 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Nexus     = nexus
-local NexusCore = Nexus.core
+local Nexus         = nexus
+local NexusCore     = Nexus.core
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.data  = {}
+NexusCore.data      = {}
 
-local Data      = NexusCore.data
+local Data          = NexusCore.data
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local t_fonts = {}
+local t_fonts       = {}
 
-local t_texts = {}
+local t_texts       = {}
 
-local t_caches = {}
+local t_caches      = {}
 
-local t_colors = {}
+local t_colors      = {}
 
-local t_formats = {}
+local t_formats     = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --

@@ -23,16 +23,36 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
 
-nexus.core.resource = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l         = love
+local la        = l.audio
+local lg        = l.graphics
 
-local t_fonts = {}
+local Nexus     = nexus
+local NexusCore = Nexus.core
 
-local t_images = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+NexusCore.resource  = {}
 
-local t_sources = {}
+local Resource      = NexusCore.resource
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local t_fonts       = {}
+
+local t_images      = {}
+
+local t_sources     = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function load_font_resource(folder, filename, size)
     local path = folder .. filename
 
@@ -41,7 +61,7 @@ local function load_font_resource(folder, filename, size)
     end
 
     if not t_fonts[path][size] then
-        t_fonts[path][size] = love.graphics.newFont(path, size)
+        t_fonts[path][size] = lg.newFont(path, size)
     end
 
     return t_fonts[path][size]
@@ -51,7 +71,7 @@ local function load_image_resource(folder, filename)
     local path = folder .. filename
 
     if not t_images[path] then
-        t_images[path] = love.graphics.newImage(path)
+        t_images[path] = lg.newImage(path)
     end
 
     return t_images[path]
@@ -61,66 +81,71 @@ local function load_source_resource(folder, filename)
     local path = folder .. filename
 
     if not t_sources[path] then
-        t_sources[path] = love.audio.newSource(path)
+        t_sources[path] = la.newSource(path)
     end
 
     return t_sources[path]
 end
 
-function nexus.core.resource.initialize()
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Resource.initialize()
 end
 
-function nexus.core.resource.finalize()
-    nexus.core.resource.reset()
+function Resource.finalize()
+    Resource.reset()
 end
 
-function nexus.core.resource.reset()
+function Resource.reset()
     t_fonts = {}
     t_images = {}
     t_sources = {}
     collectgarbage()
 end
 
-function nexus.core.resource.loadEffectSource(filename)
+function Resource.loadEffectSource(filename)
     return load_source_resource('res/audios/effects/', filename)
 end
 
-function nexus.core.resource.loadMusicSource(filename)
+function Resource.loadMusicSource(filename)
     return load_source_resource('res/audios/musics/', filename)
 end
 
-function nexus.core.resource.loadSoundSource(filename)
+function Resource.loadSoundSource(filename)
     return load_source_resource('res/audios/sounds/', filename)
 end
 
-function nexus.core.resource.loadAnimationIamge(filename)
+function Resource.loadAnimationIamge(filename)
     return load_image_resource('res/graphics/animations/', filename)
 end
 
-function nexus.core.resource.loadCharacterImage(filename)
+function Resource.loadCharacterImage(filename)
     return load_image_resource('res/graphics/characters/', filename)
 end
 
-function nexus.core.resource.loadIconImage(filename)
+function Resource.loadIconImage(filename)
     return load_image_resource('res/graphics/icons/', filename)
 end
 
-function nexus.core.resource.loadMapImage(filename)
+function Resource.loadMapImage(filename)
     return load_image_resource('res/graphics/maps/', filename)
 end
 
-function nexus.core.resource.loadObjectImage(filename)
+function Resource.loadObjectImage(filename)
     return load_image_resource('res/graphics/objects/', filename)
 end
 
-function nexus.core.resource.loadPictureImage(filename)
+function Resource.loadPictureImage(filename)
     return load_image_resource('res/graphics/pictures/', filename)
 end
 
-function nexus.core.resource.loadSystemImage(filename)
+function Resource.loadSystemImage(filename)
     return load_image_resource('res/graphics/systems/', filename)
 end
 
-function nexus.core.resource.loadFont(filename, size)
+function Resource.loadFont(filename, size)
     return load_font_resource('res/fonts/', filename, size)
 end
+
+return Resource

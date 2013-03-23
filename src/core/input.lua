@@ -27,40 +27,40 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l         = love
-local lm        = l.mouse
-local lk        = l.keyboard
+local l             = love
+local lm            = l.mouse
+local lk            = l.keyboard
 
-local Nexus     = nexus
-local NexusCore = Nexus.core
+local Nexus         = nexus
+local NexusCore     = Nexus.core
 
-local Game      = Nexus.game
+local Game          = Nexus.game
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.input = {}
+NexusCore.input     = {}
 
-local Input     = NexusCore.input
+local Input         = NexusCore.input
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_system_f1 = false
+local m_system_f1   = false
 
-local m_system_f9 = false
+local m_system_f9   = false
 
-local m_system_f12 = false
+local m_system_f12  = false
 
-local t_pressed = {}
+local t_pressed     = {}
 
-local t_released = {}
+local t_released    = {}
 
-local t_triggered = {}
+local t_triggered   = {}
 
-local t_counter = {}
+local t_counter     = {}
 
-local t_controls = nexus.configures.controls
+local t_controls    = nexus.configures.controls
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -142,7 +142,7 @@ function Input.update(dt)
     if lk.isDown('f12') then
         if not m_system_f12 then
             m_system_f12 = true
-            nexus.game.reload()
+            Game.reload()
         end
     else
         m_system_f12 = false

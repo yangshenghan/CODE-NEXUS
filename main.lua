@@ -27,29 +27,29 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l         = love
-local le        = l.event
-local lt        = l.timer
-local lg        = l.graphics
+local l             = love
+local le            = l.event
+local lt            = l.timer
+local lg            = l.graphics
 
-local Nexus     = nexus
+local Nexus         = nexus
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-Nexus.game      = {}
+Nexus.game          = {}
 
-local Game      = Nexus.game
+local Game          = Nexus.game
 
-local Audio     = require 'src.core.audio'
-local Data      = require 'src.core.data'
-local Input     = require 'src.core.input'
+local Audio         = require 'src.core.audio'
+local Data          = require 'src.core.data'
+local Input         = require 'src.core.input'
+local Resource      = require 'src.core.resource'
 
 require 'bootstrap'
 
 local GraphicsManager       = Nexus.core.graphics
 local MessageManager        = Nexus.core.message
-local ResourceManager       = Nexus.core.resource
 local SceneManager          = Nexus.core.scene
 
 -- / ---------------------------------------------------------------------- \ --
@@ -95,7 +95,7 @@ function Game.initialize()
     GraphicsManager.initialize()
     Input.initialize()
     MessageManager.initialize()
-    ResourceManager.initialize()
+    Resource.initialize()
     SceneManager.initialize()
 
     -- nexus.game.data = nil
@@ -116,7 +116,7 @@ end
 
 function Game.finalize()
     SceneManager.finalize()
-    ResourceManager.finalize()
+    Resource.finalize()
     nexus.core.message.finalize()
     Input.finalize()
     GraphicsManager.finalize()
@@ -165,6 +165,7 @@ end
 
 function Game.reload()
     m_loading = true
+    m_running = false
 end
 
 function Game.quit()
@@ -187,6 +188,7 @@ function love.run()
     while m_loading do
         Game.initialize()
 
+        m_running = true
         m_loading = false
         while m_running do
             le.pump()

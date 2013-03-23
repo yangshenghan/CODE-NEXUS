@@ -23,38 +23,26 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.loading         = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lf                    = l.filesystem
 
-local function enter(instance)
-    instance.scene.loading = instance
-    instance.scene.progress = nexus.window.progressbar.new()
-    instance.scene.coroutine = coroutine.create(instance.scene.enter)
-end
+local save                  = require 'src.system.save'
+local version               = require 'src.system.version'
+local upgrade               = require 'src.system.upgrade'
+local decompress            = require 'src.system.decompress'
+local deserialize           = require 'src.system.deserialize'
 
-local function update(instance, dt)
-    local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
-    nexus.window.progressbar.setProgressValue(instance.scene.progress, progress)
-
-    if coroutine.status(instance.scene.coroutine) == 'dead' then
-        instance.scene.progress.dispose(instance.scene.progress)
-
-        nexus.core.scene.change(instance.scene)
-        instance.scene = nil
+return function(filename)
+    local chunk = deserialize(decompress(lf.read(filename)))
+    if chunk.version < version() then
+        local data = upgrade(chunk.identifier, chunk) 
+        save(filename, data, chunk.identifier)
+    elseif chunk.version > version() then
+        error('Your game version is older than saving data!')
     end
-end
-
-function nexus.scene.loading.setProgress(value)
-    if value < 0 then value = 0 end
-    if value > 1 then value = 1 end
-    coroutine.yield(value)
-end
-
-function nexus.scene.loading.new(instance)
-    return nexus.base.scene.new({
-        enter   = enter,
-        update  = update,
-        scene   = nexus.base.scene.new(instance)
-    })
+    return chunk.data
 end

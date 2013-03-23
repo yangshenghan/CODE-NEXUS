@@ -27,10 +27,15 @@ local nexus = nexus
 
 nexus.scene.error = {}
 
-local m_message = 'There is an error occured!' 
+local Nexus                 = nexus
+
+local Systems               = Nexus.systems
+local SystemsDefaults       = Systems.defaults
+
+local m_message             = 'There is an error occured!' 
 
 local function render(instance)
-    love.graphics.print(m_message, nexus.system.defaults.width / 2, nexus.system.defaults.height / 2)
+    love.graphics.print(m_message, SystemsDefaults.width / 2, SystemsDefaults.height / 2)
 end
 
 function nexus.scene.error.new(message)

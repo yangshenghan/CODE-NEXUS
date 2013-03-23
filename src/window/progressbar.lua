@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.window.progressbar = {}
+nexus.window.progressbar    = {}
 
 local function render(instance)
     local rectangle = love.graphics.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)

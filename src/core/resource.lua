@@ -27,28 +27,28 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l             = love
-local la            = l.audio
-local lg            = l.graphics
+local l                     = love
+local la                    = l.audio
+local lg                    = l.graphics
 
-local Nexus         = nexus
-local NexusCore     = Nexus.core
+local Nexus                 = nexus
+local NexusCore             = Nexus.core
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.resource  = {}
+NexusCore.resource          = {}
 
-local Resource      = NexusCore.resource
+local Resource              = NexusCore.resource
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local t_fonts       = {}
+local t_fonts               = {}
 
-local t_images      = {}
+local t_images              = {}
 
-local t_sources     = {}
+local t_sources             = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --

@@ -27,18 +27,17 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l             = love
-local la            = l.audio
+local l                     = love
+local la                    = l.audio
 
-local Nexus         = nexus
-local NexusCore     = Nexus.core
+local Nexus                 = nexus
+
+local Resource              = require 'src.core.resource'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.audio     = {}
-
-local Audio         = NexusCore.audio
+local Audio                 = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -66,7 +65,7 @@ end
 -- end
 
 function Audio.playCancel()
-    local source = nexus.core.resource.loadSoundSource('cancel')
+    local source = Resource.loadSoundSource('cancel')
     source.play(source)
 end
 

@@ -23,7 +23,11 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local http = require 'socket.http'
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local http                  = require 'socket.http'
 
 return function(addresses)
     for _, address in pairs(addresses) do

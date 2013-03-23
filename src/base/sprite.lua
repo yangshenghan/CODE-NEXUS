@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.base.sprite = {}
+nexus.base.sprite           = {}
 
 local function transform_opacity_color(color, opacity)
     if opacity < 0 then opacity = 0 end

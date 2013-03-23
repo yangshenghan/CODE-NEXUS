@@ -23,18 +23,23 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.scene.stage = {}
+nexus.scene.stage           = {}
+
+local Data                  = require 'src.core.data'
+local Graphics              = require 'src.core.graphics'
+local Input                 = require 'src.core.input'
+local Scene                 = require 'src.core.scene'
 
 local function enter(instance)
     local canvas = love.graphics.newCanvas()
-    local background = nexus.core.graphics.getBackgroundViewport()
+    local background = Graphics.getBackgroundViewport()
 
     -- Load stage data
-    instance.map = nexus.core.database.loadMapData(instance.name)
-    instance.stage = nexus.core.database.loadStageData(instance.name)
-    instance.script = nexus.core.database.loadScriptData(instance.name)
+    instance.map = Data.loadMapData(instance.name)
+    instance.stage = Data.loadStageData(instance.name)
+    instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
     instance.player = nexus.object.player.new()
@@ -59,7 +64,7 @@ local function enter(instance)
     background.dispose = function(...) end
     background.disposed = function(...) end
     background.render = function(instance)
-        nexus.core.graphics.clear()
+        Graphics.clear()
         love.graphics.draw(canvas)
     end
     love.graphics.setCanvas(canvas)
@@ -73,7 +78,7 @@ local function enter(instance)
     love.graphics.setBlendMode('alpha')
     love.graphics.setCanvas()
     nexus.base.viewport.addDrawable(instance.viewports[1], instance.player)
-    nexus.base.viewport.addDrawable(nexus.core.graphics.getBackgroundViewport(), background)
+    nexus.base.viewport.addDrawable(Graphics.getBackgroundViewport(), background)
 
     -- Create objects
     for _, data in pairs(instance.stage.objects) do
@@ -107,31 +112,31 @@ end
 local function update(instance, dt)
     if instance.idle then return end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.Z) then
+    if Input.isKeyDown(NEXUS_KEY.Z) then
         nexus.object.player.rush(instance.player)
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.X) then
+    if Input.isKeyDown(NEXUS_KEY.X) then
         nexus.object.player.jump(instance.player)
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.C) then
+    if Input.isKeyDown(NEXUS_KEY.C) then
         nexus.object.player.attack(instance.player)
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.LEFT) and nexus.base.object.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
+    if Input.isKeyDown(NEXUS_KEY.LEFT) and nexus.base.object.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
         nexus.object.player.left(instance.player)
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.RIGHT) and nexus.base.object.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
+    if Input.isKeyDown(NEXUS_KEY.RIGHT) and nexus.base.object.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
         nexus.object.player.right(instance.player)
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.UP) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
+    if Input.isKeyDown(NEXUS_KEY.UP) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
         nexus.object.player.up(instance.player)
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.DOWN) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
+    if Input.isKeyDown(NEXUS_KEY.DOWN) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
         nexus.object.player.down(instance.player)
     end
 
@@ -141,7 +146,7 @@ local function update(instance, dt)
 end
 
 function nexus.scene.stage.getCurrentStage()
-    local scene = nexus.core.scene.getCurrentScene()
+    local scene = Scene.getCurrentScene()
     return scene.stage
 end
 

@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.base.viewport = {}
+nexus.base.viewport         = {}
 
 local function drawable_zorder_sorter(a, b)
     return a.z < b.z

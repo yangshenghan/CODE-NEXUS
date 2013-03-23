@@ -23,21 +23,21 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.base.scene = {}
+nexus.base.scene            = {}
 
-local t_default = {
-    create  = function(...) end,
-    delete  = function(...) end,
-    enter   = function(...) end,
-    leave   = function(...) end,
-    idleIn  = function(...) end,
-    idleOut = function(...) end,
-    update  = function(...) end,
+local t_default             = {
+    create                  = function(...) end,
+    delete                  = function(...) end,
+    enter                   = function(...) end,
+    leave                   = function(...) end,
+    idleIn                  = function(...) end,
+    idleOut                 = function(...) end,
+    update                  = function(...) end,
     -- The render callback may be removed and managed in nexus.game
-    render  = function(...) end,
-    idle    = false
+    render                  = function(...) end,
+    idle                    = false
 }
 
 function nexus.base.scene.isIdle(instance)

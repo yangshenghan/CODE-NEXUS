@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.window.command = {}
+nexus.window.command        = {}
 
 local function update(instance, dt)
     if nexus.core.input.isKeyRepeat(NEXUS_KEY.UP) then

@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.scene.continue = {}
+nexus.scene.continue        = {}
 
 local function enter(instance)
 end

@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.base.rectangle = {}
+nexus.base.rectangle        = {}
 
 function nexus.base.rectangle.empty(instance)
     instance.x = 0

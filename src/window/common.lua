@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.window.common = {}
+nexus.window.common         = {}
 
 function nexus.window.common.drawCharacterHealth(character, x, y, width)
 end

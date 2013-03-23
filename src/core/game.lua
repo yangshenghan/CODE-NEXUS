@@ -27,27 +27,39 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l             = love
-local le            = l.event
-local lg            = l.graphics
+local l                     = love
+local le                    = l.event
+local lg                    = l.graphics
 
-local Nexus         = nexus
-local NexusCore     = Nexus.core
+local Nexus                 = nexus
 
-local Data          = require 'src.core.data'
-local Scene         = require 'src.core.scene'
+local Systems               = Nexus.systems
+local SystemsVersion        = Systems.version
+
+local Settings              = Nexus.settings
+
+local Configures            = Nexus.configures
+local OptionConfigures      = Configures.options
+
+local Data                  = require 'src.core.data'
+local Graphics              = require 'src.core.graphics'
+local Scene                 = require 'src.core.scene'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.game      = {}
-
-local Game          = NexusCore.game
+local Game                  = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local t_saving_data = {}
+local m_version             = nil
+local t_saving_data         = {}
+
+local MAJOR                 = SystemsVersion.major
+local MINOR                 = SystemsVersion.minor
+local MICRO                 = SystemsVersion.micro
+local PATCH                 = SystemsVersion.patch
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -56,7 +68,12 @@ local function on_after_load()
 end
 
 local function on_before_save()
+    t_saving_data.system.framecount = Graphics.getFramecount()
     t_saving_data.system.savingcount = t_saving_data.system.savingcount + 1
+end
+
+local function on_start_game()
+    Graphics.setFramecount(t_saving_data.system.framecount)
 end
 
 local function adjust_screen_mode()
@@ -80,7 +97,6 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Game.initialize()
-    t_saving_data = Data.loadScriptData('setup')
 end
 
 function Game.finalize()
@@ -93,18 +109,22 @@ end
 function Game.render()
 end
 
+function Game.pause()
+end
+
+function Game.resume()
+end
+
 function Game.start()
-    Data.loadTextData(nexus.configures.options.language)
-    if nexus.configures and not nexus.system.error and lg.isSupported('canvas') then
-        if nexus.system.firstrun then adjust_screen_mode() end
+    Data.loadTextData(OptionConfigures.language)
+    if Configures and not Systems.error and lg.isSupported('canvas') then
+        if Systems.firstrun then adjust_screen_mode() end
         Scene.goto(nexus.scene.title.new(m_loaded))
         -- Scene.goto(nexus.scene.stage.new('prologue'))
-        if nexus.settings.console then
-            Scene.enter(nexus.scene.console.new())
-        end
+        if Settings.console then Scene.enter(nexus.scene.console.new()) end
         m_loaded = true
     else
-        Scene.goto(nexus.scene.error.new(Data.getTranslatedText(nexus.system.error)))
+        Scene.goto(nexus.scene.error.new(Data.getTranslatedText(Systems.error)))
     end
 end
 
@@ -116,14 +136,17 @@ end
 -- end
 
 -- function Game.saveGameConfigure()
-    -- nexus.core.save(nexus.system.paths.configure, nexus.configures, nexus.system.parameters.configure_identifier)
+    -- nexus.core.save(Systems.paths.configure, nexus.configures, Systems.parameters.configure_identifier)
 -- end
 
 function Game.setup()
+    t_saving_data = Data.loadScriptData('setup')
+    on_start_game()
 end
 
 function Game.load(index)
     on_after_load()
+    on_start_game()
     return false
 end
 
@@ -137,8 +160,8 @@ function Game.delete(index)
 end
 
 function Game.exists()
-    for index = 1, nexus.system.parameters.saving_slot_size do
-        local filename = string.format(nexus.system.paths.saving, index)
+    for index = 1, Systems.parameters.saving_slot_size do
+        local filename = string.format(Systems.paths.saving, index)
         if nexus.core.exists(filename) then return true end
     end
     return false
@@ -150,6 +173,13 @@ end
 
 function Game.quit()
     le.push('quit')
+end
+
+function Game.getVersionString()
+    if not m_version then
+        m_version = MAJOR .. '.' .. MINOR .. '.' .. MICRO
+    end
+    return m_version
 end
 
 return Game

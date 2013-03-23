@@ -27,38 +27,46 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l             = love
-local lt            = l.timer
-local lg            = l.graphics
+local l                     = love
+local le                    = l.event
+local lt                    = l.timer
+local lg                    = l.graphics
 
-local Nexus         = nexus
-local NexusCore     = Nexus.core
+local Nexus                 = nexus
+local NexusCore             = Nexus.core
 
-local Scene         = require 'src.core.scene'
+local Settings              = Nexus.settings
+
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
+
+local Data                  = require 'src.core.data'
+-- local Resource              = require 'src.core.resource'
+local Scene                 = require 'src.core.scene'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.graphics  = {}
+NexusCore.graphics          = {}
 
-local Graphics      = NexusCore.graphics
+local Graphics              = NexusCore.graphics
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_framerate   = 60
+local m_framerate           = 60
 
-local m_framecount  = 0
+local m_framecount          = 0
 
-local m_brightness  = 255
+local m_brightness          = 255
 
-local m_caption     = lg.getCaption()
+local m_caption             = lg.getCaption()
 
-local t_viewports   = {}
+local t_viewports           = {}
 
 local t_background_viewport = nil
 
-local t_window_viewport = nil
+local t_window_viewport     = nil
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -71,11 +79,11 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Graphics.initialize()
-    -- local icon = nexus.core.resource.loadImage('icon.png')
+    -- local icon = Resource.loadImage('icon.png')
 
-    m_framerate = 60
-    m_framecount = 0
-    m_brightness = 255
+    Graphics.setFramerate(60)
+    Graphics.setFramecount(0)
+    Graphics.setBrightness(255)
 
     -- lg.setIcon(icon)
     lg.reset()
@@ -96,7 +104,7 @@ function Graphics.reset()
 end
 
 function Graphics.update(dt)
-    if nexus.settings.showfps then
+    if Settings.showfps then
         local fps = lt.getFPS()
         lg.setCaption(m_caption .. ' - FPS: ' .. fps)
     end
@@ -114,6 +122,8 @@ function Graphics.render()
             nexus.base.viewport.render(viewport)
         end
     end
+
+    m_framecount = m_framecount + 1
 end
 
 function Graphics.pause()
@@ -123,7 +133,7 @@ function Graphics.resume()
 end
 
 function Graphics.clear()
-    lg.setColor(nexus.core.database.getColor('base'))
+    lg.setColor(Data.getColor('base'))
 end
 
 function Graphics.fadeIn(duration)
@@ -136,11 +146,11 @@ function Graphics.transition(duration, transition, vague)
 end
 
 function Graphics.getScreenWidth()
-    return nexus.configures.graphics.width
+    return GraphicsConfigures.width
 end
 
 function Graphics.getScreenHeight()
-    return nexus.configures.graphics.height
+    return GraphicsConfigures.height
 end
 
 function Graphics.getScreenModes()
@@ -169,6 +179,32 @@ function Graphics.getWindowViewport()
     return t_window_viewport
 end
 
+function Graphics.getFramerate()
+    return m_framerate
+end
+
+function Graphics.setFramerate(framerate)
+    m_framerate = framerate
+
+    le.push('framerate', framerate)
+end
+
+function Graphics.getFramecount()
+    return m_framecount
+end
+
+function Graphics.setFramecount(framecount)
+    m_framecount = framecount
+end
+
+function Graphics.getBrightness()
+    return m_brightness
+end
+
+function Graphics.setBrightness(brightness)
+    m_brightness = brightness
+end
+
 function Graphics.screenshot()
     return lg.newScreenshot()
 end
@@ -178,8 +214,8 @@ function Graphics.toggleFullscreen()
 end
 
 function Graphics.toggleFPS()
-    nexus.settings.showfps = not nexus.settings.showfps
-    if not nexus.settings.showfps then lg.setCaption(m_caption) end
+    Settings.showfps = not Settings.showfps
+    if not Settings.showfps then lg.setCaption(m_caption) end
 end
 
 function Graphics.addViewport(viewport)

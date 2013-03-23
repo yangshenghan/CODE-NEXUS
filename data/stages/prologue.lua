@@ -23,16 +23,21 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
+
+local Nexus                 = nexus
+
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
 
 return {
     width       = 1280,
     height      = 720,
     objects     = {
         ground      = {
-            x           = nexus.configures.graphics.width / 2,
-            y           = nexus.configures.graphics.height - 50 / 2,
-            width       = nexus.configures.graphics.width,
+            x           = GraphicsConfigures.width / 2,
+            y           = GraphicsConfigures.height - 50 / 2,
+            width       = GraphicsConfigures.width,
             height      = 50,
             bodyType    = 'static',
             render      = function(instance)
@@ -41,9 +46,9 @@ return {
             end
         },
         sky         = {
-            x           = nexus.configures.graphics.width / 2,
+            x           = GraphicsConfigures.width / 2,
             y           = 50 / 2,
-            width       = nexus.configures.graphics.width,
+            width       = GraphicsConfigures.width,
             height      = 50,
             bodyType    = 'static',
             render      = function(instance)
@@ -53,9 +58,9 @@ return {
         },
         leftwall    = {
             x           = 50 / 2,
-            y           = nexus.configures.graphics.height / 2,
+            y           = GraphicsConfigures.height / 2,
             width       = 50,
-            height      = nexus.configures.graphics.height,
+            height      = GraphicsConfigures.height,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
@@ -63,10 +68,10 @@ return {
             end
         },
         rightwall   = {
-            x           = nexus.configures.graphics.width - 50 / 2,
-            y           = nexus.configures.graphics.height / 2,
+            x           = GraphicsConfigures.width - 50 / 2,
+            y           = GraphicsConfigures.height / 2,
             width       = 50,
-            height      = nexus.configures.graphics.height,
+            height      = GraphicsConfigures.height,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)

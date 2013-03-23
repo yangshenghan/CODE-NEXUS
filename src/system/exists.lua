@@ -23,38 +23,13 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.loading         = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lf                    = l.filesystem
 
-local function enter(instance)
-    instance.scene.loading = instance
-    instance.scene.progress = nexus.window.progressbar.new()
-    instance.scene.coroutine = coroutine.create(instance.scene.enter)
-end
-
-local function update(instance, dt)
-    local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
-    nexus.window.progressbar.setProgressValue(instance.scene.progress, progress)
-
-    if coroutine.status(instance.scene.coroutine) == 'dead' then
-        instance.scene.progress.dispose(instance.scene.progress)
-
-        nexus.core.scene.change(instance.scene)
-        instance.scene = nil
-    end
-end
-
-function nexus.scene.loading.setProgress(value)
-    if value < 0 then value = 0 end
-    if value > 1 then value = 1 end
-    coroutine.yield(value)
-end
-
-function nexus.scene.loading.new(instance)
-    return nexus.base.scene.new({
-        enter   = enter,
-        update  = update,
-        scene   = nexus.base.scene.new(instance)
-    })
+return function(filename)
+    return lf.exists(filename)
 end

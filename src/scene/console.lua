@@ -23,9 +23,13 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.scene.console = {}
+nexus.scene.console         = {}
+
+local Nexus                 = nexus
+local Systems               = Nexus.systems
+local Settings              = Nexus.settings
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local used name and modules                                            | --
@@ -351,7 +355,7 @@ function console.initialize(executer, font, width, height, spacing)
 end
 
 function nexus.console.toggleConsole()
-    if nexus.settings.console then
+    if Settings.console then
         nexus.core.scene.leave()
     else
         nexus.core.scene.enter(nexus.scene.console.new())
@@ -367,33 +371,33 @@ function console.print(...)
     console.output.push(table.concat(args, ' '))
 end
 
-if nexus.system.debug then
+if Systems.debug then
     function console.showErrorMessage(...)
-        if nexus.settings.level > 0 then
+        if Settings.level > 0 then
             console.print('[ ERROR ]', ...)
         end
     end
 
     function console.showWarningMessage(...)
-        if nexus.settings.level > 1 then
+        if Settings.level > 1 then
             console.print('[WARNING]', ...)
         end
     end
 
     function console.showInformationMessage(...)
-        if nexus.settings.level > 2 then
+        if Settings.level > 2 then
             console.print('[I N F O]', ...)
         end
     end
 
     function console.showLogMessage(...)
-        if nexus.settings.level > 3 then
+        if Settings.level > 3 then
             console.print('[ L O G ]', ...)
         end
     end
 
     function console.showDebugMessage(...)
-        if nexus.settings.level > 4 then
+        if Settings.level > 4 then
             console.print('[ DEBUG ]', ...)
         end
     end
@@ -495,7 +499,7 @@ local function enter(instance)
 
     love.keyboard.setKeyRepeat(0.15, 0.025)
 
-    nexus.settings.console = true
+    Settings.console = true
 end
 
 local function leave(instance)
@@ -517,7 +521,7 @@ local function leave(instance)
 
     love.keyboard.setKeyRepeat(0, 0)
 
-    nexus.settings.console = false
+    Settings.console = false
 end
 
 function nexus.scene.console.new()
@@ -533,7 +537,7 @@ function nexus.scene.console.new()
     return t_instance
 end
 
-if nexus.system.debug then
+if Systems.debug then
     nexus.scene.console.new()
 end
 

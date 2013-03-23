@@ -27,32 +27,37 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l             = love
-local le            = l.event
-local lt            = l.timer
-local lg            = l.graphics
+local l                     = love
+local le                    = l.event
+local lt                    = l.timer
+local lg                    = l.graphics
 
-local Audio         = require 'src.core.audio'
-local Data          = require 'src.core.data'
-local Game          = require 'src.core.game'
-local Graphics      = require 'src.core.graphics'
-local Input         = require 'src.core.input'
-local Resource      = require 'src.core.resource'
-local Scene         = require 'src.core.scene'
+local Nexus                 = nexus
+local NexusCore             = Nexus.core
+
+local Audio                 = require 'src.core.audio'
+local Data                  = require 'src.core.data'
+local Game                  = require 'src.core.game'
+local Graphics              = require 'src.core.graphics'
+local Input                 = require 'src.core.input'
+local Resource              = require 'src.core.resource'
+local Scene                 = require 'src.core.scene'
 
 require 'bootstrap'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_loaded      = false
+local m_fps                 = 1 / Graphics.getFramerate()
 
-local m_loading     = true
+local m_loaded              = false
 
-local m_running     = true
+local m_loading             = true
 
-local HANDLERS      = {
-    focus           = function(focus)
+local m_running             = true
+
+local HANDLERS              = {
+    focus                   = function(focus)
         if focus then
             Scene.resume()
             Input.resume()
@@ -67,14 +72,17 @@ local HANDLERS      = {
             Scene.pause()
         end
     end,
-    resize          = function(width, height)
+    resize                  = function(width, height)
         Graphics.changeGraphicsConfigures(width, height)
     end,
-    reload          = function()
+    reload                  = function()
         m_loading = true
         m_running = false
     end,
-    quit            = function()
+    framerate               = function(framerate)
+        m_fps = 1 / framerate
+    end,
+    quit                    = function()
         m_running = false
     end
 }
@@ -89,7 +97,11 @@ function love.run()
     math.random()
     math.random()
 
-    nexus.core.database = Data
+    NexusCore.read          = require 'src.system.read'
+    NexusCore.load          = require 'src.system.load'
+    NexusCore.exists        = require 'src.system.exists'
+    NexusCore.version       = require 'src.system.version'
+    NexusCore.upgrade       = require 'src.system.upgrade'
 
     while m_loading do
         m_running = true
@@ -126,7 +138,7 @@ function love.run()
             Scene.render()
             lg.present()
 
-            lt.sleep(0.001)
+            lt.sleep(m_fps)
         end
         Game.terminate()
 

@@ -23,31 +23,36 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Nexus                 = nexus
+local NexusCore             = Nexus.core
 
 return {
-    control = {
-        levels          = 0x0000,
-        chips           = 0x0000
+    control                 = {
+        levels              = 0x0000,
+        chips               = 0x0000
     },
-    status = {
-        N = {
-            health      = 10,
-            energy      = 10
+    status                  = {
+        N                   = {
+            health          = 10,
+            energy          = 10
         },
-        B = {
-            health      = 10,
-            energy      = 10
+        B                   = {
+            health          = 10,
+            energy          = 10
         },
-        A = {
-            health      = 10,
-            energy      = 10
+        A                   = {
+            health          = 10,
+            energy          = 10
         }
     },
-    system = {
-        savingcount     = 0,
-        killedcount     = 0,
-        framecount      = 0,
-        gameversion     = nexus.core.getGameVersion()
+    system                  = {
+        savingcount         = 0,
+        killedcount         = 0,
+        framecount          = 0,
+        gameversion         = NexusCore.version()
     }
 }

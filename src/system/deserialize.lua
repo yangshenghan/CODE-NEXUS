@@ -23,6 +23,7 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+
 return function(data)
     assert(type(data) == 'string')
     assert(loadstring(data))()

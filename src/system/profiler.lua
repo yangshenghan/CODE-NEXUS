@@ -23,12 +23,17 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local profiler = {}
 
-local t_names = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local t_names               = {}
 
-local t_counters = {}
+local t_counters            = {}
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function hook()
     local func = debug.getinfo(2, 'f').func
     if t_counters[func] == nil then
@@ -51,18 +56,33 @@ local function get_function_name(func)
     end
 end
 
-function profiler.start()
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Profiler.start()
     debug.sethook(hook, 'c')
 end
 
-function profiler.stop()
+function Profiler.stop()
     debug.sethook()
 end
 
-function profiler.report(filename)
+function Profiler.report(filename)
     for func, count in pairs(t_counters) do
         print(get_function_name(func), count)
     end
 end
 
-return profiler
+return {
+    start                   = function()
+        debug.sethook(hook, 'c')
+    end,
+    stop                    = function()
+        debug.sethook()
+    end,
+    report                  = function(filename)
+        for func, count in pairs(t_counters) do
+            print(get_function_name(func), count)
+        end
+    end
+}

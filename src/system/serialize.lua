@@ -23,8 +23,15 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local c_function_names = {}
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local c_function_names      = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function initialize_cfunction_names(areas)
     local areas = areas or {
         '_G',
@@ -109,7 +116,7 @@ return function(data, cfunctions)
             if metatable.__serialize then
                 return metatable.__serialize(value)
             else
-                error('cannot serialize an object (no __serialize function in metatable)' )
+                error('cannot serialize an object (no __serialize function in metatable)')
             end
         else
             local seen = {}

@@ -23,12 +23,12 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.scene.exit = {}
+nexus.scene.exit            = {}
 
 local function enter(instance)
-    nexus.game.exit()
+    nexus.core.game.quit()
 end
 
 local function leave(instance)

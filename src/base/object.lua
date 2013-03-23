@@ -23,11 +23,16 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.base.object = {}
+nexus.base.object           = {}
 
-local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
+local Nexus                 = nexus
+
+local Systems               = Nexus.systems
+local SystemsParameters     = Systems.parameters
+
+local LOGICAL_GRID_SIZE = SystemsParameters.logical_grid_size
 
 local t_default = {
     create  = function(...) end,

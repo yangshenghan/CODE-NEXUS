@@ -23,11 +23,18 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local f_table_concat = table.concat
-local f_string_sub = string.sub
-local f_string_byte = string.byte
-local f_string_char = string.char
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local f_table_concat        = table.concat
+local f_string_sub          = string.sub
+local f_string_byte         = string.byte
+local f_string_char         = string.char
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function bytes_to_number(bytes)
     local power = 1
     local number = 0

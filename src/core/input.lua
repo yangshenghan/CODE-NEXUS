@@ -27,40 +27,44 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l             = love
-local lm            = l.mouse
-local lk            = l.keyboard
+local l                     = love
+local lm                    = l.mouse
+local lk                    = l.keyboard
 
-local Nexus         = nexus
-local NexusCore     = Nexus.core
+local Nexus                 = nexus
+local NexusCore             = Nexus.core
 
-local Game          = require 'src.core.game'
+local Configures            = Nexus.configures
+local KeyboardConfigures    = Configures.keyboards
+
+local Game                  = require 'src.core.game'
+local Graphics              = require 'src.core.graphics'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.input     = {}
+NexusCore.input             = {}
 
-local Input         = NexusCore.input
+local Input                 = NexusCore.input
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_system_f1   = false
+local m_system_f1           = false
 
-local m_system_f9   = false
+local m_system_f9           = false
 
-local m_system_f12  = false
+local m_system_f12          = false
 
-local t_pressed     = {}
+local t_pressed             = {}
 
-local t_released    = {}
+local t_released            = {}
 
-local t_triggered   = {}
+local t_triggered           = {}
 
-local t_counter     = {}
+local t_counter             = {}
 
-local t_controls    = nexus.configures.controls
+local t_controls            = KeyboardConfigures
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -124,7 +128,7 @@ function Input.update(dt)
     if lk.isDown('f1') then
         if not m_system_f1 then
             m_system_f1 = true
-            nexus.core.graphics.toggleFPS()
+            Graphics.toggleFPS()
         end
     else
         m_system_f1 = false
@@ -150,7 +154,7 @@ function Input.update(dt)
 
     if lk.isDown('lalt') or lk.isDown('ralt') then
         if lk.isDown('f4') then Game.quit() end
-        if lk.isDown('return') then nexus.core.graphics.toggleFullscreen() end
+        if lk.isDown('return') then Graphics.toggleFullscreen() end
     end
 end
 

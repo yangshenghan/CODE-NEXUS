@@ -23,38 +23,27 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.loading         = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Nexus                 = nexus
+local Systems               = Nexus.systems
+local SystemVersion         = Systems.version
 
-local function enter(instance)
-    instance.scene.loading = instance
-    instance.scene.progress = nexus.window.progressbar.new()
-    instance.scene.coroutine = coroutine.create(instance.scene.enter)
-end
+-- / ---------------------------------------------------------------------- \ --
+-- | Local veriables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local m_version             = nil
 
-local function update(instance, dt)
-    local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
-    nexus.window.progressbar.setProgressValue(instance.scene.progress, progress)
+local MAJOR                 = SystemVersion.major
+local MINOR                 = SystemVersion.minor
+local MICRO                 = SystemVersion.micro
+local PATCH                 = SystemVersion.patch
 
-    if coroutine.status(instance.scene.coroutine) == 'dead' then
-        instance.scene.progress.dispose(instance.scene.progress)
-
-        nexus.core.scene.change(instance.scene)
-        instance.scene = nil
+return function()
+    if not m_version then
+        m_version = tonumber(MAJOR) * 2 ^ 24 + tonumber(MINOR) * 2 ^ 16 + tonumber(MICRO) * 2 ^ 8 + tonumber(PATCH)
     end
-end
-
-function nexus.scene.loading.setProgress(value)
-    if value < 0 then value = 0 end
-    if value > 1 then value = 1 end
-    coroutine.yield(value)
-end
-
-function nexus.scene.loading.new(instance)
-    return nexus.base.scene.new({
-        enter   = enter,
-        update  = update,
-        scene   = nexus.base.scene.new(instance)
-    })
+    return m_version
 end

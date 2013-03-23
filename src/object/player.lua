@@ -23,11 +23,21 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.object.player = {}
+nexus.object.player         = {}
 
-local LOGICAL_GRID_SIZE = nexus.system.parameters.logical_grid_size
+local Nexus                 = nexus
+
+local Systems               = Nexus.systems
+local SystemsParameters     = Systems.parameters
+
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
+
+local Data                  = require 'src.core.data'
+
+local LOGICAL_GRID_SIZE = SystemsParameters.logical_grid_size
 
 local function update(instance, dt)
     if instance.object.rushing then
@@ -45,7 +55,7 @@ end
 
 local function render(instance)
     love.graphics.setColor(193, 47, 14)
-    love.graphics.circle('fill', instance.object.rx, nexus.configures.graphics.height - instance.object.ry, LOGICAL_GRID_SIZE / 2)
+    love.graphics.circle('fill', instance.object.rx, GraphicsConfigures.height - instance.object.ry, LOGICAL_GRID_SIZE / 2)
 end
 
 function nexus.object.player.rush(instance)
@@ -101,7 +111,7 @@ function nexus.object.player.new(world)
         update  = update,
         render  = render
     }
-    instance.object = nexus.core.database.loadObjectData('player')
+    instance.object = Data.loadObjectData('player')
     nexus.base.object.move(instance, 10, 10)
     return nexus.base.object.new(instance)
 end

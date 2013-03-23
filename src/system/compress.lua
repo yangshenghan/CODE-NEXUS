@@ -23,15 +23,22 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local f_math_log = math.log
-local f_math_ceil = math.ceil
-local f_math_floor = math.floor
-local f_table_concat = table.concat
-local f_string_sub = string.sub
-local f_string_char = string.char
 
-local m_log256 = f_math_log(256)
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local f_math_log            = math.log
+local f_math_ceil           = math.ceil
+local f_math_floor          = math.floor
+local f_table_concat        = table.concat
+local f_string_sub          = string.sub
+local f_string_char         = string.char
 
+local m_log256              = f_math_log(256)
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function number_to_bytes(number)
     local length = f_math_ceil(f_math_log(number + 1) / m_log256)
     local bytes = {f_string_char(length)}

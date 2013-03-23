@@ -23,9 +23,21 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.scene.title = {}
+nexus.scene.title           = {}
+
+local Nexus                 = nexus
+
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
+
+local Data                  = require 'src.core.data'
+local Game                  = require 'src.core.game'
+local Graphics              = require 'src.core.graphics'
+local Input                 = require 'src.core.input'
+local Resource              = require 'src.core.resource'
+local Scene                 = require 'src.core.scene'
 
 local f_update_coroutine = function(instance, dt, timer)
     local wait = function(microsecond, callback)
@@ -36,10 +48,10 @@ local f_update_coroutine = function(instance, dt, timer)
     -- Show splash screens
     if not instance.skip then
         local splash = nexus.base.sprite.new({
-            x       = nexus.configures.graphics.width / 2,
-            y       = nexus.configures.graphics.height / 2
-        }, nexus.core.graphics.getWindowViewport())
-        nexus.base.sprite.setImage(splash, nexus.core.resource.loadSystemImage('splash1.png'))
+            x       = GraphicsConfigures.width / 2,
+            y       = GraphicsConfigures.height / 2
+        }, Graphics.getWindowViewport())
+        nexus.base.sprite.setImage(splash, Resource.loadSystemImage('splash1.png'))
         splash.opacity = 0
         wait(1000, function(dt)
             splash.opacity = splash.opacity + dt
@@ -55,13 +67,13 @@ local f_update_coroutine = function(instance, dt, timer)
 
     -- Start animation of PRESS TO START message
     local waiting = nexus.base.sprite.new({
-        x       = nexus.configures.graphics.width / 2,
-        y       = nexus.configures.graphics.height / 2
-    }, nexus.core.graphics.getWindowViewport())
-    nexus.base.sprite.setImage(waiting, nexus.core.resource.loadSystemImage('press_any_key_to_continue.png'))
+        x       = GraphicsConfigures.width / 2,
+        y       = GraphicsConfigures.height / 2
+    }, Graphics.getWindowViewport())
+    nexus.base.sprite.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue.png'))
     while true do
         local cycle, phase = math.modf((timer - 0.5) / 0.75)
-        if nexus.core.input.isKeyTrigger(NEXUS_KEY.C) then break end
+        if Input.isKeyTrigger(NEXUS_KEY.C) then break end
         if cycle % 2 == 0 then
             waiting.opacity = 1 - phase
         else
@@ -89,32 +101,32 @@ local function enter(instance)
     instance.coroutines.update = coroutine.create(f_update_coroutine)
     instance.windows.command = nexus.window.command.new(320, 240, {
         {
-            text    = nexus.core.database.getTranslatedText('New Game'),
+            text    = Data.getTranslatedText('New Game'),
             handler = function(...)
-                nexus.core.game.setup()
-                nexus.core.scene.goto(nexus.scene.stage.new('prologue'))
-                -- nexus.core.scene.goto(nexus.scene.newgame.new())
+                Game.setup()
+                Scene.goto(nexus.scene.stage.new('prologue'))
+                -- Scene.goto(nexus.scene.newgame.new())
             end
         }, {
-            text    = nexus.core.database.getTranslatedText('Continue'),
+            text    = Data.getTranslatedText('Continue'),
             handler = function(...)
-                nexus.core.scene.goto(nexus.scene.continue.new())
+                Scene.goto(nexus.scene.continue.new())
             end,
-            enabled = nexus.core.game.exists()
+            enabled = Game.exists()
         }, {
-            text    = nexus.core.database.getTranslatedText('Extra'),
+            text    = Data.getTranslatedText('Extra'),
             handler = function(...)
-                nexus.core.scene.goto(nexus.scene.extra.new())
+                Scene.goto(nexus.scene.extra.new())
             end
         }, {
-            text    = nexus.core.database.getTranslatedText('Option'),
+            text    = Data.getTranslatedText('Option'),
             handler = function(...)
-                nexus.core.scene.goto(nexus.scene.option.new())
+                Scene.goto(nexus.scene.option.new())
             end
         }, {
-            text    = nexus.core.database.getTranslatedText('Exit'),
+            text    = Data.getTranslatedText('Exit'),
             handler = function(...)
-                nexus.core.scene.goto(nexus.scene.exit.new())
+                Scene.goto(nexus.scene.exit.new())
             end
         }
     })

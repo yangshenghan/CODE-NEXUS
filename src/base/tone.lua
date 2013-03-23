@@ -23,9 +23,9 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local nexus                 = nexus
 
-nexus.base.tone = {}
+nexus.base.tone             = {}
 
 local function set_correct_value(value, gray)
     if not value then return 0 end

@@ -31,6 +31,9 @@ local Nexus                 = nexus
 local Systems               = Nexus.systems
 local Settings              = Nexus.settings
 
+local Resource              = require 'src.core.resource'
+local Scene                 = require 'src.core.scene'
+
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
@@ -358,9 +361,9 @@ end
 
 function nexus.console.toggleConsole()
     if Settings.console then
-        nexus.core.scene.leave()
+        Scene.leave()
     else
-        nexus.core.scene.enter(nexus.scene.console.new())
+        Scene.enter(nexus.scene.console.new())
     end
 end
 
@@ -471,7 +474,7 @@ local function enter(instance)
         end
 
         if key == 'escape' then
-            nexus.core.scene.leave()
+            Scene.leave()
         end
 
         console.input.push(key, code)
@@ -492,7 +495,7 @@ local function enter(instance)
     end
 
     quit = function()
-        nexus.core.scene.leave()
+        Scene.leave()
     end
 
     exit = function()
@@ -528,7 +531,7 @@ end
 
 function nexus.scene.console.new()
     if not t_instance then
-        local font = nexus.core.resource.loadFontData('inconsolata.otf', 16)
+        local font = Resource.loadFontData('inconsolata.otf', 16)
         console.initialize(executer, font)
 
         t_instance = nexus.base.scene.new({

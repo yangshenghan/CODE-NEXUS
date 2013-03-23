@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.loading         = {}
 
+local Scene                 = require 'src.core.scene'
+
 local function enter(instance)
     instance.scene.loading = instance
     instance.scene.progress = nexus.window.progressbar.new()
@@ -40,7 +42,7 @@ local function update(instance, dt)
     if coroutine.status(instance.scene.coroutine) == 'dead' then
         instance.scene.progress.dispose(instance.scene.progress)
 
-        nexus.core.scene.change(instance.scene)
+        Scene.change(instance.scene)
         instance.scene = nil
     end
 end

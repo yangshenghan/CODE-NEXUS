@@ -32,7 +32,6 @@ local lm                    = l.mouse
 local lk                    = l.keyboard
 
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
 
 local Configures            = Nexus.configures
 local KeyboardConfigures    = Configures.keyboards
@@ -43,9 +42,7 @@ local Graphics              = require 'src.core.graphics'
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.input             = {}
-
-local Input                 = NexusCore.input
+local Input                 = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --

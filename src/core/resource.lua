@@ -32,14 +32,11 @@ local la                    = l.audio
 local lg                    = l.graphics
 
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.resource          = {}
-
-local Resource              = NexusCore.resource
+local Resource              = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --

@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.window.progressbar    = {}
 
+local Graphics              = require 'src.core.graphics'
+
 local function render(instance)
     local rectangle = love.graphics.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)
     love.graphics.setColor(128, 128, 128, 255)
@@ -64,9 +66,9 @@ function nexus.window.progressbar.new(x, y, width, height)
             instance.image.setFilter(instance.image, 'linear', 'linear')
         end,
         render      = render,
-        x           = x or nexus.core.graphics.getScreenWidth() * 0.15,
-        y           = y or nexus.core.graphics.getScreenHeight() * 0.8 - 60,
-        width       = width or nexus.core.graphics.getScreenWidth() * 0.7,
+        x           = x or Graphics.getScreenWidth() * 0.15,
+        y           = y or Graphics.getScreenHeight() * 0.8 - 60,
+        width       = width or Graphics.getScreenWidth() * 0.7,
         height      = height or 60
     })
 end

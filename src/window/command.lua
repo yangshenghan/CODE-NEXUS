@@ -27,20 +27,22 @@ local nexus                 = nexus
 
 nexus.window.command        = {}
 
+local Input                 = require 'src.core.input'
+
 local NEXUS_KEY             = NEXUS_KEY
 
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 local function update(instance, dt)
-    if nexus.core.input.isKeyRepeat(NEXUS_KEY.UP) then
-        nexus.window.command.moveCursorUp(instance, nexus.core.input.isKeyTrigger(NEXUS_KEY.UP))
+    if Input.isKeyRepeat(NEXUS_KEY.UP) then
+        nexus.window.command.moveCursorUp(instance, Input.isKeyTrigger(NEXUS_KEY.UP))
     end
 
-    if nexus.core.input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        nexus.window.command.moveCursorDown(instance, nexus.core.input.isKeyTrigger(NEXUS_KEY.DOWN))
+    if Input.isKeyRepeat(NEXUS_KEY.DOWN) then
+        nexus.window.command.moveCursorDown(instance, Input.isKeyTrigger(NEXUS_KEY.DOWN))
     end
 
-    if nexus.core.input.isKeyDown(NEXUS_KEY.C) then
+    if Input.isKeyDown(NEXUS_KEY.C) then
         local command = instance.commands[instance.cursor]
         if command.enabled then command.handler() end
         return instance.cursor 

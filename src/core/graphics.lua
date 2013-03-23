@@ -33,7 +33,6 @@ local lt                    = l.timer
 local lg                    = l.graphics
 
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
 
 local Settings              = Nexus.settings
 
@@ -47,9 +46,7 @@ local Scene                 = require 'src.core.scene'
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NexusCore.graphics          = {}
-
-local Graphics              = NexusCore.graphics
+local Graphics              = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --

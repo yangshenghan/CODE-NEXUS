@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.continue        = {}
 
+local Input                 = require 'src.core.input'
+
 local NEXUS_KEY             = NEXUS_KEY
 
 local function enter(instance)
@@ -36,7 +38,7 @@ local function leave(instance)
 end
 
 local function update(instance, dt)
-    if nexus.core.input.isKeyDown(NEXUS_KEY.CONFIRM) or nexus.core.input.isKeyDown(NEXUS_KEY.CANCEL) then
+    if Input.isKeyDown(NEXUS_KEY.CONFIRM) or Input.isKeyDown(NEXUS_KEY.CANCEL) then
         nexus.core.scene.leave()
     end
 end

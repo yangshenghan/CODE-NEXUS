@@ -27,11 +27,13 @@ local nexus                 = nexus
 
 nexus.base.window           = {}
 
+local Graphics              = require 'src.core.graphics'
+
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 local function dispose(instance)
     instance.render = nil
-    nexus.base.viewport.removeDrawable(nexus.core.graphics.getWindowViewport(), instance)
+    nexus.base.viewport.removeDrawable(Graphics.getWindowViewport(), instance)
 end
 
 local function disposed(instance)
@@ -82,6 +84,6 @@ local t_default = {
 function nexus.base.window.new(instance)
     instance = table.merge(t_default, instance)
     instance.create(instance)
-    nexus.base.viewport.addDrawable(nexus.core.graphics.getWindowViewport(), instance)
+    nexus.base.viewport.addDrawable(Graphics.getWindowViewport(), instance)
     return instance
 end

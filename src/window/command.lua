@@ -27,6 +27,10 @@ local nexus                 = nexus
 
 nexus.window.command        = {}
 
+local NEXUS_KEY             = NEXUS_KEY
+
+local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+
 local function update(instance, dt)
     if nexus.core.input.isKeyRepeat(NEXUS_KEY.UP) then
         nexus.window.command.moveCursorUp(instance, nexus.core.input.isKeyTrigger(NEXUS_KEY.UP))
@@ -88,7 +92,7 @@ function nexus.window.command.addCommand(instance, text, enabled, handler)
     instance.commands[instance.size] = {
         text    = text,
         enabled = enabled == nil or true and false,
-        handler = handler or function(...) end
+        handler = handler or NEXUS_EMPTY_FUNCTION
     }
 end
 

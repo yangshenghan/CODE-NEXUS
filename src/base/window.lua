@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.base.window           = {}
 
+local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+
 local function dispose(instance)
     instance.render = nil
     nexus.base.viewport.removeDrawable(nexus.core.graphics.getWindowViewport(), instance)
@@ -62,10 +64,10 @@ end
 local t_default = {
     dispose     = dispose,
     disposed    = disposed,
-    create      = function(...) end,
-    delete      = function(...) end,
-    update      = function(...) end,
-    render      = function(...) end,
+    create      = NEXUS_EMPTY_FUNCTION,
+    delete      = NEXUS_EMPTY_FUNCTION,
+    update      = NEXUS_EMPTY_FUNCTION,
+    render      = NEXUS_EMPTY_FUNCTION,
     active      = false,
     height      = nil,
     openness    = 1,

@@ -32,13 +32,15 @@ local Nexus                 = nexus
 local Systems               = Nexus.systems
 local SystemsParameters     = Systems.parameters
 
-local LOGICAL_GRID_SIZE = SystemsParameters.logical_grid_size
+local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
+
+local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 local t_default = {
-    create  = function(...) end,
-    delete  = function(...) end,
-    update  = function(...) end,
-    render  = function(...) end,
+    create  = NEXUS_EMPTY_FUNCTION,
+    delete  = NEXUS_EMPTY_FUNCTION,
+    update  = NEXUS_EMPTY_FUNCTION,
+    render  = NEXUS_EMPTY_FUNCTION,
     object  = {
         x           = 0,    -- logical x position
         y           = 0,    -- logical y position

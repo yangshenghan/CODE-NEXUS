@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.option          = {}
 
+local NEXUS_KEY             = NEXUS_KEY
+
 local function enter(instance)
 end
 

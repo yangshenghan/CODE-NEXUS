@@ -92,39 +92,6 @@ function coroutine.resume(...)
 end
 
 -- / ---------------------------------------------------------------------- \ --
--- | Global constant definitions                                            | --
--- \ ---------------------------------------------------------------------- / --
-NEXUS_EMPTY_FUNCTION = function(...) end
-
-NEXUS_KEY = {
-    Z           = 'z',
-    X           = 'x',
-    C           = 'c',
-    V           = 'v',
-    A           = 'a',
-    S           = 's',
-    D           = 'd',
-    F           = 'f',
-    UP          = 'up',
-    RIGHT       = 'right',
-    DOWN        = 'down',
-    LEFT        = 'left',
-    CONFIRM     = 'confirm',
-    CANCEL      = 'cancel',
-    SHIFT       = 'shift',
-    ALTERNATIVE = 'alternative',
-    CONTROL     = 'control',
-    F1          = 'f1',
-    F2          = 'f2',
-    F3          = 'f3',
-    F4          = 'f4',
-    F5          = 'f5',
-    F6          = 'f6',
-    F7          = 'f7',
-    F8          = 'f8'
-}
-
--- / ---------------------------------------------------------------------- \ --
 -- | Actually load the game                                                 | --
 -- \ ---------------------------------------------------------------------- / --
 require 'src.base.color'

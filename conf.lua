@@ -25,6 +25,39 @@
 --[[ ********************************************************************** ]]--
 
 -- / ---------------------------------------------------------------------- \ --
+-- | Global constant definitions                                            | --
+-- \ ---------------------------------------------------------------------- / --
+NEXUS_KEY = {
+    Z           = 'z',
+    X           = 'x',
+    C           = 'c',
+    V           = 'v',
+    A           = 'a',
+    S           = 's',
+    D           = 'd',
+    F           = 'f',
+    UP          = 'up',
+    RIGHT       = 'right',
+    DOWN        = 'down',
+    LEFT        = 'left',
+    CONFIRM     = 'confirm',
+    CANCEL      = 'cancel',
+    SHIFT       = 'shift',
+    ALTERNATIVE = 'alternative',
+    CONTROL     = 'control',
+    F1          = 'f1',
+    F2          = 'f2',
+    F3          = 'f3',
+    F4          = 'f4',
+    F5          = 'f5',
+    F6          = 'f6',
+    F7          = 'f7',
+    F8          = 'f8'
+}
+
+NEXUS_EMPTY_FUNCTION = function(...) end
+
+-- / ---------------------------------------------------------------------- \ --
 -- | Construction of base nexus table                                       | --
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
@@ -36,19 +69,86 @@ nexus = {
     system = {},
     window = {},
 
-    systems                 = require 'src.systems',
-    settings                = require 'src.settings',
-    configures              = require 'src.configures'
+    systems                 = {  -- these should not be changed at runtime.
+        version             = {
+            major           = '0',
+            minor           = '2',
+            micro           = '0',
+            patch           = '0',
+            build           = '0',
+            stamp           = '20130315',
+            stage           = 'Development',
+        },
+        paths               = {
+            identity        = 'code-nexus',
+            configure       = 'config.dat',
+            saving          = 'save-%02d.sav'
+        },
+        defaults            = {
+            width           = 640,
+            height          = 360,
+            fullscreen      = false
+        },
+        parameters          = {
+            saving_slot_size        = 15,
+            logical_grid_size       = 16,
+            logical_canvas_width    = 1280,
+            logical_canvas_height   = 720,
+            configure_identifier    = 'configure'
+        },
+        debug               = true,
+        firstrun            = false,
+        error               = nil
+    },
+    settings                = {
+        showfps             = true,
+        console             = false,
+        level               = 5
+    },
+    configures              = {
+        audios              = {
+            volume          = 80
+        },
+        keyboards           = {
+            z               = {'z'},
+            x               = {'x'},
+            c               = {'c'},
+            v               = {'v'},
+            a               = {'a'},
+            s               = {'s'},
+            d               = {'d'},
+            f               = {'f'},
+            up              = {'up'},
+            right           = {'right'},
+            down            = {'down'},
+            left            = {'left'},
+            confirm         = {'return'},
+            cancel          = {'escape'}
+        },
+        gameplay            = {
+        },
+        joysticks           = {
+        },
+        mouses              = {
+        },
+        graphics            = {
+            width           = 1280,
+            height          = 720,
+            fullscreen      = false,
+            vsync           = true,
+            fsaa            = 0
+        },
+        options             = {
+            language        = 'en_US'
+        }
+    }
 }
-
--- / ---------------------------------------------------------------------- \ --
--- | Declare alias                                                          | --
--- \ ---------------------------------------------------------------------- / --
-local nexus                 = nexus
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Entry point of LÖVE before modules are loaded                          | --
 -- \ ---------------------------------------------------------------------- / --
+local nexus                 = nexus
+
 function love.conf(game)
     local identity  = nexus.systems.paths.identity
     local filename  = nexus.systems.paths.configure

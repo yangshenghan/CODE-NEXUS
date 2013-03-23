@@ -31,6 +31,8 @@ local Nexus                 = nexus
 local Systems               = Nexus.systems
 local Settings              = Nexus.settings
 
+local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Local used name and modules                                            | --
 -- \ ---------------------------------------------------------------------- / --
@@ -93,7 +95,7 @@ function console.input.push(key, code)
 end
 
 function console.input.initialize(executer)
-    f_executer = executer or function(...) end
+    f_executer = executer or NEXUS_EMPTY_FUNCTION
 
     t_hooks['return'] = function()
         local command = table.concat(m_commandline)

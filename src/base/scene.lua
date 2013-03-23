@@ -27,16 +27,18 @@ local nexus                 = nexus
 
 nexus.base.scene            = {}
 
+local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+
 local t_default             = {
-    create                  = function(...) end,
-    delete                  = function(...) end,
-    enter                   = function(...) end,
-    leave                   = function(...) end,
-    idleIn                  = function(...) end,
-    idleOut                 = function(...) end,
-    update                  = function(...) end,
+    create                  = NEXUS_EMPTY_FUNCTION,
+    delete                  = NEXUS_EMPTY_FUNCTION,
+    enter                   = NEXUS_EMPTY_FUNCTION,
+    leave                   = NEXUS_EMPTY_FUNCTION,
+    idleIn                  = NEXUS_EMPTY_FUNCTION,
+    idleOut                 = NEXUS_EMPTY_FUNCTION,
+    update                  = NEXUS_EMPTY_FUNCTION,
     -- The render callback may be removed and managed in nexus.game
-    render                  = function(...) end,
+    render                  = NEXUS_EMPTY_FUNCTION,
     idle                    = false
 }
 

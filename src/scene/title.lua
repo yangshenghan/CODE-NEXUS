@@ -39,6 +39,8 @@ local Input                 = require 'src.core.input'
 local Resource              = require 'src.core.resource'
 local Scene                 = require 'src.core.scene'
 
+local NEXUS_KEY             = NEXUS_KEY
+
 local f_update_coroutine = function(instance, dt, timer)
     local wait = function(microsecond, callback)
         local wakeup = love.timer.getMicroTime() + microsecond / 1000

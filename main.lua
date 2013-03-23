@@ -23,20 +23,21 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-require 'bootstrap'
+local Game                  = {}
 
 local l = love
 local le = l.event
 local lt = l.timer
 local lg = l.graphics
 
-local Game                  = {}
-
-local Audio                 = require 'src/core/audio'
 local Nexus                 = nexus
 local NexusCore             = Nexus.core
-local AudioManager          = NexusCore.audio
-local DatabaseManager       = NexusCore.database
+
+local Audio                 = require 'src.core.audio'
+local Data                  = require 'src.core.data'
+
+require 'bootstrap'
+
 local GraphicsManager       = NexusCore.graphics
 local InputManager          = NexusCore.input
 local MessageManager        = NexusCore.message
@@ -76,12 +77,15 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Game.initialize()
-    local databases = {
-        colors  = 'color'
-    }
+    nexus.core.audio = Audio
+    -- nexus.core.data = Data
+    nexus.core.database = Data
+    -- nexus.core = {
+        -- audio = require 'src.core.audio'
+    -- }
 
-    AudioManager.initialize()
-    DatabaseManager.initialize(databases)
+    Audio.initialize()
+    Data.initialize()
     GraphicsManager.initialize()
     InputManager.initialize()
     MessageManager.initialize()
@@ -89,7 +93,7 @@ function Game.initialize()
     SceneManager.initialize()
 
     -- nexus.game.data = nil
-    DatabaseManager.loadTextData(nexus.configures.options.language)
+    Data.loadTextData(nexus.configures.options.language)
 
     if nexus.configures and not nexus.system.error and love.graphics.isSupported('canvas') then
         if nexus.system.firstrun then adjust_screen_mode() end
@@ -100,7 +104,7 @@ function Game.initialize()
         end
         m_loaded = true
     else
-        SceneManager.goto(nexus.scene.error.new(DatabaseManager.getTranslatedText(nexus.system.error)))
+        SceneManager.goto(nexus.scene.error.new(Data.getTranslatedText(nexus.system.error)))
     end
 end
 
@@ -110,12 +114,12 @@ function Game.finalize()
     nexus.core.message.finalize()
     InputManager.finalize()
     GraphicsManager.finalize()
-    DatabaseManager.finalize()
-    AudioManager.finalize()
+    Data.finalize()
+    Audio.finalize()
 end
 
 function Game.update(dt)
-    AudioManager.update(dt)
+    Audio.update(dt)
     GraphicsManager.update(dt)
     InputManager.update(dt)
     nexus.core.message.update(dt)
@@ -129,7 +133,7 @@ function Game.render()
 end
 
 function Game.pause()
-    AudioManager.pause()
+    Audio.pause()
     GraphicsManager.pause()
     InputManager.pause()
     nexus.core.message.pause()
@@ -141,7 +145,7 @@ function Game.resume()
     nexus.core.message.resume()
     InputManager.resume()
     GraphicsManager.resume()
-    AudioManager.resume()
+    Audio.resume()
 end
 
 function Game.focus(focus)
@@ -161,22 +165,11 @@ function Game.quit()
     m_running = false
 end
 
--- / ---------------------------------------------------------------------- \ --
--- | Public functions                                                       | --
--- \ ---------------------------------------------------------------------- / --
-function reload()
-    le.push('reload')
-end
-
-function quit()
-    le.push('quit')
-end
-
--- function nexus.game.changeGameplayConfigures()
+-- function Game.changeGameplayConfigures()
     -- nexus.game.saveGameConfigure()
 -- end
 
--- function nexus.game.saveGameConfigure()
+-- function Game.saveGameConfigure()
     -- nexus.core.save(nexus.system.paths.configure, nexus.configures, nexus.system.parameters.configure_identifier)
 -- end
 

@@ -23,19 +23,24 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local Data = {}
 
-nexus.core.database = {
-    fonts       = {},
-    texts       = {},
-    colors      = {},
-    formats     = {}
-}
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local t_fonts = {}
+
+local t_texts = {}
 
 local t_caches = {}
 
 local t_colors = {}
 
+local t_formats = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function load_data_resource(folder, filename)
     local path = folder .. filename .. '.lua'
 
@@ -46,76 +51,72 @@ local function load_data_resource(folder, filename)
     return t_caches[path]
 end
 
-function nexus.core.database.loadDatabaseData(filename)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Data.initialize()
+    t_colors = Data.loadDatabaseData('colors')
+end
+
+function Data.finalize()
+    Data.reset()
+end
+
+function Data.reset()
+    t_formats = {}
+    t_colors = {}
+    t_caches = {}
+    t_texts = {}
+    t_fonts = {}
+end
+
+function Data.loadDatabaseData(filename)
     return load_data_resource('data/databases/', filename)
 end
 
-function nexus.core.database.loadExtraData(filename)
+function Data.loadExtraData(filename)
     return load_data_resource('data/extras/', filename)
 end
 
-function nexus.core.database.loadMapData(filename)
+function Data.loadMapData(filename)
     return load_data_resource('data/maps/', filename)
 end
 
-function nexus.core.database.loadObjectData(filename)
+function Data.loadObjectData(filename)
     return load_data_resource('data/objects/', filename)
 end
 
-function nexus.core.database.loadScriptData(filename)
+function Data.loadScriptData(filename)
     return load_data_resource('data/scripts/', filename)
 end
 
-function nexus.core.database.loadStageData(filename)
+function Data.loadStageData(filename)
     return load_data_resource('data/stages/', filename)
 end
 
-function nexus.core.database.loadTextData(filename)
+function Data.loadTextData(filename)
     local texts = load_data_resource('data/texts/', filename)
-    nexus.core.database.fonts = texts.fonts
-    nexus.core.database.texts = texts.texts
-    nexus.core.database.formats = texts.formats
+    t_fonts = texts.fonts
+    t_texts = texts.texts
+    t_formats = texts.formats
     return texts
 end
 
-function nexus.core.database.getTextsList()
-    
+function Data.getTranslationList()
 end
 
-function nexus.core.database.getTranslatedText(text)
-    return nexus.core.database.texts[text] or text
+function Data.getTranslatedText(text)
+    return t_texts[text] or text
 end
 
-function nexus.core.database.setTranslationTexts(language)
-end
-
-function nexus.core.database.initialize(databases)
-    for index, filename in pairs(databases) do
-        if nexus.core.database[index] then
-            nexus.core.database[index] = nexus.core.database.loadDatabaseData(filename)
-        end
-    end
-end
-
-function nexus.core.database.finalize()
-    nexus.core.database.formats = {}
-    nexus.core.database.colors = {}
-    nexus.core.database.texts = {}
-    nexus.core.database.fonts = {}
-
-    nexus.core.database.reset()
-end
-
-function nexus.core.database.reset()
-    t_caches = {}
-end
-
-function nexus.core.database.getColor(index)
-    local color = nexus.core.database.colors[index]
+function Data.getColor(index)
+    local color = t_colors[index]
     if color then return nexus.base.color.get(color) end
     return 0, 0, 0, 0
 end
 
-function nexus.core.database.changeOptionConfigures()
-    nexus.game.saveGameConfigure()
-end
+-- function Data.changeOptionConfigures()
+    -- Game.saveGameConfigure()
+-- end
+
+return Data

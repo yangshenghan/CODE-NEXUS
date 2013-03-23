@@ -131,8 +131,6 @@ NEXUS_KEY = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Actually load the game                                                 | --
 -- \ ---------------------------------------------------------------------- / --
-require 'src.core.audio'
-require 'src.core.database'
 require 'src.core.graphics'
 require 'src.core.input'
 require 'src.core.message'

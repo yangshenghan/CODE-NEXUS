@@ -23,33 +23,36 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local Audio = {}
 
-nexus.core.audio = {}
-
-function nexus.core.audio.initialize()
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Audio.initialize()
 end
 
-function nexus.core.audio.finalize()
+function Audio.finalize()
     love.audio.stop()
 end
 
-function nexus.core.audio.update(dt)
+function Audio.update(dt)
 end
 
-function nexus.core.audio.pause()
+function Audio.pause()
     love.audio.pause()
 end
 
-function nexus.core.audio.resume()
+function Audio.resume()
     love.audio.resume()
 end
 
-function nexus.core.audio.changeAudioConfigures()
-    nexus.game.saveGameConfigure()
-end
+-- function Audio.changeAudioConfigures()
+    -- Game.saveGameConfigure()
+-- end
 
-function nexus.core.audio.playCancel()
+function Audio.playCancel()
     local source = nexus.core.resource.loadSoundSource('cancel')
     source.play(source)
 end
+
+return Audio

@@ -98,6 +98,8 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Global constant definitions                                            | --
 -- \ ---------------------------------------------------------------------- / --
+NEXUS_EMPTY_FUNCTION = function(...) end
+
 NEXUS_KEY = {
     Z           = 'z',
     X           = 'x',
@@ -161,5 +163,3 @@ require 'src.object.player'
 
 require 'src.window.command'
 require 'src.window.progressbar'
-
-require 'src.game'

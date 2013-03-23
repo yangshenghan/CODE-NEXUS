@@ -257,6 +257,7 @@ function love.conf(game)
     end
     game.author = 'Yang Sheng Han'
     game.url = 'http://yangshenghan.twbbs.org'
+    game.version = '0.8.0'
     game.identity = identity
     game.release = not nexus.system.debug
 

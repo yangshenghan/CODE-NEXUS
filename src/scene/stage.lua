@@ -30,6 +30,7 @@ nexus.scene.stage           = {}
 local require               = require
 
 local Data                  = require 'src.core.data'
+local Game                  = require 'src.core.game'
 local Graphics              = require 'src.core.graphics'
 local Input                 = require 'src.core.input'
 local Scene                 = require 'src.core.scene'
@@ -41,6 +42,7 @@ local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 local function enter(instance)
     local canvas = love.graphics.newCanvas()
     local background = Graphics.getBackgroundViewport()
+    instance.gameobjects = Game.getGameObjects()
 
     -- Load stage data
     instance.map = Data.loadMapData(instance.name)
@@ -48,7 +50,7 @@ local function enter(instance)
     instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
-    instance.player = nexus.object.player.new()
+    instance.player = instance.gameobjects.player
     instance.player.z = 30
     instance.player.visible = true
     instance.player.dispose = NEXUS_EMPTY_FUNCTION
@@ -108,6 +110,7 @@ local function leave(instance)
         nexus.base.viewport.dispose(viewport)
     end
 
+    instance.gameobjects = nil
     instance.objects = nil
     instance.player = nil
     instance.script = nil
@@ -119,31 +122,31 @@ local function update(instance, dt)
     if instance.idle then return end
 
     if Input.isKeyDown(NEXUS_KEY.Z) then
-        nexus.object.player.rush(instance.player)
+        instance.player.rush(instance.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.X) then
-        nexus.object.player.jump(instance.player)
+        instance.player.jump(instance.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.C) then
-        nexus.object.player.attack(instance.player)
+        instance.player.attack(instance.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.LEFT) and nexus.base.object.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
-        nexus.object.player.left(instance.player)
+        instance.player.left(instance.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.RIGHT) and nexus.base.object.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
-        nexus.object.player.right(instance.player)
+        instance.player.right(instance.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.UP) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
-        nexus.object.player.up(instance.player)
+        instance.player.up(instance.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.DOWN) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
-        nexus.object.player.down(instance.player)
+        instance.player.down(instance.player)
     end
 
     for _, object in pairs(instance.objects) do

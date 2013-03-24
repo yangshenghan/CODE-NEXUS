@@ -23,7 +23,6 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.object                = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Extend bulit-in lua modules and functions                              | --
@@ -113,8 +112,6 @@ require 'src.scene.stage'
 require 'src.scene.option'
 require 'src.scene.extra'
 require 'src.scene.exit'
-
-require 'src.object.player'
 
 require 'src.window.command'
 require 'src.window.progressbar'

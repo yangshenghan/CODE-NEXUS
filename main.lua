@@ -36,6 +36,9 @@ local require               = require
 local Nexus                 = nexus
 local Core                  = Nexus.core
 
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
+
 local Audio                 = require 'src.core.audio'
 local Data                  = require 'src.core.data'
 local Game                  = require 'src.core.game'
@@ -139,7 +142,7 @@ function love.run()
             Scene.render()
             lg.present()
 
-            lt.sleep(m_fps)
+            if not GraphicsConfigures.vsync then lt.sleep(m_fps) end
         end
         Game.terminate()
 

@@ -62,13 +62,12 @@ NEXUS_EMPTY_FUNCTION = function(...) end
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
     base = {},
-    core = {},
-    game = {},
     scene = {},
     sprite = {},
     system = {},
     window = {},
 
+    core                    = {},
     systems                 = {  -- these should not be changed at runtime.
         version             = {
             major           = '0',

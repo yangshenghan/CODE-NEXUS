@@ -23,10 +23,10 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.object.player         = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local require               = require
 
 local Nexus                 = nexus
@@ -37,9 +37,31 @@ local GraphicsConfigures    = Configures.graphics
 
 local Data                  = require 'src.core.data'
 
-local LOGICAL_GRID_SIZE = SystemsParameters.logical_grid_size
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Player                = {}
 
-local function update(instance, dt)
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Player.new()
+    local instance = nexus.base.object.new(setmetatable(Player, {}))
+    instance.object = Data.loadObjectData('player')
+    nexus.base.object.move(instance, 10, 10)
+    return instance
+end
+
+function Player.update(instance, dt)
     if instance.object.rushing then
         coroutine.resume(instance.object.rushing, dt)
     end
@@ -53,12 +75,11 @@ local function update(instance, dt)
     end
 end
 
-local function render(instance)
+function Player.render(instance)
     love.graphics.setColor(193, 47, 14)
     love.graphics.circle('fill', instance.object.rx, GraphicsConfigures.height - instance.object.ry, LOGICAL_GRID_SIZE / 2)
 end
-
-function nexus.object.player.rush(instance)
+function Player.rush(instance)
     if not instance.object.rushing then
         instance.object.rushing = coroutine.create(function(dt)
             instance.object.rushing = nil
@@ -66,7 +87,7 @@ function nexus.object.player.rush(instance)
     end
 end
 
-function nexus.object.player.jump(instance)
+function Player.jump(instance)
     if not instance.object.jumping then
         instance.object.jumping = coroutine.create(function(dt)
             while instance.object.ry < (instance.object.y + 4) * LOGICAL_GRID_SIZE do
@@ -82,7 +103,7 @@ function nexus.object.player.jump(instance)
     end
 end
 
-function nexus.object.player.attack(instance)
+function Player.attack(instance)
     if not instance.object.attacking then
         instance.object.attacking = coroutine.create(function(dt)
             instance.object.attacking = nil
@@ -90,28 +111,20 @@ function nexus.object.player.attack(instance)
     end
 end
 
-function nexus.object.player.up(instance)
+function Player.up(instance)
     nexus.base.object.move(instance, false, instance.object.y + 1)
 end
 
-function nexus.object.player.right(instance)
+function Player.right(instance)
     nexus.base.object.move(instance, instance.object.x + 1, false)
 end
 
-function nexus.object.player.down(instance)
+function Player.down(instance)
     nexus.base.object.move(instance, false, instance.object.y - 1)
 end
 
-function nexus.object.player.left(instance)
+function Player.left(instance)
     nexus.base.object.move(instance, instance.object.x - 1, false)
 end
 
-function nexus.object.player.new(world)
-    local instance = {
-        update  = update,
-        render  = render
-    }
-    instance.object = Data.loadObjectData('player')
-    nexus.base.object.move(instance, 10, 10)
-    return nexus.base.object.new(instance)
-end
+return Player

@@ -43,6 +43,8 @@ local Data                  = require 'src.core.data'
 local Graphics              = require 'src.core.graphics'
 local Scene                 = require 'src.core.scene'
 
+local Player                = require 'src.game.player'
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
@@ -52,7 +54,10 @@ local Game                  = {}
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_version             = nil
-local t_saving_data         = {}
+
+local t_saving_data         = nil
+
+local t_game_objects        = nil
 
 local MAJOR                 = SystemsVersion.major
 local MINOR                 = SystemsVersion.minor
@@ -62,16 +67,17 @@ local PATCH                 = SystemsVersion.patch
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
+local function on_start_game()
+    Graphics.setFramecount(0)
+end
+
 local function on_after_load()
+    Graphics.setFramecount(t_saving_data.system.framecount)
 end
 
 local function on_before_save()
     t_saving_data.system.framecount = Graphics.getFramecount()
     t_saving_data.system.savingcount = t_saving_data.system.savingcount + 1
-end
-
-local function on_start_game()
-    Graphics.setFramecount(t_saving_data.system.framecount)
 end
 
 local function adjust_screen_mode()
@@ -98,6 +104,7 @@ function Game.initialize()
 end
 
 function Game.finalize()
+    t_game_objects = {}
     t_saving_data = {}
 end
 
@@ -139,12 +146,32 @@ end
 
 function Game.setup()
     t_saving_data = Data.loadScriptData('setup')
+    t_game_objects = {
+        player              = Player.new(),
+        -- messgae             = Message.new(),
+        -- story               = Story.new(),
+        -- stage               = Stage.new(),
+        -- system              = System.new()
+    }
+
     on_start_game()
+    -- $game_party.setup_starting_members
+    -- $game_map.setup($data_system.start_map_id)
+    -- $game_player.moveto($data_system.start_x, $data_system.start_y)
+    -- $game_player.refresh
 end
 
 function Game.load(index)
+    -- local data = Core.load()
+    t_game_objects = {
+        player              = data.player,
+        -- messgae             = data.messgae,
+        -- story               = data.story,
+        -- stage               = data.stage,
+        -- system              = data.system
+    }
+
     on_after_load()
-    on_start_game()
     return false
 end
 
@@ -178,6 +205,10 @@ function Game.getVersionString()
         m_version = MAJOR .. '.' .. MINOR .. '.' .. MICRO
     end
     return m_version
+end
+
+function Game.getGameObjects()
+    return t_game_objects
 end
 
 return Game

@@ -27,6 +27,7 @@ local nexus                 = nexus
 
 nexus.base.viewport         = {}
 
+local require               = require
 local Graphics              = require 'src.core.graphics'
 
 local function drawable_zorder_sorter(a, b)

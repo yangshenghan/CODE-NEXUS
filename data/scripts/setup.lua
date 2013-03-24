@@ -28,7 +28,7 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
+local Core                  = Nexus.core
 
 return {
     control                 = {
@@ -53,6 +53,6 @@ return {
         savingcount         = 0,
         killedcount         = 0,
         framecount          = 0,
-        gameversion         = NexusCore.version()
+        gameversion         = Core.version()
     }
 }

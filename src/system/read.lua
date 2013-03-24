@@ -29,6 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local l                     = love
 local lf                    = l.filesystem
+local require               = require
 
 local save                  = require 'src.system.save'
 local version               = require 'src.system.version'

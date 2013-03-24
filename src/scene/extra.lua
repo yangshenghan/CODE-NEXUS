@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.extra           = {}
 
+local require               = require
+
 local Input                 = require 'src.core.input'
 local Scene                 = require 'src.core.scene'
 

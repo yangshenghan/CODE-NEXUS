@@ -27,6 +27,7 @@ local nexus                 = nexus
 
 nexus.base.window           = {}
 
+local require               = require
 local Graphics              = require 'src.core.graphics'
 
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION

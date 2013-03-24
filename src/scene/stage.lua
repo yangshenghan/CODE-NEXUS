@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.stage           = {}
 
+local require               = require
+
 local Data                  = require 'src.core.data'
 local Graphics              = require 'src.core.graphics'
 local Input                 = require 'src.core.input'

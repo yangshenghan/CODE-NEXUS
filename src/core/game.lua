@@ -30,14 +30,12 @@
 local l                     = love
 local le                    = l.event
 local lg                    = l.graphics
+local require               = require
 
 local Nexus                 = nexus
-
 local Systems               = Nexus.systems
 local SystemsVersion        = Systems.version
-
 local Settings              = Nexus.settings
-
 local Configures            = Nexus.configures
 local OptionConfigures      = Configures.options
 

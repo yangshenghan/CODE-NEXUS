@@ -30,11 +30,13 @@
 local l                     = love
 local lm                    = l.mouse
 local lk                    = l.keyboard
+local require               = require
 
 local Nexus                 = nexus
-
 local Configures            = Nexus.configures
+local MouseConfigures       = Configures.mouses
 local KeyboardConfigures    = Configures.keyboards
+-- local JoystickConfigures    = Configures.joysticks
 
 local Game                  = require 'src.core.game'
 local Graphics              = require 'src.core.graphics'

@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.window.progressbar    = {}
 
+local require               = require
+
 local Graphics              = require 'src.core.graphics'
 
 local function render(instance)

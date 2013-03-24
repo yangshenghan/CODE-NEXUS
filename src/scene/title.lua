@@ -27,8 +27,9 @@ local nexus                 = nexus
 
 nexus.scene.title           = {}
 
-local Nexus                 = nexus
+local require               = require
 
+local Nexus                 = nexus
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 

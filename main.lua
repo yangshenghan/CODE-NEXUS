@@ -31,9 +31,10 @@ local l                     = love
 local le                    = l.event
 local lt                    = l.timer
 local lg                    = l.graphics
+local require               = require
 
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
+local Core                  = Nexus.core
 
 local Audio                 = require 'src.core.audio'
 local Data                  = require 'src.core.data'
@@ -97,11 +98,11 @@ function love.run()
     math.random()
     math.random()
 
-    NexusCore.read          = require 'src.system.read'
-    NexusCore.load          = require 'src.system.load'
-    NexusCore.exists        = require 'src.system.exists'
-    NexusCore.version       = require 'src.system.version'
-    NexusCore.upgrade       = require 'src.system.upgrade'
+    Core.read               = require 'src.system.read'
+    Core.load               = require 'src.system.load'
+    Core.exists             = require 'src.system.exists'
+    Core.version            = require 'src.system.version'
+    Core.upgrade            = require 'src.system.upgrade'
 
     while m_loading do
         m_running = true

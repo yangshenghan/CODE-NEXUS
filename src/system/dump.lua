@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local require               = require
+
 local serializer            = require 'src.system.serialize'
 
 return function(...)

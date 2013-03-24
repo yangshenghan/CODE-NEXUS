@@ -27,11 +27,11 @@ local nexus                 = nexus
 
 nexus.object.player         = {}
 
-local Nexus                 = nexus
+local require               = require
 
+local Nexus                 = nexus
 local Systems               = Nexus.systems
 local SystemsParameters     = Systems.parameters
-
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 

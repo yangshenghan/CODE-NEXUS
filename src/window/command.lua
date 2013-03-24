@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.window.command        = {}
 
+local require               = require
+
 local Input                 = require 'src.core.input'
 
 local NEXUS_KEY             = NEXUS_KEY

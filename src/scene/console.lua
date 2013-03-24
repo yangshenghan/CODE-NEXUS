@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.console         = {}
 
+local require               = require
+
 local Nexus                 = nexus
 local Systems               = Nexus.systems
 local Settings              = Nexus.settings

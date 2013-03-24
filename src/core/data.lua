@@ -28,7 +28,7 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
+local Core                  = Nexus.core
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -55,7 +55,7 @@ local function load_data_resource(folder, filename)
     local path = folder .. filename .. '.lua'
 
     if not t_caches[path] then
-        t_caches[path] = NexusCore.load(path)
+        t_caches[path] = Core.load(path)
     end
 
     return t_caches[path]

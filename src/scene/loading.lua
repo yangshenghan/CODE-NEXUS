@@ -27,6 +27,8 @@ local nexus                 = nexus
 
 nexus.scene.loading         = {}
 
+local require               = require
+
 local Scene                 = require 'src.core.scene'
 
 local function enter(instance)

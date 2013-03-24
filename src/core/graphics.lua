@@ -31,11 +31,10 @@ local l                     = love
 local le                    = l.event
 local lt                    = l.timer
 local lg                    = l.graphics
+local require               = require
 
 local Nexus                 = nexus
-
 local Settings              = Nexus.settings
-
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 

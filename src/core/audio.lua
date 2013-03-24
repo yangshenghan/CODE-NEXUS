@@ -29,8 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local l                     = love
 local la                    = l.audio
-
-local Nexus                 = nexus
+local require               = require
 
 local Resource              = require 'src.core.resource'
 

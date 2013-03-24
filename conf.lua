@@ -109,6 +109,8 @@ nexus = {
         audios              = {
             volume          = 80
         },
+        mouses              = {
+        },
         keyboards           = {
             z               = {'z'},
             x               = {'x'},
@@ -125,11 +127,9 @@ nexus = {
             confirm         = {'return'},
             cancel          = {'escape'}
         },
-        gameplay            = {
-        },
         joysticks           = {
         },
-        mouses              = {
+        gameplay            = {
         },
         graphics            = {
             width           = 1280,
@@ -148,6 +148,7 @@ nexus = {
 -- | Entry point of LÖVE before modules are loaded                          | --
 -- \ ---------------------------------------------------------------------- / --
 local nexus                 = nexus
+local require               = require
 
 function love.conf(game)
     local identity  = nexus.systems.paths.identity

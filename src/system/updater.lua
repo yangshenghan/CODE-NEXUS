@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local require               = require
+
 local http                  = require 'socket.http'
 
 return function(addresses)

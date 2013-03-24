@@ -23,54 +23,74 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.window.progressbar    = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local li                    = l.image
+local lg                    = l.graphics
 local require               = require
-
 local Graphics              = require 'src.core.graphics'
 
-local function render(instance)
-    local rectangle = love.graphics.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)
-    love.graphics.setColor(128, 128, 128, 255)
-    love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
-    love.graphics.drawq(instance.image, rectangle, instance.x, instance.y)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local ProgressBarWindow     = {
+    x                       = 0,
+    y                       = 0,
+    width                   = 0,
+    height                  = 0,
+    progress                = 0,
+    image                   = nil
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function ProgressBarWindow.new(x, y, width, height)
+    local instance = nexus.base.window.new(setmetatable(ProgressBarWindow, {}))
+    instance.x = x or Graphics.getScreenWidth() * 0.15
+    instance.y = y or Graphics.getScreenHeight() * 0.8 - 60
+    instance.width = width or Graphics.getScreenWidth() * 0.7
+    instance.height = height or 60
+
+    do
+        local image = li.newImageData(instance.width, instance.height)
+        local l = nexus.base.color.new(128, 255, 128, 255)
+        local r = nexus.base.color.new(255, 128, 128, 255)
+        for x = 0, instance.width - 1 do
+            local rr = x / instance.width
+            local lr = 1 - rr
+            for y = 0, instance.height - 1 do
+                image.setPixel(image, x, y, l.red * lr + r.red * rr, l.green * lr + r.green * rr, l.blue * lr + r.blue * rr, l.alpha * lr + r.alpha * rr)
+            end
+        end
+
+        instance.progress = 0
+        instance.image = lg.newImage(image)
+        instance.image.setFilter(instance.image, 'linear', 'linear')
+    end
+
+    return instance
 end
 
-function nexus.window.progressbar.getProgressValue(instance)
+function ProgressBarWindow.render(instance)
+    local rectangle = lg.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)
+    lg.setColor(128, 128, 128, 255)
+    lg.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+    lg.drawq(instance.image, rectangle, instance.x, instance.y)
+end
+
+function ProgressBarWindow.getProgressValue(instance)
     return instance.progress
 end
 
-function nexus.window.progressbar.setProgressValue(instance, value)
+function ProgressBarWindow.setProgressValue(instance, value)
     if not value then value = 0 end
     if value < 0 then value = 0 end
     if value > 1 then value = 1 end
     instance.progress = value
 end
 
-function nexus.window.progressbar.new(x, y, width, height)
-    return nexus.base.window.new({
-        create      = function(instance)
-            local image = love.image.newImageData(instance.width, instance.height)
-            local l = nexus.base.color.new(128, 255, 128, 255)
-            local r = nexus.base.color.new(255, 128, 128, 255)
-            for x = 0, instance.width - 1 do
-                local rr = x / instance.width
-                local lr = 1 - rr
-                for y = 0, instance.height - 1 do
-                    image.setPixel(image, x, y, l.red * lr + r.red * rr, l.green * lr + r.green * rr, l.blue * lr + r.blue * rr, l.alpha * lr + r.alpha * rr)
-                end
-            end
-
-            instance.progress = 0
-            instance.image = love.graphics.newImage(image)
-            instance.image.setFilter(instance.image, 'linear', 'linear')
-        end,
-        render      = render,
-        x           = x or Graphics.getScreenWidth() * 0.15,
-        y           = y or Graphics.getScreenHeight() * 0.8 - 60,
-        width       = width or Graphics.getScreenWidth() * 0.7,
-        height      = height or 60
-    })
-end
+return ProgressBarWindow

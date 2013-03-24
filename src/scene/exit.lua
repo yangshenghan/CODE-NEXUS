@@ -27,8 +27,10 @@ local nexus                 = nexus
 
 nexus.scene.exit            = {}
 
+local Game                  = require 'src.core.game'
+
 local function enter(instance)
-    nexus.core.game.quit()
+    Game.quit()
 end
 
 local function leave(instance)

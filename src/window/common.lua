@@ -23,31 +23,30 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.window.common         = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local CommonWindow          = {}
 
-function nexus.window.common.drawCharacterHealth(character, x, y, width)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function CommonWindow.new()
+    local instance = nexus.base.window.new(setmetatable(CommonWindow, {}))
+    return instance
 end
 
-function nexus.window.common.drawCharacterEnergy(character, x, y, width)
+function CommonWindow.drawCharacterHealth(character, x, y, width)
 end
 
-function nexus.window.common.drawChatacterName(character, x, y, width)
+function CommonWindow.drawCharacterEnergy(character, x, y, width)
 end
 
-function nexus.window.common.drawGaugeBar(x, y, width, rate)
+function CommonWindow.drawChatacterName(character, x, y, width)
 end
 
-local function update(instance, dt)
+function CommonWindow.drawGaugeBar(x, y, width, rate)
 end
 
-local function render(instance)
-end
-
-function nexus.window.common.new()
-    return nexus.base.window.new({
-        update          = update,
-        render          = render
-    })
-end
+return CommonWindow

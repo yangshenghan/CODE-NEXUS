@@ -112,6 +112,3 @@ require 'src.scene.stage'
 require 'src.scene.option'
 require 'src.scene.extra'
 require 'src.scene.exit'
-
-require 'src.window.command'
-require 'src.window.progressbar'

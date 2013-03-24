@@ -23,25 +23,65 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.window.command        = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local require               = require
-
 local Input                 = require 'src.core.input'
-
 local NEXUS_KEY             = NEXUS_KEY
-
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
-local function update(instance, dt)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local CommandWindow         = {
+    x                       = 0,
+    y                       = 0,
+    -- width                   = 0,
+    -- height                  = 0,
+    size                    = 0,
+    cursor                  = 1,
+    commands                = {}
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function move_cursor_up(instance, wrap)
+    instance.cursor = instance.cursor - 1
+    if instance.cursor < 1 then
+        instance.cursor = wrap and instance.size or 1 
+    end
+end
+
+local function move_cursor_down(instance, wrap)
+    instance.cursor = instance.cursor + 1
+    if instance.cursor > instance.size then
+        instance.cursor = wrap and 1 or instance.size
+    end
+end
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function CommandWindow.new(x, y, commands)
+    local instance = nexus.base.window.new(setmetatable(CommandWindow, {}))
+    instance.x = x or instance.x
+    instance.y = y or instance.y
+    if commands then CommandWindow.addCommands(instance, commands) end
+    return instance
+end
+
+function CommandWindow.update(instance, dt)
     if Input.isKeyRepeat(NEXUS_KEY.UP) then
-        nexus.window.command.moveCursorUp(instance, Input.isKeyTrigger(NEXUS_KEY.UP))
+        move_cursor_up(instance, Input.isKeyTrigger(NEXUS_KEY.UP))
     end
 
     if Input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        nexus.window.command.moveCursorDown(instance, Input.isKeyTrigger(NEXUS_KEY.DOWN))
+        move_cursor_down(instance, Input.isKeyTrigger(NEXUS_KEY.DOWN))
     end
 
     if Input.isKeyDown(NEXUS_KEY.C) then
@@ -51,35 +91,21 @@ local function update(instance, dt)
     end
 end
 
-local function render(instance)
+function CommandWindow.render(instance)
     for index, command in ipairs(instance.commands) do
         if command.enabled then
-            love.graphics.setColor(255, 255, 255)
+            lg.setColor(255, 255, 255)
         else
-            love.graphics.setColor(255, 255, 255, 128)
+            lg.setColor(255, 255, 255, 128)
         end
         if instance.cursor == index then
-            love.graphics.setColor(255, 255, 0)
+            lg.setColor(255, 255, 0)
         end
-        love.graphics.print(command.text, instance.x, instance.y + index * 20) 
+        lg.print(command.text, instance.x, instance.y + index * 20) 
     end
 end
 
-function nexus.window.command.moveCursorUp(instance, wrap)
-    instance.cursor = instance.cursor - 1
-    if instance.cursor < 1 then
-        instance.cursor = wrap and instance.size or 1 
-    end
-end
-
-function nexus.window.command.moveCursorDown(instance, wrap)
-    instance.cursor = instance.cursor + 1
-    if instance.cursor > instance.size then
-        instance.cursor = wrap and 1 or instance.size
-    end
-end
-
-function nexus.window.command.setHandler(instance, text, handler)
+function CommandWindow.setHandler(instance, text, handler)
     for _, command in ipairs(instance.commands) do
         if command.text == text then
             command.handler = handler
@@ -89,7 +115,7 @@ function nexus.window.command.setHandler(instance, text, handler)
     return false
 end
 
-function nexus.window.command.addCommand(instance, text, enabled, handler)
+function CommandWindow.addCommand(instance, text, enabled, handler)
     assert(type(text) == 'string')
 
     instance.size = instance.size + 1
@@ -100,27 +126,12 @@ function nexus.window.command.addCommand(instance, text, enabled, handler)
     }
 end
 
-function nexus.window.command.addCommands(instance, commands)
+function CommandWindow.addCommands(instance, commands)
     assert(type(commands) == 'table')
 
     for _, command in pairs(commands) do
-        nexus.window.command.addCommand(instance, command.text, command.enabled, command.handler)
+        instance.addCommand(instance, command.text, command.enabled, command.handler)
     end
 end
 
-function nexus.window.command.new(x, y, commands)
-    return nexus.base.window.new({
-        create      = function(instance)
-            if commands then
-                nexus.window.command.addCommands(instance, commands)
-            end
-        end,
-        update      = update,
-        render      = render,
-        x           = x,
-        y           = y,
-        size        = 0,
-        cursor      = 1,
-        commands    = {}
-    })
-end
+return CommandWindow

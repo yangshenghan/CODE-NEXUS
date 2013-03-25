@@ -46,7 +46,7 @@ local Input                 = Core.import 'nexus.core.input'
 local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 
-require 'bootstrap'
+require 'src.base.object'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --

@@ -25,10 +25,25 @@
 --[[ ********************************************************************** ]]--
 
 -- / ---------------------------------------------------------------------- \ --
--- | Extend bulit-in lua modules and functions                              | --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local type                  = type
+local pairs                 = pairs
+local error                 = error
+local table                 = table
+local tostring              = tostring
+local coroutine             = coroutine
+local setmetatable          = setmetatable
+local getmetatable          = getmetatable
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local f_coroutine_resume    = coroutine.resume
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Extend bulit-in lua modules and functions                              | --
+-- \ ---------------------------------------------------------------------- / --
 function table.first(t)
     return t[1]
 end
@@ -89,8 +104,3 @@ function coroutine.resume(...)
     if not success then error(tostring(result), 2) end
     return success, result
 end
-
--- / ---------------------------------------------------------------------- \ --
--- | Actually load the game                                                 | --
--- \ ---------------------------------------------------------------------- / --
-require 'src.base.object'

@@ -34,7 +34,6 @@ local require               = require
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
     base                    = {},
-    scene                   = {},
 
     core                    = {
         read                = require 'src.system.read',
@@ -146,6 +145,8 @@ nexus = {
 -- | Entry point of LÖVE before modules are loaded                          | --
 -- \ ---------------------------------------------------------------------- / --
 function love.conf(game)
+    require 'bootstrap'
+
     local nexus = nexus
     local filename = nexus.systems.paths.configure
 

@@ -40,6 +40,8 @@ local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 local WindowBase            = {
     create                  = NEXUS_EMPTY_FUNCTION,
     delete                  = NEXUS_EMPTY_FUNCTION,
+    render                  = NEXUS_EMPTY_FUNCTION,
+    update                  = NEXUS_EMPTY_FUNCTION,
     active                  = false,
     visible                 = false,
     openness                = 0,
@@ -54,8 +56,8 @@ local WindowBase            = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function WindowBase.new(instance)
-    local instance = setmetatable(instance, { __index = WindowBase })
+function WindowBase.new(derive)
+    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = WindowBase }) })
     instance.create(instance)
     Viewport.addDrawable(Graphics.getWindowViewport(), instance)
     return instance
@@ -70,18 +72,18 @@ function WindowBase.disposed(instance)
     return instance.render == nil
 end
 
-function WindowBase.update(instance, dt, ...)
-    if instance.active then
-        return instance.update(instance, dt, ...)
-    end
-    return true
-end
+-- function WindowBase.update(instance, dt, ...)
+    -- if instance.active then
+        -- return instance.update(instance, dt, ...)
+    -- end
+    -- return true
+-- end
 
-function WindowBase.render(instance, ...)
-    if instance.visible then
-        instance.render(instance, ...)
-    end
-end
+-- function WindowBase.render(instance, ...)
+    -- if instance.visible then
+        -- instance.render(instance, ...)
+    -- end
+-- end
 
 function WindowBase.open(instance)
     instance.active = true

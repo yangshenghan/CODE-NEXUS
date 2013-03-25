@@ -69,8 +69,8 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function SpriteBase.new(instance, viewport)
-    local instance = setmetatable(instance, { __index = SpriteBase })
+function SpriteBase.new(derive, viewport)
+    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = SpriteBase }) })
     if viewport then
         instance.viewport = viewport
         Viewport.addDrawable(instance.viewport, instance)

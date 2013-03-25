@@ -23,18 +23,44 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.base.color            = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Color                 = {
+    red                     = 0,
+    green                   = 0,
+    blue                    = 0,
+    alpha                   = 0
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function set_correct_value(value)
-    if not value then return 0 end
     if value < 0 then return 0 end
     if value > 255 then return 255 end
     return value
 end
 
-function nexus.base.color.set(instance, ...)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Color.new(...)
+    local instance = setmetatable(Color, {})
+    instance.set(instance, ...)
+    return instance
+end
+
+function Color.get(instance)
+    return instance.red, instance.green, instance.blue, instance.alpha
+end
+
+function Color.set(instance, ...)
     if type(...) == 'table' then
         local rgba = ...
         instance.red = set_correct_value(rgba.red or rgba[1])
@@ -51,10 +77,4 @@ function nexus.base.color.set(instance, ...)
     return instance
 end
 
-function nexus.base.color.get(instance)
-    return instance.red, instance.green, instance.blue, instance.alpha
-end
-
-function nexus.base.color.new(...)
-    return nexus.base.color.set({}, ...)
-end
+return Color

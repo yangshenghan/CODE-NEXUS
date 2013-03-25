@@ -23,16 +23,16 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
+local Color                 = require 'src.base.color'
 
 return {
-    base    = nexus.base.color.new(255, 255, 255, 255),
-    black   = nexus.base.color.new(0, 0, 0, 255),
-    blue    = nexus.base.color.new(0, 0, 255, 255),
-    green   = nexus.base.color.new(0, 255, 0, 255),
-    cyan    = nexus.base.color.new(0, 255, 255, 255),
-    red     = nexus.base.color.new(255, 0, 0, 255),
-    puple   = nexus.base.color.new(255, 0, 255, 255),
-    yellow  = nexus.base.color.new(255, 255, 0, 255),
-    white   = nexus.base.color.new(255, 255, 255, 255)
+    base    = Color.new(255, 255, 255, 255),
+    black   = Color.new(0, 0, 0, 255),
+    blue    = Color.new(0, 0, 255, 255),
+    green   = Color.new(0, 255, 0, 255),
+    cyan    = Color.new(0, 255, 255, 255),
+    red     = Color.new(255, 0, 0, 255),
+    puple   = Color.new(255, 0, 255, 255),
+    yellow  = Color.new(255, 255, 0, 255),
+    white   = Color.new(255, 255, 255, 255)
 }

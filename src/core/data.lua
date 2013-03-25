@@ -29,6 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Color                 = require 'src.base.color'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -121,7 +122,7 @@ end
 
 function Data.getColor(index)
     local color = t_colors[index]
-    if color then return nexus.base.color.get(color) end
+    if color then return Color.get(color) end
     return 0, 0, 0, 0
 end
 

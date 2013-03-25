@@ -32,6 +32,7 @@ local li                    = l.image
 local lg                    = l.graphics
 local require               = require
 local Graphics              = require 'src.core.graphics'
+local Color                 = require 'src.base.color'
 local WindowBase            = require 'src.base.window'
 
 -- / ---------------------------------------------------------------------- \ --
@@ -59,8 +60,8 @@ function WindowProgressBar.new(x, y, width, height)
 
     do
         local image = li.newImageData(instance.width, instance.height)
-        local l = nexus.base.color.new(128, 255, 128, 255)
-        local r = nexus.base.color.new(255, 128, 128, 255)
+        local l = Color.new(128, 255, 128, 255)
+        local r = Color.new(255, 128, 128, 255)
         for x = 0, instance.width - 1 do
             local rr = x / instance.width
             local lr = 1 - rr

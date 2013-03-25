@@ -93,7 +93,6 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Actually load the game                                                 | --
 -- \ ---------------------------------------------------------------------- / --
-require 'src.base.color'
 require 'src.base.rectangle'
 require 'src.base.tone'
 require 'src.base.viewport'

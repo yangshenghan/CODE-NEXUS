@@ -32,10 +32,10 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Systems               = Nexus.systems
 local Settings              = Nexus.settings
-local Game                  = Core.require 'src.core.game'
-local Resource              = Core.require 'src.core.resource'
-local Scene                 = Core.require 'src.core.scene'
-local SceneBase             = Core.require 'src.scene.base'
+local Game                  = Core.import 'nexus.core.game'
+local Resource              = Core.import 'nexus.core.resource'
+local Scene                 = Core.import 'nexus.core.scene'
+local SceneBase             = Core.import 'nexus.scene.base'
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --

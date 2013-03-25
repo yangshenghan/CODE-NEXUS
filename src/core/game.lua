@@ -38,13 +38,13 @@ local SystemsVersion        = Systems.version
 local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local OptionConfigures      = Configures.options
-local Data                  = Core.require 'src.core.data'
-local Graphics              = Core.require 'src.core.graphics'
-local Scene                 = Core.require 'src.core.scene'
-local GamePlayer            = Core.require 'src.game.player'
-local SceneTitle            = Core.require 'src.scene.title'
-local SceneConsole          = Core.require 'src.scene.console'
-local SceneError            = Core.require 'src.scene.error'
+local Data                  = Core.import 'nexus.core.data'
+local Graphics              = Core.import 'nexus.core.graphics'
+local Scene                 = Core.import 'nexus.core.scene'
+local GamePlayer            = Core.import 'nexus.game.player'
+local SceneTitle            = Core.import 'nexus.scene.title'
+local SceneConsole          = Core.import 'nexus.scene.console'
+local SceneError            = Core.import 'nexus.scene.error'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

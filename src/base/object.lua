@@ -32,7 +32,7 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Systems               = Nexus.systems
 local SystemsParameters     = Systems.parameters
-local SceneStage            = Core.require 'src.scene.stage'
+local SceneStage            = Core.import 'nexus.scene.stage'
 local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
 
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION

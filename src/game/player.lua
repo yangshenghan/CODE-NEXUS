@@ -34,7 +34,7 @@ local SystemsParameters     = Systems.parameters
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
-local Data                  = Core.require 'src.core.data'
+local Data                  = Core.import 'nexus.core.data'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

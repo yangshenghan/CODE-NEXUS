@@ -32,7 +32,7 @@ local la                    = l.audio
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Resource              = Core.require 'src.core.resource'
+local Resource              = Core.import 'nexus.core.resource'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

@@ -29,9 +29,9 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Scene                 = Core.require 'src.core.scene'
-local SceneBase             = Core.require 'src.scene.base'
-local WindowProgressBar     = Core.require 'src.window.progressbar'
+local Scene                 = Core.import 'nexus.core.scene'
+local SceneBase             = Core.import 'nexus.scene.base'
+local WindowProgressBar     = Core.import 'nexus.window.progressbar'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

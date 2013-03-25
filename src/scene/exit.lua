@@ -29,7 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Game                  = Core.require 'src.core.game'
+local Game                  = Core.import 'nexus.core.game'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

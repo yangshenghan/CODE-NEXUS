@@ -38,13 +38,13 @@ local Core                  = Nexus.core
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
-local Audio                 = Core.require 'src.core.audio'
-local Data                  = Core.require 'src.core.data'
-local Game                  = Core.require 'src.core.game'
-local Graphics              = Core.require 'src.core.graphics'
-local Input                 = Core.require 'src.core.input'
-local Resource              = Core.require 'src.core.resource'
-local Scene                 = Core.require 'src.core.scene'
+local Audio                 = Core.import 'nexus.core.audio'
+local Data                  = Core.import 'nexus.core.data'
+local Game                  = Core.import 'nexus.core.game'
+local Graphics              = Core.import 'nexus.core.graphics'
+local Input                 = Core.import 'nexus.core.input'
+local Resource              = Core.import 'nexus.core.resource'
+local Scene                 = Core.import 'nexus.core.scene'
 
 require 'bootstrap'
 

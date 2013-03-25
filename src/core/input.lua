@@ -38,8 +38,8 @@ local MouseConfigures       = Configures.mouses
 local KeyboardConfigures    = Configures.keyboards
 -- local JoystickConfigures    = Configures.joysticks
 
-local Game                  = Core.require 'src.core.game'
-local Graphics              = Core.require 'src.core.graphics'
+local Game                  = Core.import 'nexus.core.game'
+local Graphics              = Core.import 'nexus.core.graphics'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

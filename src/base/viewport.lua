@@ -29,8 +29,8 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Graphics              = Core.require 'src.core.graphics'
-local Rectangle             = Core.require 'src.base.rectangle'
+local Graphics              = Core.import 'nexus.core.graphics'
+local Rectangle             = Core.import 'nexus.base.rectangle'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

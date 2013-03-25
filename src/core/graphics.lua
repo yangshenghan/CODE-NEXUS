@@ -38,9 +38,9 @@ local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
-local Data                  = Core.require 'src.core.data'
--- local Resource              = Core.require 'src.core.resource'
-local Scene                 = Core.require 'src.core.scene'
+local Data                  = Core.import 'nexus.core.data'
+-- local Resource              = Core.import 'nexus.core.resource'
+local Scene                 = Core.import 'nexus.core.scene'
 
 local Viewport              = require 'src.base.viewport'
 

@@ -41,7 +41,7 @@ nexus = {
         save                = require 'src.system.save',
         load                = require 'src.system.load',
         exists              = require 'src.system.exists',
-        require             = require 'src.system.require',
+        import              = require 'src.system.import',
         upgrade             = require 'src.system.upgrade',
         version             = require 'src.system.version'
     },

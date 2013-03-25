@@ -32,9 +32,9 @@ local li                    = l.image
 local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Graphics              = Core.require 'src.core.graphics'
-local Color                 = Core.require 'src.base.color'
-local WindowBase            = Core.require 'src.window.base'
+local Graphics              = Core.import 'nexus.core.graphics'
+local Color                 = Core.import 'nexus.base.color'
+local WindowBase            = Core.import 'nexus.window.base'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

@@ -30,8 +30,8 @@
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Graphics              = Core.require 'src.core.graphics'
-local Viewport              = Core.require 'src.base.viewport'
+local Graphics              = Core.import 'nexus.core.graphics'
+local Viewport              = Core.import 'nexus.base.viewport'
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --

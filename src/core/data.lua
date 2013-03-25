@@ -29,7 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Color                 = Core.require 'src.base.color'
+local Color                 = Core.import 'nexus.base.color'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

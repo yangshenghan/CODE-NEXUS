@@ -32,8 +32,8 @@ local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Input                 = Core.require 'src.core.input'
-local WindowBase            = Core.require 'src.window.base'
+local Input                 = Core.import 'nexus.core.input'
+local WindowBase            = Core.import 'nexus.window.base'
 local NEXUS_KEY             = Constants.KEYS
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 

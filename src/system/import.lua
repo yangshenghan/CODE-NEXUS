@@ -33,13 +33,15 @@ local setmetatable          = setmetatable
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
+local f_string_gsub         = string.gsub
+
 local t_loaded_modules      = {}
 
 return function(name)
     if not t_loaded_modules[name] then
         t_loaded_modules[name] = {}
         do
-            local data = require(name)
+            local data = require(f_string_gsub(name, 'nexus%.', 'src%.'))
             setmetatable(t_loaded_modules[name], { __index = data })
         end
     end

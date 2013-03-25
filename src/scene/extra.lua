@@ -30,9 +30,9 @@
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Input                 = Core.require 'src.core.input'
-local Scene                 = Core.require 'src.core.scene'
-local SceneBase             = Core.require 'src.scene.base'
+local Input                 = Core.import 'nexus.core.input'
+local Scene                 = Core.import 'nexus.core.scene'
+local SceneBase             = Core.import 'nexus.scene.base'
 local NEXUS_KEY             = Constants.KEYS
 
 -- / ---------------------------------------------------------------------- \ --

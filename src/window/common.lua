@@ -29,7 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local WindowBase            = Core.require 'src.base.window'
+local WindowBase            = Core.require 'src.window.base'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

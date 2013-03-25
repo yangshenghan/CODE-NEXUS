@@ -37,7 +37,7 @@ local Graphics              = Core.require 'src.core.graphics'
 local Input                 = Core.require 'src.core.input'
 local Resource              = Core.require 'src.core.resource'
 local Scene                 = Core.require 'src.core.scene'
-local SpriteBase            = Core.require 'src.base.sprite'
+local SpriteBase            = Core.require 'src.sprite.base'
 local WindowCommand         = Core.require 'src.window.command'
 
 local NEXUS_KEY             = Constants.KEYS

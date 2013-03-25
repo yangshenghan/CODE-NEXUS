@@ -34,7 +34,7 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Graphics              = Core.require 'src.core.graphics'
 local Color                 = Core.require 'src.base.color'
-local WindowBase            = Core.require 'src.base.window'
+local WindowBase            = Core.require 'src.window.base'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

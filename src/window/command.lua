@@ -33,7 +33,7 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Input                 = Core.require 'src.core.input'
-local WindowBase            = Core.require 'src.base.window'
+local WindowBase            = Core.require 'src.window.base'
 local NEXUS_KEY             = Constants.KEYS
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 

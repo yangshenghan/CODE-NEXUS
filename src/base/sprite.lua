@@ -23,42 +23,85 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.base.sprite           = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local require               = require
 local Color                 = require 'src.base.color'
 local Rectangle             = require 'src.base.rectangle'
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SpriteBase            = {
+    color                   = nil,
+    rectangle               = nil,
+    viewport                = nil,
+    image                   = nil,
+    visible                 = true,
+    mx                      = false,
+    my                      = false,
+    angle                   = 0,
+    opacity                 = 1,
+    ox                      = 0,
+    oy                      = 0,
+    sx                      = 0,
+    sy                      = 0, 
+    x                       = 0,
+    y                       = 0,
+    z                       = 0,
+    zx                      = 1,
+    zy                      = 1
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function transform_opacity_color(color, opacity)
     if opacity < 0 then opacity = 0 end
     if opacity > 1 then opacity = 1 end
     return color.red, color.green, color.blue, color.alpha * opacity
 end
 
-local function dispose(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SpriteBase.new(viewport)
+    local instance = setmetatable({}, { __index = SpriteBase })
+    if viewport then
+        instance.viewport = viewport
+        nexus.base.viewport.addDrawable(instance.viewport, instance)
+    end
+    instance.color = Color.new(255, 255, 255, 255)
+    instance.rectangle = Rectangle.new()
+    return instance
+end
+
+function SpriteBase.dispose(instance)
     instance.render = nil
     nexus.base.viewport.removeDrawable(instance.viewport, instance)
 end
 
-local function disposed(instance)
+function SpriteBase.disposed(instance)
     return instance.render == nil
 end
 
-function nexus.base.sprite.setImage(instance, image)
+function SpriteBase.setImage(instance, image)
     instance.image = image
     instance.rectangle.width = image.getWidth(image)
     instance.rectangle.height = image.getHeight(image)
 end
 
-function nexus.base.sprite.getWidth(instance)
+function SpriteBase.getWidth(instance)
     return instacne.rectangle.width
 end
 
-function nexus.base.sprite.getHeight(instance)
+function SpriteBase.getHeight(instance)
     return instance.rectangle.height
 end
 
-function nexus.base.sprite.render(instance)
+function SpriteBase.render(instance)
     if not instance.disposed(instance) and instance.image then
         local src = instance.image
         local rect = instance.rectangle
@@ -68,38 +111,4 @@ function nexus.base.sprite.render(instance)
     end
 end
 
-local t_default = {
-    dispose     = dispose,
-    disposed    = disposed,
-    render      = nil,
-    color       = nil,
-    angle       = 0,
-    mx          = false,
-    my          = false,
-    image       = nil,
-    opacity     = 1,
-    ox          = 0,
-    oy          = 0,
-    rectangle   = nil,
-    sx          = 0,
-    sy          = 0,
-    visible     = true,
-    viewport    = nil,
-    x           = 0,
-    y           = 0,
-    z           = 0,
-    zx          = 1,
-    zy          = 1
-}
-
-function nexus.base.sprite.new(instance, viewport)
-    instance = table.merge(t_default, instance)
-    instance.render = nexus.base.sprite.render
-    if viewport then
-        instance.viewport = viewport
-        nexus.base.viewport.addDrawable(instance.viewport, instance)
-    end
-    instance.color = instance.color or Color.new(255, 255, 255, 255)
-    instance.rectangle = instance.rectangle or Rectangle.new()
-    return instance 
-end
+return SpriteBase

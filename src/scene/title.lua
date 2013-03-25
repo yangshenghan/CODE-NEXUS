@@ -29,17 +29,13 @@ nexus.scene.title           = {}
 
 local require               = require
 
-local Nexus                 = nexus
-local Configures            = Nexus.configures
-local GraphicsConfigures    = Configures.graphics
-
 local Data                  = require 'src.core.data'
 local Game                  = require 'src.core.game'
 local Graphics              = require 'src.core.graphics'
 local Input                 = require 'src.core.input'
 local Resource              = require 'src.core.resource'
 local Scene                 = require 'src.core.scene'
-
+local SpriteBase            = require 'src.base.sprite'
 local WindowCommand         = require 'src.window.command'
 
 local NEXUS_KEY             = NEXUS_KEY
@@ -52,11 +48,10 @@ local f_update_coroutine = function(instance, dt, timer)
 
     -- Show splash screens
     if not instance.skip then
-        local splash = nexus.base.sprite.new({
-            x       = GraphicsConfigures.width / 2,
-            y       = GraphicsConfigures.height / 2
-        }, Graphics.getWindowViewport())
-        nexus.base.sprite.setImage(splash, Resource.loadSystemImage('splash1.png'))
+        local splash = SpriteBase.new(Graphics.getWindowViewport())
+        splash.x = Graphics.getScreenWidth() / 2
+        splash.y = Graphics.getScreenHeight() / 2
+        splash.setImage(splash, Resource.loadSystemImage('splash1.png'))
         splash.opacity = 0
         wait(1000, function(dt)
             splash.opacity = splash.opacity + dt
@@ -71,11 +66,10 @@ local f_update_coroutine = function(instance, dt, timer)
     end
 
     -- Start animation of PRESS TO START message
-    local waiting = nexus.base.sprite.new({
-        x       = GraphicsConfigures.width / 2,
-        y       = GraphicsConfigures.height / 2
-    }, Graphics.getWindowViewport())
-    nexus.base.sprite.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue.png'))
+    local waiting = SpriteBase.new(Graphics.getWindowViewport())
+    waiting.x = Graphics.getScreenWidth() / 2
+    waiting.y = Graphics.getScreenHeight() / 2
+    waiting.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue.png'))
     while true do
         local cycle, phase = math.modf((timer - 0.5) / 0.75)
         if Input.isKeyTrigger(NEXUS_KEY.C) then break end

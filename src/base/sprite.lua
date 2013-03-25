@@ -67,8 +67,8 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function SpriteBase.new(viewport)
-    local instance = setmetatable({}, { __index = SpriteBase })
+function SpriteBase.new(instance, viewport)
+    local instance = setmetatable(instance, { __index = SpriteBase })
     if viewport then
         instance.viewport = viewport
         nexus.base.viewport.addDrawable(instance.viewport, instance)

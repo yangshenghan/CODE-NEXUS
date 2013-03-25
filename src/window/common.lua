@@ -23,17 +23,21 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+nexus.window.common         = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local require               = require
-local WindowBase            = require 'src.base.window'
+local Nexus                 = Nexus
+local Base                  = Nexus.base
+local Window                = Nexus.window
+local WindowBase            = Base.window or require 'src.base.window'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local WindowCommon          = {}
+local WindowCommon          = Window.common
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --

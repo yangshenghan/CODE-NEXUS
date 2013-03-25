@@ -23,43 +23,81 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
+nexus.base.viewport         = {
+    drawables               = nil,
+    visible                 = true,
+    ox                      = 0,
+    oy                      = 0,
+    z                       = 0
+}
 
-nexus.base.viewport         = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local require               = require
-local Graphics              = require 'src.core.graphics'
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Graphics              = Core.graphics or require 'src.core.graphics'
 local Rectangle             = require 'src.base.rectangle'
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Viewport              = nexus.base.viewport
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function drawable_zorder_sorter(a, b)
     return a.z < b.z
 end
 
-function nexus.base.viewport.addDrawable(instance, drawable)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Viewport.new(...)
+    local instance = setmetatable({}, { __index = Viewport })
+    
+    if ... == nil then
+        instance.rectangle = Rectangle.new(0, 0, Graphics.getScreenWidth(), Graphics.getScreenHeight())
+    elseif type(...) == 'table' then
+        local args = ...
+        instance.rectangle = args.rectangle or Rectangle.new(args.x or 0, args.y or 0, args.width or Graphics.getScreenWidth(), args.height or Graphics.getScreenHeight())
+    else
+        local x, y, width, height = unpack({...})
+        instance.rectangle = Rectangle.new(x, y, width, height)
+    end
+    instance.drawables = {}
+
+    Graphics.addViewport(instance)
+    return instance
+end
+
+function Viewport.addDrawable(instance, drawable)
     table.insert(instance.drawables, drawable)
 end
 
-function nexus.base.viewport.removeDrawable(instance, drawable)
+function Viewport.removeDrawable(instance, drawable)
     table.removeValue(instance.drawables, drawable)
 end
 
-function nexus.base.viewport.dispose(instance)
+function Viewport.dispose(instance)
     instance.drawables = nil
 
     Graphics.removeViewport(instance)
 end
 
-function nexus.base.viewport.disposed(instance)
+function Viewport.disposed(instance)
     return instance.drawables == nil
 end
 
-function nexus.base.viewport.flash(instance, color, duration)
+function Viewport.flash(instance, color, duration)
 end
 
-function nexus.base.viewport.update(instance, dt)
+function Viewport.update(instance, dt)
 end
 
-function nexus.base.viewport.render(instance)
+function Viewport.render(instance)
     local u, v, w, h = Rectangle.get(instance.rectangle)
     table.sort(instance.drawables, drawable_zorder_sorter)
 
@@ -77,24 +115,4 @@ function nexus.base.viewport.render(instance)
     love.graphics.pop()
 end
 
-function nexus.base.viewport.new(...)
-    local instance = {}
-    if ... == nil then
-        instance.rectangle = Rectangle.new(0, 0, Graphics.getScreenWidth(), Graphics.getScreenHeight())
-    elseif type(...) == 'table' then
-        local args = ...
-        instance.rectangle = args.rectangle or Rectangle.new(args.x or 0, args.y or 0, args.width or Graphics.getScreenWidth(), args.height or Graphics.getScreenHeight())
-    else
-        local x, y, width, height = unpack({...})
-        instance.rectangle = Rectangle.new(x, y, width, height)
-    end
-
-    instance.z = 0
-    instance.ox = 0
-    instance.oy = 0
-    instance.visible = true
-    instance.drawables = {}
-
-    Graphics.addViewport(instance)
-    return instance
-end
+return Viewport

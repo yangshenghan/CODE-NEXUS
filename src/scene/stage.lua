@@ -34,6 +34,7 @@ local Game                  = require 'src.core.game'
 local Graphics              = require 'src.core.graphics'
 local Input                 = require 'src.core.input'
 local Scene                 = require 'src.core.scene'
+local Viewport              = require 'src.base.viewport'
 
 local NEXUS_KEY             = NEXUS_KEY
 
@@ -57,9 +58,9 @@ local function enter(instance)
     instance.player.disposed = NEXUS_EMPTY_FUNCTION
     instance.objects = { instance.player }
     instance.viewports = {
-        nexus.base.viewport.new(),
-        nexus.base.viewport.new(),
-        nexus.base.viewport.new()
+        Viewport.new(),
+        Viewport.new(),
+        Viewport.new()
     }
     instance.viewports[1].z = 10
     instance.viewports[2].z = 20
@@ -85,8 +86,8 @@ local function enter(instance)
     end
     love.graphics.setBlendMode('alpha')
     love.graphics.setCanvas()
-    nexus.base.viewport.addDrawable(instance.viewports[1], instance.player)
-    nexus.base.viewport.addDrawable(Graphics.getBackgroundViewport(), background)
+    Viewport.addDrawable(instance.viewports[1], instance.player)
+    Viewport.addDrawable(Graphics.getBackgroundViewport(), background)
 
     -- Create objects
     for _, data in pairs(instance.stage.objects) do
@@ -98,7 +99,7 @@ local function enter(instance)
         object.disposed = NEXUS_EMPTY_FUNCTION
         object.update = data.update or NEXUS_EMPTY_FUNCTION
         object.render = data.render or NEXUS_EMPTY_FUNCTION
-        nexus.base.viewport.addDrawable(instance.viewports[1], object)
+        Viewport.addDrawable(instance.viewports[1], object)
         table.insert(instance.objects, object)
     end
 end
@@ -107,7 +108,7 @@ local function leave(instance)
     instance.player.delete(instance.player)
 
     for _, viewport in pairs(instance.viewports) do
-        nexus.base.viewport.dispose(viewport)
+        Viewport.dispose(viewport)
     end
 
     instance.gameobjects = nil

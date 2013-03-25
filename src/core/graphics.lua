@@ -23,6 +23,7 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+nexus.core.graphics         = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
@@ -37,15 +38,18 @@ local Nexus                 = nexus
 local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
+local Base                  = Nexus.base
 
 local Data                  = require 'src.core.data'
 -- local Resource              = require 'src.core.resource'
 local Scene                 = require 'src.core.scene'
 
+local Viewport              = Base.viewport or require 'src.base.viewport'
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Graphics              = {}
+local Graphics              = nexus.core.graphics
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -91,7 +95,7 @@ end
 
 function Graphics.reset()
     for _, viewport in pairs(t_viewports) do
-        nexus.base.viewport.dispose(viewport)
+        Viewport.dispose(viewport)
     end
 
     t_viewports = {}
@@ -108,14 +112,14 @@ function Graphics.update(dt)
     table.sort(t_viewports, viewport_zorder_sorter)
 
     for _, viewport in pairs(t_viewports) do
-        nexus.base.viewport.update(viewport, dt)
+        viewport.update(viewport, dt)
     end
 end
 
 function Graphics.render()
     for _, viewport in pairs(t_viewports) do
-        if not nexus.base.viewport.disposed(viewport) and viewport.visible then
-            nexus.base.viewport.render(viewport)
+        if not Viewport.disposed(viewport) and viewport.visible then
+            Viewport.render(viewport)
         end
     end
 
@@ -161,7 +165,7 @@ end
 
 function Graphics.getBackgroundViewport()
     if not t_background_viewport then
-        t_background_viewport = nexus.base.viewport.new()
+        t_background_viewport = Viewport.new()
         t_background_viewport.z = 0
     end
     return t_background_viewport
@@ -169,7 +173,7 @@ end
 
 function Graphics.getWindowViewport()
     if not t_window_viewport then
-        t_window_viewport = nexus.base.viewport.new()
+        t_window_viewport = Viewport.new()
         t_window_viewport.z = 40
     end
     return t_window_viewport

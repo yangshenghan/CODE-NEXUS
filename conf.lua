@@ -61,13 +61,13 @@ NEXUS_EMPTY_FUNCTION = function(...) end
 -- | Construction of base nexus table                                       | --
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
-    base = {},
-    scene = {},
-    sprite = {},
-    system = {},
-    window = {},
-
+    base                    = {},
     core                    = {},
+    game                    = {},
+    scene                   = {},
+    sprite                  = {},
+    system                  = {},
+    window                  = {},
     systems                 = {  -- these should not be changed at runtime.
         version             = {
             major           = '0',

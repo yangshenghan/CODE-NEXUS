@@ -29,6 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local require               = require
 local Graphics              = require 'src.core.graphics'
+local Viewport              = require 'src.base.viewport'
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
@@ -54,13 +55,13 @@ local WindowBase            = {
 function WindowBase.new(instance)
     local instance = setmetatable(instance, { __index = WindowBase })
     instance.create(instance)
-    nexus.base.viewport.addDrawable(Graphics.getWindowViewport(), instance)
+    Viewport.addDrawable(Graphics.getWindowViewport(), instance)
     return instance
 end
 
 function WindowBase.dispose(instance)
     instance.render = nil
-    nexus.base.viewport.removeDrawable(Graphics.getWindowViewport(), instance)
+    Viewport.removeDrawable(Graphics.getWindowViewport(), instance)
 end
 
 function WindowBase.disposed(instance)

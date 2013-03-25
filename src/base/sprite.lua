@@ -30,6 +30,7 @@
 local require               = require
 local Color                 = require 'src.base.color'
 local Rectangle             = require 'src.base.rectangle'
+local Viewport              = require 'src.base.viewport'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -71,7 +72,7 @@ function SpriteBase.new(instance, viewport)
     local instance = setmetatable(instance, { __index = SpriteBase })
     if viewport then
         instance.viewport = viewport
-        nexus.base.viewport.addDrawable(instance.viewport, instance)
+        Viewport.addDrawable(instance.viewport, instance)
     end
     instance.color = Color.new(255, 255, 255, 255)
     instance.rectangle = Rectangle.new()
@@ -80,7 +81,7 @@ end
 
 function SpriteBase.dispose(instance)
     instance.render = nil
-    nexus.base.viewport.removeDrawable(instance.viewport, instance)
+    Viewport.removeDrawable(instance.viewport, instance)
 end
 
 function SpriteBase.disposed(instance)

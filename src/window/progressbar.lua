@@ -23,6 +23,14 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+nexus.window.progressbar    = {
+    x                       = 0,
+    y                       = 0,
+    width                   = 0,
+    height                  = 0,
+    progress                = 0,
+    image                   = nil
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
@@ -31,21 +39,17 @@ local l                     = love
 local li                    = l.image
 local lg                    = l.graphics
 local require               = require
-local Graphics              = require 'src.core.graphics'
-local Color                 = require 'src.base.color'
-local WindowBase            = require 'src.base.window'
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Base                  = Nexus.base
+local Graphics              = Core.graphics or require 'src.core.graphics'
+local Color                 = Base.color or require 'src.base.color'
+local WindowBase            = Base.window or require 'src.base.window'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local WindowProgressBar     = {
-    x                       = 0,
-    y                       = 0,
-    width                   = 0,
-    height                  = 0,
-    progress                = 0,
-    image                   = nil
-}
+local WindowProgressBar     = nexus.window.progressbar
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --

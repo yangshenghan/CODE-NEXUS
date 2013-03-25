@@ -23,10 +23,20 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.base.tone             = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Tone                  = {
+    red                     = 0,
+    green                   = 0,
+    blue                    = 0,
+    gray                    = 0
+}
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function set_correct_value(value, gray)
     if not value then return 0 end
     if gray and value < 0 then return 0 end
@@ -35,7 +45,20 @@ local function set_correct_value(value, gray)
     return value
 end
 
-function nexus.base.tone.set(instance, ...)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Tone.new(...)
+    local instance = setmetatable({}, { __index = Tone })
+    instance.set(instance, ...)
+    return instance
+end
+
+function Tone.get(instance)
+    return instance.red, instance.green, instance.blue, instance.gray
+end
+
+function Tone.set(instance, ...)
     if type(...) == 'table' then
         local rgbg = ...
         instance.red = set_correct_value(rgba.red or rgbg[1])
@@ -52,10 +75,4 @@ function nexus.base.tone.set(instance, ...)
     return instance
 end
 
-function nexus.base.tone.get(instance)
-    return instance.red, instance.green, instance.blue, instance.gray
-end
-
-function nexus.base.tone.new(...)
-    return nexus.base.tone.set({}, ...)
-end
+return Tone

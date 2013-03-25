@@ -38,8 +38,6 @@ local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowBase            = {
-    create                  = NEXUS_EMPTY_FUNCTION,
-    delete                  = NEXUS_EMPTY_FUNCTION,
     render                  = NEXUS_EMPTY_FUNCTION,
     update                  = NEXUS_EMPTY_FUNCTION,
     active                  = false,
@@ -58,7 +56,6 @@ local WindowBase            = {
 -- \ ---------------------------------------------------------------------- / --
 function WindowBase.new(derive)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = WindowBase }) })
-    instance.create(instance)
     Viewport.addDrawable(Graphics.getWindowViewport(), instance)
     return instance
 end

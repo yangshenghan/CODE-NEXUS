@@ -93,16 +93,4 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Actually load the game                                                 | --
 -- \ ---------------------------------------------------------------------- / --
-require 'src.base.scene'
 require 'src.base.object'
-
-require 'src.scene.error'
-require 'src.scene.console'
-require 'src.scene.loading'
-require 'src.scene.title'
-require 'src.scene.newgame'
-require 'src.scene.continue'
-require 'src.scene.stage'
-require 'src.scene.option'
-require 'src.scene.extra'
-require 'src.scene.exit'

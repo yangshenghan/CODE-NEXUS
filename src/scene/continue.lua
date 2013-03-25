@@ -23,33 +23,41 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.continue        = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Input                 = Core.require 'src.core.input'
-
+local Scene                 = Core.require 'src.core.scene'
+local SceneBase             = Core.require 'src.scene.base'
 local NEXUS_KEY             = Constants.KEYS
 
-local function enter(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneContinue         = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneContinue.new()
+    local instance = SceneBase.new(SceneContinue)
+    return instance
 end
 
-local function leave(instance)
-end
-
-local function update(instance, dt)
+function SceneContinue.enter(instance)
     if Input.isKeyDown(NEXUS_KEY.CONFIRM) or Input.isKeyDown(NEXUS_KEY.CANCEL) then
-        nexus.core.scene.leave()
+        Scene.leave()
     end
 end
 
-function nexus.scene.continue.new()
-    return nexus.scene.loading.new({
-        enter   = enter,
-        leave   = leave,
-        update  = update
-    })
+function SceneContinue.leave(instance)
 end
+
+function SceneContinue.update(instance, dt)
+end
+
+return SceneContinue

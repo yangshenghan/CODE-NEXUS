@@ -48,7 +48,7 @@ end
 
 function Scene.update(dt)
     for _, scene in ipairs(t_scenes) do
-        if not nexus.base.scene.isIdle(scene) then scene.update(scene, dt) end
+        if not scene.isIdle(scene) then scene.update(scene, dt) end
     end
 end
 
@@ -59,11 +59,13 @@ function Scene.render()
 end
 
 function Scene.pause()
-    nexus.base.scene.setIdle(Scene.getCurrentScene(), true)
+    local scene = Scene.getCurrentScene()
+    scene.setIdle(scene, true)
 end
 
 function Scene.resume()
-    nexus.base.scene.setIdle(Scene.getCurrentScene(), false)
+    local scene = Scene.getCurrentScene()
+    scene.setIdle(scene, false)
 end
 
 function Scene.getCurrentScene()
@@ -82,7 +84,7 @@ end
 function Scene.enter(scene)
     if #t_scenes > 0 then
         local current = Scene.getCurrentScene()
-        nexus.base.scene.setIdle(current, true)
+        current.setIdle(current, true)
         current.idleIn(current)
     end
 
@@ -98,7 +100,7 @@ function Scene.leave()
 
     if #t_scenes > 0 then
         local current = Scene.getCurrentScene()
-        nexus.base.scene.setIdle(current, false)
+        current.setIdle(current, false)
         current.idleOut(current)
     end
 end

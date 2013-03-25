@@ -23,24 +23,35 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus = nexus
 
-nexus.scene.error = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
-
 local Systems               = Nexus.systems
 local SystemsDefaults       = Systems.defaults
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneError            = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
 local m_message             = 'There is an error occured!' 
 
-local function render(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneError.render(instance)
     love.graphics.print(m_message, SystemsDefaults.width / 2, SystemsDefaults.height / 2)
 end
 
-function nexus.scene.error.new(message)
+function SceneError.new(message)
+    local instance = SceneBase.new(SceneError)
     m_message = message
-    return nexus.base.scene.new({
-        render  = render
-    })
+    return instance
 end
+
+return SceneError

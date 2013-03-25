@@ -23,32 +23,31 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.console         = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Systems               = Nexus.systems
 local Settings              = Nexus.settings
-
+local Game                  = Core.require 'src.core.game'
 local Resource              = Core.require 'src.core.resource'
 local Scene                 = Core.require 'src.core.scene'
-
+local SceneBase             = Core.require 'src.scene.base'
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
--- | Local used name and modules                                            | --
+-- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-nexus.console = {}
-nexus.console.input = {}
-nexus.console.output = {}
-
-local console = nexus.console
+local SceneConsole          = {}
+local Console               = {}
+local ConsoleInput          = {}
+local ConsoleOutput         = {}
 
 -- / ---------------------------------------------------------------------- \ --
--- | The submodule input of the nexus.console                               | --
+-- | The submodule ConsoleInput of the SceneConsole                         | --
 -- \ ---------------------------------------------------------------------- / --
 local m_cursor = 1
 
@@ -74,37 +73,12 @@ local function chars(s)
     return t
 end
 
-function console.input.purge(command)
-    for index = #t_history, 1, -1 do
-        if t_history[index] == command then
-            table.remove(t_history, index)
-        end
-    end
-end
-
-function console.input.current()
-    return table.concat(m_commandline)
-end
-
-function console.input.position()
-    return m_cursor - #m_commandline - 1
-end
-
-function console.input.push(key, code)
-    if t_hooks[key] then
-        t_hooks[key]()
-    elseif code > 31 and code < 256 then
-        table.insert(m_commandline, m_cursor, string.char(code))
-        m_cursor = m_cursor + 1
-    end
-end
-
-function console.input.initialize(executer)
+function ConsoleInput.initialize(executer)
     f_executer = executer or NEXUS_EMPTY_FUNCTION
 
     t_hooks['return'] = function()
         local command = table.concat(m_commandline)
-        console.input.purge(command)
+        ConsoleInput.purge(command)
         m_commandline = {}
         m_cursor = 1
         m_selected = #t_history + 1
@@ -159,7 +133,7 @@ function console.input.initialize(executer)
             return f_autocomplete()
         end
 
-        local inp = console.input.current()
+        local inp = ConsoleInput.current()
         local left = 0
         local right = 0
 
@@ -230,8 +204,33 @@ function console.input.initialize(executer)
     end
 end
 
+function ConsoleInput.purge(command)
+    for index = #t_history, 1, -1 do
+        if t_history[index] == command then
+            table.remove(t_history, index)
+        end
+    end
+end
+
+function ConsoleInput.current()
+    return table.concat(m_commandline)
+end
+
+function ConsoleInput.position()
+    return m_cursor - #m_commandline - 1
+end
+
+function ConsoleInput.push(key, code)
+    if t_hooks[key] then
+        t_hooks[key]()
+    elseif code > 31 and code < 256 then
+        table.insert(m_commandline, m_cursor, string.char(code))
+        m_cursor = m_cursor + 1
+    end
+end
+
 -- / ---------------------------------------------------------------------- \ --
--- | The submodule output of the nexus.console                              | --
+-- | The submodule ConsoleOutput of the SceneConsole                   | --
 -- \ ---------------------------------------------------------------------- / --
 local m_font = nil
 
@@ -253,7 +252,11 @@ local m_characters_per_line = 0
 
 local t_lines = {}
 
-function console.output.render(ox, oy, position)
+function ConsoleOutput.initialize(font, width, height, spacing)
+    ConsoleOutput.reset(font, width, height, spacing)
+end
+
+function ConsoleOutput.render(ox, oy, position)
     assert(ox and oy)
     if not position then return end
 
@@ -282,7 +285,7 @@ function console.output.render(ox, oy, position)
     love.graphics.setColor(unpack(color))
 end
 
-function console.output.push(...)
+function ConsoleOutput.push(...)
     local str = table.concat{...}
     local added = 0
     for line in str:gmatch('[^\n]+') do
@@ -297,7 +300,7 @@ function console.output.push(...)
     return added
 end
 
-function console.output.pushc(c, ...)
+function ConsoleOutput.pushc(c, ...)
     if not c then return end
     local line = t_lines[#t_lines]
     if line:len() + 1 < m_characters_per_line then
@@ -307,18 +310,18 @@ function console.output.pushc(c, ...)
     end
 
     t_lines[#t_lines] = line
-    return console.output.pushc(...)
+    return ConsoleOutput.pushc(...)
 end
 
-function console.output.pop(n)
+function ConsoleOutput.pop(n)
     local n = n or 1
     if n < 1 then
         return nil
     end
-    return table.remove(t_lines), console.output.pop(n - 1)
+    return table.remove(t_lines), ConsoleOutput.pop(n - 1)
 end
 
-function console.output.reset(font, width, height, spacing)
+function ConsoleOutput.reset(font, width, height, spacing)
     m_font = font or love.graphics.getFont()
     m_width = width or love.graphics.getWidth()
     m_height = height or love.graphics.getHeight()
@@ -332,18 +335,14 @@ function console.output.reset(font, width, height, spacing)
     m_characters_per_line = math.floor(m_width / m_character_width) - 1
 end
 
-function console.output.initialize(font, width, height, spacing)
-    console.output.reset(font, width, height, spacing)
-end
-
 -- / ---------------------------------------------------------------------- \ --
--- | The main module of the nexus.console                                   | --
+-- | The submodule Console of the SceneConsole                              | --
 -- \ ---------------------------------------------------------------------- / --
-function console.initialize(executer, font, width, height, spacing)
-    console.input.initialize(executer)
-    console.output.initialize(font, width, height, spacing)
+function Console.initialize(executer, font, width, height, spacing)
+    ConsoleInput.initialize(executer)
+    ConsoleOutput.initialize(font, width, height, spacing)
 
-    console.print([[
+    Console.print([[
 / ******************************************************************************** \
 |                                  [ CODE NEXUS ]                                  |
 |                           == Console for Code Nexus ==                           |
@@ -358,66 +357,58 @@ function console.initialize(executer, font, width, height, spacing)
 | understand clearly what you are doing now. You can type 'help' to see the notes. |
 \ ******************************************************************************** /
 ]])
-    console.print()
+    Console.print()
 end
 
-function nexus.console.toggleConsole()
-    if Settings.console then
-        Scene.leave()
-    else
-        Scene.enter(nexus.scene.console.new())
-    end
-end
-
-function console.print(...)
+function Console.print(...)
     local argc, args = select('#', ...), {...}
     for i = 1, argc do
         args[i] = (args[i] == nil) and 'nil' or tostring(args[i])
     end
     if argc == 0 then args = {' '} end
-    console.output.push(table.concat(args, ' '))
+    ConsoleOutput.push(table.concat(args, ' '))
 end
 
 if Systems.debug then
-    function console.showErrorMessage(...)
+    function Console.showErrorMessage(...)
         if Settings.level > 0 then
-            console.print('[ ERROR ]', ...)
+            Console.print('[ ERROR ]', ...)
         end
     end
 
-    function console.showWarningMessage(...)
+    function Console.showWarningMessage(...)
         if Settings.level > 1 then
-            console.print('[WARNING]', ...)
+            Console.print('[WARNING]', ...)
         end
     end
 
-    function console.showInformationMessage(...)
+    function Console.showInformationMessage(...)
         if Settings.level > 2 then
-            console.print('[I N F O]', ...)
+            Console.print('[I N F O]', ...)
         end
     end
 
-    function console.showLogMessage(...)
+    function Console.showLogMessage(...)
         if Settings.level > 3 then
-            console.print('[ L O G ]', ...)
+            Console.print('[ L O G ]', ...)
         end
     end
 
-    function console.showDebugMessage(...)
+    function Console.showDebugMessage(...)
         if Settings.level > 4 then
-            console.print('[ DEBUG ]', ...)
+            Console.print('[ DEBUG ]', ...)
         end
     end
 else
-    function console.showErrorMessage(...) end
-    function console.showWarningMessage(...) end
-    function console.showInformationMessage(...) end
-    function console.showLogMessage(...) end
-    function console.showDebugMessage(...) end
+    function Console.showErrorMessage(...) end
+    function Console.showWarningMessage(...) end
+    function Console.showInformationMessage(...) end
+    function Console.showLogMessage(...) end
+    function Console.showDebugMessage(...) end
 end
 
 -- / ---------------------------------------------------------------------- \ --
--- | The scene of console                                                   | --
+-- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_prompt = '> '
 
@@ -425,8 +416,11 @@ local m_chunk = nil
 
 local t_instance = nil
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function executer(command)
-    console.output.push(m_prompt, command)
+    ConsoleOutput.push(m_prompt, command)
     command = string.gsub(command, '^=%s?', 'return ')
     command = string.gsub(command, '^return%s+(.*)(%s*)$', 'print(%1)%2')
     m_chunk = m_chunk and table.concat({m_chunk, command}, ' ') or command
@@ -437,14 +431,27 @@ local function executer(command)
     else
         m_prompt = '> '
         if out and string.len(out) > 0 then
-            console.output.push(out)
+            ConsoleOutput.push(out)
         end
         t_history[#t_history] = m_chunk
         m_chunk = nil
     end
 end
 
-local function enter(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneConsole.new()
+    if not t_instance then
+        local font = Resource.loadFontData('inconsolata.otf', 16)
+        Console.initialize(executer, font)
+
+        t_instance = SceneBase.new(SceneConsole)
+    end
+    return t_instance
+end
+
+function SceneConsole.enter(instance)
     instance.ld = love.draw
     instance.lk = love.keypressed
     instance.print = print
@@ -462,10 +469,10 @@ local function enter(instance)
         love.graphics.setColor(240, 240, 0, 255)
 
         -- assert(ox and oy)
-        local s = table.concat{m_prompt, console.input.current(), ' '}
-        local n = console.output.push(s)
-        console.output.render(4, love.graphics.getHeight() - 4, console.input.position())
-        console.output.pop(n)
+        local s = table.concat{m_prompt, ConsoleInput.current(), ' '}
+        local n = ConsoleOutput.push(s)
+        ConsoleOutput.render(4, love.graphics.getHeight() - 4, ConsoleInput.position())
+        ConsoleOutput.pop(n)
 
         love.graphics.setColor(unpack(color))
     end
@@ -479,13 +486,13 @@ local function enter(instance)
             Scene.leave()
         end
 
-        console.input.push(key, code)
+        ConsoleInput.push(key, code)
 
         if instance.lk then instance.lk(key, code) end
     end
 
     print = function(...)
-        return console.print(...)
+        return Console.print(...)
     end
 
     printf = function(format, ...)
@@ -493,7 +500,7 @@ local function enter(instance)
     end
 
     reset = function()
-        nexus.core.game.reload()
+        Game.reload()
     end
 
     quit = function()
@@ -509,7 +516,7 @@ local function enter(instance)
     Settings.console = true
 end
 
-local function leave(instance)
+function SceneConsole.leave(instance)
     exit = instance.exit
     quit = instance.quit
     reset = instance.reset
@@ -531,20 +538,12 @@ local function leave(instance)
     Settings.console = false
 end
 
-function nexus.scene.console.new()
-    if not t_instance then
-        local font = Resource.loadFontData('inconsolata.otf', 16)
-        console.initialize(executer, font)
-
-        t_instance = nexus.base.scene.new({
-            enter   = enter,
-            leave   = leave
-        })
+function SceneConsole.toggleConsole()
+    if Settings.console then
+        Scene.leave()
+    else
+        Scene.enter(SceneConsole.new())
     end
-    return t_instance
 end
 
-if Systems.debug then
-    nexus.scene.console.new()
-end
-
+return SceneConsole

@@ -23,14 +23,15 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.title           = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lt                    = l.timer
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-
 local Data                  = Core.require 'src.core.data'
 local Game                  = Core.require 'src.core.game'
 local Graphics              = Core.require 'src.core.graphics'
@@ -38,13 +39,31 @@ local Input                 = Core.require 'src.core.input'
 local Resource              = Core.require 'src.core.resource'
 local Scene                 = Core.require 'src.core.scene'
 local SpriteBase            = Core.require 'src.sprite.base'
+local SceneBase             = Core.require 'src.scene.base'
+local SceneStage            = Core.require 'src.scene.stage'
+-- local SceneNewGame          = Core.require 'src.scene.newgame'
+local SceneContinue         = Core.require 'src.scene.continue'
+local SceneExtra            = Core.require 'src.scene.extra'
+local SceneOption           = Core.require 'src.scene.option'
+local SceneExit             = Core.require 'src.scene.exit'
 local WindowCommand         = Core.require 'src.window.command'
-
 local NEXUS_KEY             = Constants.KEYS
 
-local f_update_coroutine = function(instance, dt, timer)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneTitle            = {
+    windows                 = nil,
+    coroutines              = nil,
+    skip                    = false
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function title_update_coroutine(instance, dt, timer)
     local wait = function(microsecond, callback)
-        local wakeup = love.timer.getMicroTime() + microsecond / 1000
+        local wakeup = lt.getMicroTime() + microsecond / 1000
         repeat callback(dt) until select(3, coroutine.yield()) > wakeup
     end
 
@@ -98,61 +117,63 @@ local f_update_coroutine = function(instance, dt, timer)
     end
 end
 
-local function enter(instance)
-    instance.coroutines.update = coroutine.create(f_update_coroutine)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneTitle.new(skip)
+    local instance = SceneBase.new(SceneTitle)
+    instance.skip = skip or instance.skip
+    instance.windows = {}
+    instance.coroutines = {}
+    return instance
+end
+
+function SceneTitle.enter(instance)
+    instance.coroutines.update = coroutine.create(title_update_coroutine)
     instance.windows.command = WindowCommand.new(320, 240, {
         {
             text    = Data.getTranslatedText('New Game'),
             handler = function(...)
                 Game.setup()
-                Scene.goto(nexus.scene.stage.new('prologue'))
-                -- Scene.goto(nexus.scene.newgame.new())
+                Scene.goto(SceneStage.new('prologue'))
+                -- Scene.goto(SceneNewGame.new())
             end
         }, {
             text    = Data.getTranslatedText('Continue'),
             handler = function(...)
-                Scene.goto(nexus.scene.continue.new())
+                Scene.goto(SceneContinue.new())
             end,
             enabled = Game.exists()
         }, {
             text    = Data.getTranslatedText('Extra'),
             handler = function(...)
-                Scene.goto(nexus.scene.extra.new())
+                Scene.goto(SceneExtra.new())
             end
         }, {
             text    = Data.getTranslatedText('Option'),
             handler = function(...)
-                Scene.goto(nexus.scene.option.new())
+                Scene.goto(SceneOption.new())
             end
         }, {
             text    = Data.getTranslatedText('Exit'),
             handler = function(...)
-                Scene.goto(nexus.scene.exit.new())
+                Scene.goto(SceneExit.new())
             end
         }
     })
 end
 
-local function leave(instance)
+function SceneTitle.leave(instance)
     instance.windows.command.dispose(instance.windows.command)
 
     instance.windows.command = nil
     instance.coroutines.update = nil
 end
 
-local function update(instance, dt)
+function SceneTitle.update(instance, dt)
     if instance.idle then return end
 
-    coroutine.resume(instance.coroutines.update, instance, dt, love.timer.getMicroTime())
+    coroutine.resume(instance.coroutines.update, instance, dt, lt.getMicroTime())
 end
 
-function nexus.scene.title.new(skip)
-    return nexus.base.scene.new({
-        enter       = enter,
-        leave       = leave,
-        update      = update,
-        skip        = skip,
-        windows     = {},
-        coroutines  = {}
-    })
-end
+return SceneTitle

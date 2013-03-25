@@ -23,42 +23,46 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.base.scene            = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Constants             = Nexus.constants
-
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
-local t_default             = {
-    create                  = NEXUS_EMPTY_FUNCTION,
-    delete                  = NEXUS_EMPTY_FUNCTION,
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneBase             = {
     enter                   = NEXUS_EMPTY_FUNCTION,
     leave                   = NEXUS_EMPTY_FUNCTION,
-    idleIn                  = NEXUS_EMPTY_FUNCTION,
-    idleOut                 = NEXUS_EMPTY_FUNCTION,
     update                  = NEXUS_EMPTY_FUNCTION,
     -- The render callback may be removed and managed in nexus.game
     render                  = NEXUS_EMPTY_FUNCTION,
+    idleIn                  = NEXUS_EMPTY_FUNCTION,
+    idleOut                 = NEXUS_EMPTY_FUNCTION,
     idle                    = false
 }
 
-function nexus.base.scene.isIdle(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneBase.new(derive, viewport)
+    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = SceneBase }) })
+    return instance
+end
+
+function SceneBase.isIdle(instance)
     return instance.idle
 end
 
-function nexus.base.scene.setIdle(instance, idle)
+function SceneBase.setIdle(instance, idle)
     instance.idle = idle
 end
 
-function nexus.base.scene.toggleIdle(instance)
+function SceneBase.toggleIdle(instance)
     instance.idle = not instance.idle
 end
 
-function nexus.base.scene.new(instance)
-    instance = table.merge(t_default, instance)
-    instance.create(instance)
-    return instance
-end
+return SceneBase

@@ -23,23 +23,39 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.loading         = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-
 local Scene                 = Core.require 'src.core.scene'
+local SceneBase             = Core.require 'src.scene.base'
 local WindowProgressBar     = Core.require 'src.window.progressbar'
 
-local function enter(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneLoading          = {
+    scene                   = nil
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneLoading.new(scene)
+    local instance = SceneBase.new(SceneLoading)
+    instance.scene = scene
+    return instance
+end
+
+function SceneLoading.enter(instance)
     instance.scene.loading = instance
     instance.scene.progress = WindowProgressBar.new()
     instance.scene.coroutine = coroutine.create(instance.scene.enter)
 end
 
-local function update(instance, dt)
+function SceneLoading.update(instance, dt)
     local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
     instance.scene.progress.setProgressValue(instance.scene.progress, progress)
 
@@ -51,16 +67,10 @@ local function update(instance, dt)
     end
 end
 
-function nexus.scene.loading.setProgress(value)
+function SceneLoading.setProgress(value)
     if value < 0 then value = 0 end
     if value > 1 then value = 1 end
     coroutine.yield(value)
 end
 
-function nexus.scene.loading.new(instance)
-    return nexus.base.scene.new({
-        enter   = enter,
-        update  = update,
-        scene   = nexus.base.scene.new(instance)
-    })
-end
+return SceneLoading

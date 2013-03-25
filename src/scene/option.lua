@@ -23,35 +23,41 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.option          = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-
 local Input                 = Core.require 'src.core.input'
 local Scene                 = Core.require 'src.core.scene'
-
+local SceneBase             = Core.require 'src.scene.base'
 local NEXUS_KEY             = Constants.KEYS
 
-local function enter(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneOption           = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneOption.new()
+    local instance = SceneBase.new(SceneOption)
+    return instance
 end
 
-local function leave(instance)
-end
-
-local function update(instance, dt)
+function SceneOption.enter(instance)
     if Input.isKeyDown(NEXUS_KEY.CONFIRM) or Input.isKeyDown(NEXUS_KEY.CANCEL) then
         Scene.leave()
     end
 end
 
-function nexus.scene.option.new()
-    return nexus.base.scene.new({
-        enter   = enter,
-        leave   = leave,
-        update  = update
-    })
+function SceneOption.leave(instance)
 end
+
+function SceneOption.update(instance, dt)
+end
+
+return SceneOption

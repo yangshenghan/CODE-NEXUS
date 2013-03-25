@@ -23,27 +23,46 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.stage           = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-
 local Data                  = Core.require 'src.core.data'
 local Game                  = Core.require 'src.core.game'
 local Graphics              = Core.require 'src.core.graphics'
 local Input                 = Core.require 'src.core.input'
 local Scene                 = Core.require 'src.core.scene'
 local Viewport              = Core.require 'src.base.viewport'
-
+local SceneBase             = Core.require 'src.scene.base'
+local SceneLoading          = Core.require 'src.scene.loading'
 local NEXUS_KEY             = Constants.KEYS
-
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
-local function enter(instance)
-    local canvas = love.graphics.newCanvas()
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneStage            = {
+    map                     = nil,
+    stage                   = nil,
+    script                  = nil
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneStage.new(name)
+    local instance = SceneBase.new(SceneStage)
+    instance.name = name
+    return SceneLoading.new(instance)
+end
+
+function SceneStage.enter(instance)
+    local canvas = lg.newCanvas()
     local background = Graphics.getBackgroundViewport()
     instance.gameobjects = Game.getGameObjects()
 
@@ -76,18 +95,18 @@ local function enter(instance)
     background.disposed = NEXUS_EMPTY_FUNCTION
     background.render = function(instance)
         Graphics.clear()
-        love.graphics.draw(canvas)
+        lg.draw(canvas)
     end
-    love.graphics.setCanvas(canvas)
-    love.graphics.setBlendMode('premultiplied')
-    love.graphics.setColor(255, 255, 255, 32)
+    lg.setCanvas(canvas)
+    lg.setBlendMode('premultiplied')
+    lg.setColor(255, 255, 255, 32)
     for j = 0, 45 do
         for i = 0, 80 do
-            love.graphics.rectangle('line', 16 * i, 16 * j, 16, 16)
+            lg.rectangle('line', 16 * i, 16 * j, 16, 16)
         end
     end
-    love.graphics.setBlendMode('alpha')
-    love.graphics.setCanvas()
+    lg.setBlendMode('alpha')
+    lg.setCanvas()
     Viewport.addDrawable(instance.viewports[1], instance.player)
     Viewport.addDrawable(Graphics.getBackgroundViewport(), background)
 
@@ -106,7 +125,7 @@ local function enter(instance)
     end
 end
 
-local function leave(instance)
+function SceneStage.leave(instance)
     instance.player.delete(instance.player)
 
     for _, viewport in pairs(instance.viewports) do
@@ -121,7 +140,7 @@ local function leave(instance)
     instance.map = nil
 end
 
-local function update(instance, dt)
+function SceneStage.update(instance, dt)
     if instance.idle then return end
 
     if Input.isKeyDown(NEXUS_KEY.Z) then
@@ -157,16 +176,9 @@ local function update(instance, dt)
     end
 end
 
-function nexus.scene.stage.getCurrentStage()
+function SceneStage.getCurrentStage()
     local scene = Scene.getCurrentScene()
     return scene.stage
 end
 
-function nexus.scene.stage.new(name)
-    return nexus.scene.loading.new({
-        enter   = enter,
-        leave   = leave,
-        update  = update,
-        name    = name
-    })
-end
+return SceneStage

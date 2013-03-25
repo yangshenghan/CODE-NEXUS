@@ -23,28 +23,35 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.exit            = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-
 local Game                  = Core.require 'src.core.game'
 
-local function enter(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneExit             = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneExit.new()
+    local instance = SceneBase.new(SceneExit)
+    return instance
+end
+
+function SceneExit.enter(instance)
     Game.quit()
 end
 
-local function leave(instance)
+function SceneExit.leave(instance)
 end
 
-local function update(instance, dt)
+function SceneExit.update(instance, dt)
 end
 
-function nexus.scene.exit.new()
-    return nexus.base.scene.new({
-        enter   = enter,
-        leave   = leave,
-        update  = update
-    })
-end
+return SceneExit

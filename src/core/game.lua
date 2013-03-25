@@ -38,12 +38,13 @@ local SystemsVersion        = Systems.version
 local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local OptionConfigures      = Configures.options
-
 local Data                  = Core.require 'src.core.data'
 local Graphics              = Core.require 'src.core.graphics'
 local Scene                 = Core.require 'src.core.scene'
-
-local Player                = Core.require 'src.game.player'
+local GamePlayer            = Core.require 'src.game.player'
+local SceneTitle            = Core.require 'src.scene.title'
+local SceneConsole          = Core.require 'src.scene.console'
+local SceneError            = Core.require 'src.scene.error'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -124,11 +125,11 @@ function Game.start()
     Data.loadTextData(OptionConfigures.language)
     if Configures and not Systems.error and lg.isSupported('canvas') then
         if Systems.firstrun then adjust_screen_mode() end
-        Scene.goto(nexus.scene.title.new(m_loaded))
-        if Settings.console then Scene.enter(nexus.scene.console.new()) end
+        Scene.goto(SceneTitle.new(m_loaded))
+        if Systems.debug and Settings.console then Scene.enter(SceneConsole.new()) end
         m_loaded = true
     else
-        Scene.goto(nexus.scene.error.new(Data.getTranslatedText(Systems.error)))
+        Scene.goto(SceneError.new(Data.getTranslatedText(Systems.error)))
     end
 end
 
@@ -146,11 +147,11 @@ end
 function Game.setup()
     t_saving_data = Data.loadScriptData('setup')
     t_game_objects = {
-        player              = Player.new(),
-        -- messgae             = Message.new(),
-        -- story               = Story.new(),
-        -- stage               = Stage.new(),
-        -- system              = System.new()
+        player              = GamePlayer.new(),
+        -- messgae             = GameMessage.new(),
+        -- story               = GameStory.new(),
+        -- stage               = GameStage.new(),
+        -- system              = GameSystem.new()
     }
 
     on_start_game()

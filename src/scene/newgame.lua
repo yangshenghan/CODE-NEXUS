@@ -23,23 +23,27 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.scene.newgame         = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneNewGame          = {}
 
-local function enter(instance)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneNewGame.new()
+    local instance = SceneBase.new(SceneNewGame)
+    return instance
 end
 
-local function leave(instance)
+function SceneNewGame.enter(instance)
 end
 
-local function update(instance, dt)
+function SceneNewGame.leave(instance)
 end
 
-function nexus.scene.newgame.new()
-    return nexus.scene.loading.new({
-        enter   = enter,
-        leave   = leave,
-        update  = update
-    })
+function SceneNewGame.update(instance, dt)
 end
+
+return SceneNewGame

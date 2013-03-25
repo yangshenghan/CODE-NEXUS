@@ -28,10 +28,11 @@ local nexus                 = nexus
 nexus.base.object           = {}
 
 local Nexus                 = nexus
+local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Systems               = Nexus.systems
 local SystemsParameters     = Systems.parameters
-
+local SceneStage            = Core.require 'src.scene.stage'
 local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
 
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
@@ -69,7 +70,7 @@ function nexus.base.object.isMoving(instance)
 end
 
 function nexus.base.object.isPassable(instance, x, y)
-    local stage = nexus.scene.stage.getCurrentStage()
+    local stage = SceneStage.getCurrentStage()
     if x < 0 or y < 0 then return false end
     if x > stage.width / LOGICAL_GRID_SIZE or y > stage.height / LOGICAL_GRID_SIZE then return false end
     return true

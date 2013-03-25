@@ -100,7 +100,6 @@ require 'src.base.viewport'
 require 'src.base.scene'
 require 'src.base.sprite'
 require 'src.base.object'
-require 'src.base.window'
 
 require 'src.scene.error'
 require 'src.scene.console'

@@ -31,17 +31,14 @@ local l                     = love
 local lg                    = l.graphics
 local require               = require
 local Input                 = require 'src.core.input'
+local WindowBase            = require 'src.base.window'
 local NEXUS_KEY             = NEXUS_KEY
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local CommandWindow         = {
-    x                       = 0,
-    y                       = 0,
-    -- width                   = 0,
-    -- height                  = 0,
+local WindowCommand         = {
     size                    = 0,
     cursor                  = 1,
     commands                = {}
@@ -67,15 +64,15 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function CommandWindow.new(x, y, commands)
-    local instance = nexus.base.window.new(setmetatable(CommandWindow, {}))
+function WindowCommand.new(x, y, commands)
+    local instance = WindowBase.new(WindowCommand)
     instance.x = x or instance.x
     instance.y = y or instance.y
-    if commands then CommandWindow.addCommands(instance, commands) end
+    if commands then WindowCommand.addCommands(instance, commands) end
     return instance
 end
 
-function CommandWindow.update(instance, dt)
+function WindowCommand.update(instance, dt)
     if Input.isKeyRepeat(NEXUS_KEY.UP) then
         move_cursor_up(instance, Input.isKeyTrigger(NEXUS_KEY.UP))
     end
@@ -91,7 +88,7 @@ function CommandWindow.update(instance, dt)
     end
 end
 
-function CommandWindow.render(instance)
+function WindowCommand.render(instance)
     for index, command in ipairs(instance.commands) do
         if command.enabled then
             lg.setColor(255, 255, 255)
@@ -105,7 +102,7 @@ function CommandWindow.render(instance)
     end
 end
 
-function CommandWindow.setHandler(instance, text, handler)
+function WindowCommand.setHandler(instance, text, handler)
     for _, command in ipairs(instance.commands) do
         if command.text == text then
             command.handler = handler
@@ -115,7 +112,7 @@ function CommandWindow.setHandler(instance, text, handler)
     return false
 end
 
-function CommandWindow.addCommand(instance, text, enabled, handler)
+function WindowCommand.addCommand(instance, text, enabled, handler)
     assert(type(text) == 'string')
 
     instance.size = instance.size + 1
@@ -126,7 +123,7 @@ function CommandWindow.addCommand(instance, text, enabled, handler)
     }
 end
 
-function CommandWindow.addCommands(instance, commands)
+function WindowCommand.addCommands(instance, commands)
     assert(type(commands) == 'table')
 
     for _, command in pairs(commands) do
@@ -134,4 +131,4 @@ function CommandWindow.addCommands(instance, commands)
     end
 end
 
-return CommandWindow
+return WindowCommand

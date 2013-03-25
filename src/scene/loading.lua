@@ -30,17 +30,17 @@ nexus.scene.loading         = {}
 local require               = require
 
 local Scene                 = require 'src.core.scene'
-local ProgressBarWindow     = require 'src.window.progressbar'
+local WindowProgressBar     = require 'src.window.progressbar'
 
 local function enter(instance)
     instance.scene.loading = instance
-    instance.scene.progress = ProgressBarWindow.new()
+    instance.scene.progress = WindowProgressBar.new()
     instance.scene.coroutine = coroutine.create(instance.scene.enter)
 end
 
 local function update(instance, dt)
     local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
-    ProgressBarWindow.setProgressValue(instance.scene.progress, progress)
+    instance.scene.progress.setProgressValue(instance.scene.progress, progress)
 
     if coroutine.status(instance.scene.coroutine) == 'dead' then
         instance.scene.progress.dispose(instance.scene.progress)

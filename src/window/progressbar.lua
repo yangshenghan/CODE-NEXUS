@@ -32,11 +32,12 @@ local li                    = l.image
 local lg                    = l.graphics
 local require               = require
 local Graphics              = require 'src.core.graphics'
+local WindowBase            = require 'src.base.window'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local ProgressBarWindow     = {
+local WindowProgressBar     = {
     x                       = 0,
     y                       = 0,
     width                   = 0,
@@ -48,12 +49,13 @@ local ProgressBarWindow     = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function ProgressBarWindow.new(x, y, width, height)
-    local instance = nexus.base.window.new(setmetatable(ProgressBarWindow, {}))
+function WindowProgressBar.new(x, y, width, height)
+    local instance = WindowBase.new(WindowProgressBar)
     instance.x = x or Graphics.getScreenWidth() * 0.15
     instance.y = y or Graphics.getScreenHeight() * 0.8 - 60
     instance.width = width or Graphics.getScreenWidth() * 0.7
     instance.height = height or 60
+    instance.visible = true
 
     do
         local image = li.newImageData(instance.width, instance.height)
@@ -75,22 +77,22 @@ function ProgressBarWindow.new(x, y, width, height)
     return instance
 end
 
-function ProgressBarWindow.render(instance)
+function WindowProgressBar.render(instance)
     local rectangle = lg.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)
     lg.setColor(128, 128, 128, 255)
     lg.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
     lg.drawq(instance.image, rectangle, instance.x, instance.y)
 end
 
-function ProgressBarWindow.getProgressValue(instance)
+function WindowProgressBar.getProgressValue(instance)
     return instance.progress
 end
 
-function ProgressBarWindow.setProgressValue(instance, value)
+function WindowProgressBar.setProgressValue(instance, value)
     if not value then value = 0 end
     if value < 0 then value = 0 end
     if value > 1 then value = 1 end
     instance.progress = value
 end
 
-return ProgressBarWindow
+return WindowProgressBar

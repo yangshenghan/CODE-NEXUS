@@ -25,28 +25,34 @@
 --[[ ********************************************************************** ]]--
 
 -- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local require               = require
+local WindowBase            = require 'src.base.window'
+
+-- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local CommonWindow          = {}
+local WindowCommon          = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function CommonWindow.new()
-    local instance = nexus.base.window.new(setmetatable(CommonWindow, {}))
+function WindowCommon.new()
+    local instance = WindowBase.new(WindowCommon)
     return instance
 end
 
-function CommonWindow.drawCharacterHealth(character, x, y, width)
+function WindowCommon.drawCharacterHealth(character, x, y, width)
 end
 
-function CommonWindow.drawCharacterEnergy(character, x, y, width)
+function WindowCommon.drawCharacterEnergy(character, x, y, width)
 end
 
-function CommonWindow.drawChatacterName(character, x, y, width)
+function WindowCommon.drawChatacterName(character, x, y, width)
 end
 
-function CommonWindow.drawGaugeBar(x, y, width, rate)
+function WindowCommon.drawGaugeBar(x, y, width, rate)
 end
 
-return CommonWindow
+return WindowCommon

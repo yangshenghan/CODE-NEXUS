@@ -125,7 +125,6 @@ function Game.start()
     if Configures and not Systems.error and lg.isSupported('canvas') then
         if Systems.firstrun then adjust_screen_mode() end
         Scene.goto(nexus.scene.title.new(m_loaded))
-        -- Scene.goto(nexus.scene.stage.new('prologue'))
         if Settings.console then Scene.enter(nexus.scene.console.new()) end
         m_loaded = true
     else

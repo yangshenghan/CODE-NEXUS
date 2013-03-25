@@ -40,7 +40,7 @@ local Input                 = require 'src.core.input'
 local Resource              = require 'src.core.resource'
 local Scene                 = require 'src.core.scene'
 
-local CommandWindow         = require 'src.window.command'
+local WindowCommand         = require 'src.window.command'
 
 local NEXUS_KEY             = NEXUS_KEY
 
@@ -95,16 +95,16 @@ local f_update_coroutine = function(instance, dt, timer)
     wait(100, function() end)
 
     -- Show main menu
-    nexus.base.window.open(instance.windows.command)
+    instance.windows.command.open(instance.windows.command)
     while true do
-        CommandWindow.update(instance.windows.command, dt)
+        instance.windows.command.update(instance.windows.command, dt)
         coroutine.yield()
     end
 end
 
 local function enter(instance)
     instance.coroutines.update = coroutine.create(f_update_coroutine)
-    instance.windows.command = CommandWindow.new(320, 240, {
+    instance.windows.command = WindowCommand.new(320, 240, {
         {
             text    = Data.getTranslatedText('New Game'),
             handler = function(...)

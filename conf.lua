@@ -66,7 +66,6 @@ nexus = {
     base                    = {},
     scene                   = {},
 
-    core                    = {},
     systems                 = {  -- these should not be changed at runtime.
         version             = {
             major           = '0',
@@ -147,33 +146,27 @@ nexus = {
 -- \ ---------------------------------------------------------------------- / --
 local nexus                 = nexus
 local require               = require
-local setmetatable          = setmetatable
-local t_loaded_modules      = {}
 
-function nexus.core.require(name)
-    if not t_loaded_modules[name] then
-        t_loaded_modules[name] = {}
-        do
-            local data = require(name)
-            setmetatable(t_loaded_modules[name], { __index = data })
-        end
-    end
-    return t_loaded_modules[name]
-end
+nexus.core                  = {
+    read                    = require 'src.system.read',
+    save                    = require 'src.system.save',
+    load                    = require 'src.system.load',
+    exists                  = require 'src.system.exists',
+    require                 = require 'src.system.require',
+    upgrade                 = require 'src.system.upgrade',
+    version                 = require 'src.system.version'
+}
 
 function love.conf(game)
     local identity  = nexus.systems.paths.identity
     local filename  = nexus.systems.paths.configure
-    local f_save    = require 'src.system.save'
-    local f_read    = require 'src.system.read'
-    local f_exists  = require 'src.system.exists'
 
     love.filesystem.setIdentity(identity)
-    if not f_exists(filename) then
-        f_save(filename, nexus.configures, nexus.systems.parameters.configure_identifier)
+    if not nexus.core.exists(filename) then
+        nexus.core.save(filename, nexus.configures, nexus.systems.parameters.configure_identifier)
         nexus.systems.firstrun = true
     end
-    nexus.configures = f_read(filename)
+    nexus.configures = nexus.core.read(filename)
 
     game.title = 'CODE NEXUS'
     if nexus.systems.debug then

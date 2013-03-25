@@ -31,7 +31,6 @@ local l                     = love
 local le                    = l.event
 local lt                    = l.timer
 local lg                    = l.graphics
-local require               = require
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
@@ -100,12 +99,6 @@ function love.run()
     math.randomseed(os.time())
     math.random()
     math.random()
-
-    Core.read               = require 'src.system.read'
-    Core.load               = require 'src.system.load'
-    Core.exists             = require 'src.system.exists'
-    Core.version            = require 'src.system.version'
-    Core.upgrade            = require 'src.system.upgrade'
 
     while m_loading do
         m_running = true

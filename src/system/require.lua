@@ -24,8 +24,24 @@
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
 
-return function(data)
-    assert(type(data) == 'string')
-    assert(loadstring(data))()
-    return __deserialize()
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local require               = require
+local setmetatable          = setmetatable
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local t_loaded_modules      = {}
+
+return function(name)
+    if not t_loaded_modules[name] then
+        t_loaded_modules[name] = {}
+        do
+            local data = require(name)
+            setmetatable(t_loaded_modules[name], { __index = data })
+        end
+    end
+    return t_loaded_modules[name]
 end

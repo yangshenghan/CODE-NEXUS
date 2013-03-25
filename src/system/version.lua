@@ -25,25 +25,14 @@
 --[[ ********************************************************************** ]]--
 
 -- / ---------------------------------------------------------------------- \ --
--- | Import modules                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local Nexus                 = nexus
-local Systems               = Nexus.systems
-local SystemVersion         = Systems.version
-
--- / ---------------------------------------------------------------------- \ --
 -- | Local veriables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_version             = nil
 
-local MAJOR                 = SystemVersion.major
-local MINOR                 = SystemVersion.minor
-local MICRO                 = SystemVersion.micro
-local PATCH                 = SystemVersion.patch
-
 return function()
     if not m_version then
-        m_version = tonumber(MAJOR) * 2 ^ 24 + tonumber(MINOR) * 2 ^ 16 + tonumber(MICRO) * 2 ^ 8 + tonumber(PATCH)
+        local version = nexus.systems.version
+        m_version = tonumber(version.major) * 2 ^ 24 + tonumber(version.minor) * 2 ^ 16 + tonumber(version.micro) * 2 ^ 8 + tonumber(version.patch)
     end
     return m_version
 end

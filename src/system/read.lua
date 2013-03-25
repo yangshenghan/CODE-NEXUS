@@ -27,8 +27,7 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l                     = love
-local lf                    = l.filesystem
+local lf                    = love.filesystem
 local require               = require
 
 local save                  = require 'src.system.save'

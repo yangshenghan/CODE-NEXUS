@@ -27,8 +27,7 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l                     = love
-local lf                    = l.filesystem
+local lf                    = love.filesystem
 
 return function(filename)
     return lf.exists(filename)

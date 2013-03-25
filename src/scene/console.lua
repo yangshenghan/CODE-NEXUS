@@ -29,13 +29,14 @@ nexus.scene.console         = {}
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Systems               = Nexus.systems
 local Settings              = Nexus.settings
 
 local Resource              = Core.require 'src.core.resource'
 local Scene                 = Core.require 'src.core.scene'
 
-local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local used name and modules                                            | --

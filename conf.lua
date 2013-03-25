@@ -25,47 +25,56 @@
 --[[ ********************************************************************** ]]--
 
 -- / ---------------------------------------------------------------------- \ --
--- | Global constant definitions                                            | --
+-- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-NEXUS_KEY = {
-    Z           = 'z',
-    X           = 'x',
-    C           = 'c',
-    V           = 'v',
-    A           = 'a',
-    S           = 's',
-    D           = 'd',
-    F           = 'f',
-    UP          = 'up',
-    RIGHT       = 'right',
-    DOWN        = 'down',
-    LEFT        = 'left',
-    CONFIRM     = 'confirm',
-    CANCEL      = 'cancel',
-    SHIFT       = 'shift',
-    ALTERNATIVE = 'alternative',
-    CONTROL     = 'control',
-    F1          = 'f1',
-    F2          = 'f2',
-    F3          = 'f3',
-    F4          = 'f4',
-    F5          = 'f5',
-    F6          = 'f6',
-    F7          = 'f7',
-    F8          = 'f8'
-}
-
-NEXUS_EMPTY_TABLE = {}
-
-NEXUS_EMPTY_FUNCTION = function(...) end
+local require               = require
 
 -- / ---------------------------------------------------------------------- \ --
--- | Construction of base nexus table                                       | --
+-- | Construction of the nexus table                                        | --
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
     base                    = {},
     scene                   = {},
 
+    core                    = {
+        read                = require 'src.system.read',
+        save                = require 'src.system.save',
+        load                = require 'src.system.load',
+        exists              = require 'src.system.exists',
+        require             = require 'src.system.require',
+        upgrade             = require 'src.system.upgrade',
+        version             = require 'src.system.version'
+    },
+    constants               = {
+        KEYS                = {
+            Z               = 'z',
+            X               = 'x',
+            C               = 'c',
+            V               = 'v',
+            A               = 'a',
+            S               = 's',
+            D               = 'd',
+            F               = 'f',
+            UP              = 'up',
+            RIGHT           = 'right',
+            DOWN            = 'down',
+            LEFT            = 'left',
+            CONFIRM         = 'confirm',
+            CANCEL          = 'cancel',
+            SHIFT           = 'shift',
+            ALTERNATIVE     = 'alternative',
+            CONTROL         = 'control',
+            F1              = 'f1',
+            F2              = 'f2',
+            F3              = 'f3',
+            F4              = 'f4',
+            F5              = 'f5',
+            F6              = 'f6',
+            F7              = 'f7',
+            F8              = 'f8'
+        },
+        EMPTY_FUNCTION      = function(...) end
+    },
     systems                 = {  -- these should not be changed at runtime.
         version             = {
             major           = '0',
@@ -144,22 +153,10 @@ nexus = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Entry point of LÖVE before modules are loaded                          | --
 -- \ ---------------------------------------------------------------------- / --
-local nexus                 = nexus
-local require               = require
-
-nexus.core                  = {
-    read                    = require 'src.system.read',
-    save                    = require 'src.system.save',
-    load                    = require 'src.system.load',
-    exists                  = require 'src.system.exists',
-    require                 = require 'src.system.require',
-    upgrade                 = require 'src.system.upgrade',
-    version                 = require 'src.system.version'
-}
-
 function love.conf(game)
-    local identity  = nexus.systems.paths.identity
-    local filename  = nexus.systems.paths.configure
+    local nexus = nexus
+    local identity = nexus.systems.paths.identity
+    local filename = nexus.systems.paths.configure
 
     love.filesystem.setIdentity(identity)
     if not nexus.core.exists(filename) then

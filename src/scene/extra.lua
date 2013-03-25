@@ -29,11 +29,12 @@ nexus.scene.extra           = {}
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 
 local Input                 = Core.require 'src.core.input'
 local Scene                 = Core.require 'src.core.scene'
 
-local NEXUS_KEY             = NEXUS_KEY
+local NEXUS_KEY             = Constants.KEYS
 
 local function enter(instance)
 end

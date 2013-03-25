@@ -27,8 +27,10 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l                     = love
-local lf                    = l.filesystem
+local lf                    = love.filesystem
+local pcall                 = pcall
+local error                 = error
+local tostring              = tostring
 
 return function(path)
     local ok

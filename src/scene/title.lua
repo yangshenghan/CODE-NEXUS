@@ -29,6 +29,7 @@ nexus.scene.title           = {}
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 
 local Data                  = Core.require 'src.core.data'
 local Game                  = Core.require 'src.core.game'
@@ -39,7 +40,7 @@ local Scene                 = Core.require 'src.core.scene'
 local SpriteBase            = Core.require 'src.base.sprite'
 local WindowCommand         = Core.require 'src.window.command'
 
-local NEXUS_KEY             = NEXUS_KEY
+local NEXUS_KEY             = Constants.KEYS
 
 local f_update_coroutine = function(instance, dt, timer)
     local wait = function(microsecond, callback)

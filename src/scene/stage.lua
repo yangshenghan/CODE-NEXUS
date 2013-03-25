@@ -29,6 +29,7 @@ nexus.scene.stage           = {}
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 
 local Data                  = Core.require 'src.core.data'
 local Game                  = Core.require 'src.core.game'
@@ -37,9 +38,9 @@ local Input                 = Core.require 'src.core.input'
 local Scene                 = Core.require 'src.core.scene'
 local Viewport              = Core.require 'src.base.viewport'
 
-local NEXUS_KEY             = NEXUS_KEY
+local NEXUS_KEY             = Constants.KEYS
 
-local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 local function enter(instance)
     local canvas = love.graphics.newCanvas()

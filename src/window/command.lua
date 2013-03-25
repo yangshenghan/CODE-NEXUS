@@ -31,10 +31,11 @@ local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Input                 = Core.require 'src.core.input'
 local WindowBase            = Core.require 'src.base.window'
-local NEXUS_KEY             = NEXUS_KEY
-local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+local NEXUS_KEY             = Constants.KEYS
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

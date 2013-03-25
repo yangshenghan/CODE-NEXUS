@@ -28,13 +28,13 @@ local nexus                 = nexus
 nexus.base.object           = {}
 
 local Nexus                 = nexus
-
+local Constants             = Nexus.constants
 local Systems               = Nexus.systems
 local SystemsParameters     = Systems.parameters
 
 local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
 
-local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 local t_default = {
     create  = NEXUS_EMPTY_FUNCTION,

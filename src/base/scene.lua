@@ -27,7 +27,10 @@ local nexus                 = nexus
 
 nexus.base.scene            = {}
 
-local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+local Nexus                 = nexus
+local Constants             = Nexus.constants
+
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 local t_default             = {
     create                  = NEXUS_EMPTY_FUNCTION,

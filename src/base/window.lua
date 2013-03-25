@@ -29,9 +29,10 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Graphics              = Core.require 'src.core.graphics'
 local Viewport              = Core.require 'src.base.viewport'
-local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

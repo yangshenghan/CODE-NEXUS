@@ -27,6 +27,7 @@ local nexus                 = nexus
 
 nexus.base.sprite           = {}
 local Color                 = require 'src.base.color'
+local Rectangle             = require 'src.base.rectangle'
 
 local function transform_opacity_color(color, opacity)
     if opacity < 0 then opacity = 0 end
@@ -99,6 +100,6 @@ function nexus.base.sprite.new(instance, viewport)
         nexus.base.viewport.addDrawable(instance.viewport, instance)
     end
     instance.color = instance.color or Color.new(255, 255, 255, 255)
-    instance.rectangle = instance.rectangle or nexus.base.rectangle.new()
+    instance.rectangle = instance.rectangle or Rectangle.new()
     return instance 
 end

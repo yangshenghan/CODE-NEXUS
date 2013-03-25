@@ -23,20 +23,33 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.base.rectangle        = {}
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Rectangle             = {
+    x                       = 0,
+    y                       = 0,
+    width                   = 0,
+    height                  = 0
+}
 
-function nexus.base.rectangle.empty(instance)
-    instance.x = 0
-    instance.y = 0
-    instance.width = 0
-    instance.height = 0
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function Rectangle.new(x, y, width, height)
+    local instance = setmetatable({}, { __index = Rectangle })
+    instance.set(instance, x, y, width, height)
+    return instance
 end
 
-function nexus.base.rectangle.set(instance, ...)
+function Rectangle.get(instance)
+    return instance.x, instance.y, instance.width, instance.height
+end
+
+function Rectangle.set(instance, ...)
     if ... == nil then
-        nexus.base.rectangle.empty(instance)
+        instance.empty(instance)
     elseif type(...) == 'table' then
         local xywh = ...
         instance.x = xywh.x or xywh[1] or 0
@@ -53,10 +66,11 @@ function nexus.base.rectangle.set(instance, ...)
     return instance
 end
 
-function nexus.base.rectangle.get(instance)
-    return instance.x, instance.y, instance.width, instance.height
+function Rectangle.empty(instance)
+    instance.x = 0
+    instance.y = 0
+    instance.width = 0
+    instance.height = 0
 end
 
-function nexus.base.rectangle.new(...)
-    return nexus.base.rectangle.set({}, ...)
-end
+return Rectangle

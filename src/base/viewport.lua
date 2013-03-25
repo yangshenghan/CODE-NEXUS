@@ -29,6 +29,7 @@ nexus.base.viewport         = {}
 
 local require               = require
 local Graphics              = require 'src.core.graphics'
+local Rectangle             = require 'src.base.rectangle'
 
 local function drawable_zorder_sorter(a, b)
     return a.z < b.z
@@ -59,10 +60,7 @@ function nexus.base.viewport.update(instance, dt)
 end
 
 function nexus.base.viewport.render(instance)
-    local w = instance.rectangle.width
-    local h = instance.rectangle.height
-    local u = instance.rectangle.x
-    local v = instance.rectangle.y
+    local u, v, w, h = Rectangle.get(instance.rectangle)
     table.sort(instance.drawables, drawable_zorder_sorter)
 
     love.graphics.push()
@@ -82,13 +80,13 @@ end
 function nexus.base.viewport.new(...)
     local instance = {}
     if ... == nil then
-        instance.rectangle = nexus.base.rectangle.new(0, 0, Graphics.getScreenWidth(), Graphics.getScreenHeight())
+        instance.rectangle = Rectangle.new(0, 0, Graphics.getScreenWidth(), Graphics.getScreenHeight())
     elseif type(...) == 'table' then
         local args = ...
-        instance.rectangle = args.rectangle or nexus.base.rectangle.new(args.x or 0, args.y or 0, args.width or Graphics.getScreenWidth(), args.height or Graphics.getScreenHeight())
+        instance.rectangle = args.rectangle or Rectangle.new(args.x or 0, args.y or 0, args.width or Graphics.getScreenWidth(), args.height or Graphics.getScreenHeight())
     else
         local x, y, width, height = unpack({...})
-        instance.rectangle = nexus.base.rectangle.new(x, y, width, height)
+        instance.rectangle = Rectangle.new(x, y, width, height)
     end
 
     instance.z = 0

@@ -30,20 +30,20 @@
 local l                     = love
 local le                    = l.event
 local lg                    = l.graphics
-local require               = require
 
 local Nexus                 = nexus
+local Core                  = Nexus.core
 local Systems               = Nexus.systems
 local SystemsVersion        = Systems.version
 local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local OptionConfigures      = Configures.options
 
-local Data                  = require 'src.core.data'
-local Graphics              = require 'src.core.graphics'
-local Scene                 = require 'src.core.scene'
+local Data                  = Core.require 'src.core.data'
+local Graphics              = Core.require 'src.core.graphics'
+local Scene                 = Core.require 'src.core.scene'
 
-local Player                = require 'src.game.player'
+local Player                = Core.require 'src.game.player'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

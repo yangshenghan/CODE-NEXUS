@@ -23,7 +23,6 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.core.graphics         = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
@@ -32,24 +31,23 @@ local l                     = love
 local le                    = l.event
 local lt                    = l.timer
 local lg                    = l.graphics
-local require               = require
 
 local Nexus                 = nexus
+local Core                  = Nexus.core
 local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
-local Base                  = Nexus.base
 
-local Data                  = require 'src.core.data'
--- local Resource              = require 'src.core.resource'
-local Scene                 = require 'src.core.scene'
+local Data                  = Core.require 'src.core.data'
+-- local Resource              = Core.require 'src.core.resource'
+local Scene                 = Core.require 'src.core.scene'
 
-local Viewport              = Base.viewport or require 'src.base.viewport'
+local Viewport              = require 'src.base.viewport'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Graphics              = nexus.core.graphics
+local Graphics              = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --

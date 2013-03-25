@@ -23,30 +23,27 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.window.command        = {
-    size                    = 0,
-    cursor                  = 1,
-    commands                = {}
-}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local l                     = love
 local lg                    = l.graphics
-local require               = require
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Base                  = Nexus.base
-local Input                 = Core.input or require 'src.core.input'
-local WindowBase            = Base.window or require 'src.base.window'
+local Input                 = Core.require 'src.core.input'
+local WindowBase            = Core.require 'src.base.window'
 local NEXUS_KEY             = NEXUS_KEY
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local WindowCommand         = nexus.window.command 
+local WindowCommand         = {
+    size                    = 0,
+    cursor                  = 1,
+    commands                = {}
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --

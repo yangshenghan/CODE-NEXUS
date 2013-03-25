@@ -27,9 +27,9 @@ local nexus                 = nexus
 
 nexus.scene.continue        = {}
 
-local require               = require
-
-local Input                 = require 'src.core.input'
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Input                 = Core.require 'src.core.input'
 
 local NEXUS_KEY             = NEXUS_KEY
 

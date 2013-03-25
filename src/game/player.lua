@@ -27,15 +27,14 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local require               = require
-
 local Nexus                 = nexus
+local Core                  = Nexus.core
 local Systems               = Nexus.systems
 local SystemsParameters     = Systems.parameters
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
-local Data                  = require 'src.core.data'
+local Data                  = Core.require 'src.core.data'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

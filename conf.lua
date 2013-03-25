@@ -55,6 +55,8 @@ NEXUS_KEY = {
     F8          = 'f8'
 }
 
+NEXUS_EMPTY_TABLE = {}
+
 NEXUS_EMPTY_FUNCTION = function(...) end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -62,12 +64,9 @@ NEXUS_EMPTY_FUNCTION = function(...) end
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
     base                    = {},
-    core                    = {},
-    game                    = {},
     scene                   = {},
-    sprite                  = {},
-    system                  = {},
-    window                  = {},
+
+    core                    = {},
     systems                 = {  -- these should not be changed at runtime.
         version             = {
             major           = '0',
@@ -148,6 +147,19 @@ nexus = {
 -- \ ---------------------------------------------------------------------- / --
 local nexus                 = nexus
 local require               = require
+local setmetatable          = setmetatable
+local t_loaded_modules      = {}
+
+function nexus.core.require(name)
+    if not t_loaded_modules[name] then
+        t_loaded_modules[name] = {}
+        do
+            local data = require(name)
+            setmetatable(t_loaded_modules[name], { __index = data })
+        end
+    end
+    return t_loaded_modules[name]
+end
 
 function love.conf(game)
     local identity  = nexus.systems.paths.identity

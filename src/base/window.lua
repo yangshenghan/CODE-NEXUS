@@ -27,9 +27,10 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local require               = require
-local Graphics              = require 'src.core.graphics'
-local Viewport              = require 'src.base.viewport'
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Graphics              = Core.require 'src.core.graphics'
+local Viewport              = Core.require 'src.base.viewport'
 local NEXUS_EMPTY_FUNCTION  = NEXUS_EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --

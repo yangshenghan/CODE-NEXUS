@@ -27,10 +27,11 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local require               = require
-local Color                 = require 'src.base.color'
-local Rectangle             = require 'src.base.rectangle'
-local Viewport              = require 'src.base.viewport'
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Color                 = Core.require 'src.base.color'
+local Rectangle             = Core.require 'src.base.rectangle'
+local Viewport              = Core.require 'src.base.viewport'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

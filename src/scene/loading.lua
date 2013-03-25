@@ -27,10 +27,11 @@ local nexus                 = nexus
 
 nexus.scene.loading         = {}
 
-local require               = require
+local Nexus                 = nexus
+local Core                  = Nexus.core
 
-local Scene                 = require 'src.core.scene'
-local WindowProgressBar     = require 'src.window.progressbar'
+local Scene                 = Core.require 'src.core.scene'
+local WindowProgressBar     = Core.require 'src.window.progressbar'
 
 local function enter(instance)
     instance.scene.loading = instance

@@ -27,16 +27,17 @@ local nexus                 = nexus
 
 nexus.scene.title           = {}
 
-local require               = require
+local Nexus                 = nexus
+local Core                  = Nexus.core
 
-local Data                  = require 'src.core.data'
-local Game                  = require 'src.core.game'
-local Graphics              = require 'src.core.graphics'
-local Input                 = require 'src.core.input'
-local Resource              = require 'src.core.resource'
-local Scene                 = require 'src.core.scene'
-local SpriteBase            = require 'src.base.sprite'
-local WindowCommand         = require 'src.window.command'
+local Data                  = Core.require 'src.core.data'
+local Game                  = Core.require 'src.core.game'
+local Graphics              = Core.require 'src.core.graphics'
+local Input                 = Core.require 'src.core.input'
+local Resource              = Core.require 'src.core.resource'
+local Scene                 = Core.require 'src.core.scene'
+local SpriteBase            = Core.require 'src.base.sprite'
+local WindowCommand         = Core.require 'src.window.command'
 
 local NEXUS_KEY             = NEXUS_KEY
 

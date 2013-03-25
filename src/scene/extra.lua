@@ -27,10 +27,11 @@ local nexus                 = nexus
 
 nexus.scene.extra           = {}
 
-local require               = require
+local Nexus                 = nexus
+local Core                  = Nexus.core
 
-local Input                 = require 'src.core.input'
-local Scene                 = require 'src.core.scene'
+local Input                 = Core.require 'src.core.input'
+local Scene                 = Core.require 'src.core.scene'
 
 local NEXUS_KEY             = NEXUS_KEY
 

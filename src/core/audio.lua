@@ -29,9 +29,10 @@
 -- \ ---------------------------------------------------------------------- / --
 local l                     = love
 local la                    = l.audio
-local require               = require
 
-local Resource              = require 'src.core.resource'
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Resource              = Core.require 'src.core.resource'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

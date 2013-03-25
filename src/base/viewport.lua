@@ -23,27 +23,25 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-nexus.base.viewport         = {
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Graphics              = Core.require 'src.core.graphics'
+local Rectangle             = Core.require 'src.base.rectangle'
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Viewport              = {
     drawables               = nil,
     visible                 = true,
     ox                      = 0,
     oy                      = 0,
     z                       = 0
 }
-
--- / ---------------------------------------------------------------------- \ --
--- | Import modules                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local require               = require
-local Nexus                 = nexus
-local Core                  = Nexus.core
-local Graphics              = Core.graphics or require 'src.core.graphics'
-local Rectangle             = require 'src.base.rectangle'
-
--- / ---------------------------------------------------------------------- \ --
--- | Declare object                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local Viewport              = nexus.base.viewport
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --

@@ -30,11 +30,8 @@ nexus.base.object           = {}
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Systems               = Nexus.systems
-local SystemsParameters     = Systems.parameters
 local SceneStage            = Core.import 'nexus.scene.stage'
-local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
-
+local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 local t_default = {

@@ -28,8 +28,9 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
-local Systems               = Nexus.systems
-local SystemsDefaults       = Systems.defaults
+local Constants             = Nexus.constants
+local FALLBACK_WIDTH        = Constants.FALLBACK_WIDTH
+local FALLBACK_HEIGHT       = Constants.FALLBACK_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

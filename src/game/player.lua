@@ -29,8 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Systems               = Nexus.systems
-local SystemsParameters     = Systems.parameters
+local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
@@ -44,7 +43,7 @@ local Player                = {}
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local LOGICAL_GRID_SIZE     = SystemsParameters.logical_grid_size
+local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --

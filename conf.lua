@@ -73,7 +73,12 @@ nexus = {
             F7              = 'f7',
             F8              = 'f8'
         },
-        EMPTY_FUNCTION      = function(...) end
+        EMPTY_FUNCTION      = function(...) end,
+        SAVING_SLOT_SIZE    = 15,
+        LOGICAL_GRID_SIZE   = 16,
+        CONFIGURE_IDENTIFIER= 'configure',
+        FALLBACK_WIDTH      = 640,
+        FALLBACK_HEIGHT     = 360
     },
     systems                 = {  -- these should not be changed at runtime.
         version             = {
@@ -86,21 +91,8 @@ nexus = {
             stage           = 'Development',
         },
         paths               = {
-            identity        = 'code-nexus',
             configure       = 'config.dat',
             saving          = 'save-%02d.sav'
-        },
-        defaults            = {
-            width           = 640,
-            height          = 360,
-            fullscreen      = false
-        },
-        parameters          = {
-            saving_slot_size        = 15,
-            logical_grid_size       = 16,
-            logical_canvas_width    = 1280,
-            logical_canvas_height   = 720,
-            configure_identifier    = 'configure'
         },
         debug               = true,
         firstrun            = false,
@@ -155,12 +147,11 @@ nexus = {
 -- \ ---------------------------------------------------------------------- / --
 function love.conf(game)
     local nexus = nexus
-    local identity = nexus.systems.paths.identity
     local filename = nexus.systems.paths.configure
 
-    love.filesystem.setIdentity(identity)
+    love.filesystem.setIdentity('code-nexus')
     if not nexus.core.exists(filename) then
-        nexus.core.save(filename, nexus.configures, nexus.systems.parameters.configure_identifier)
+        nexus.core.save(filename, nexus.configures, nexus.constants.CONFIGURE_IDENTIFIER)
         nexus.systems.firstrun = true
     end
     nexus.configures = nexus.core.read(filename)
@@ -176,9 +167,8 @@ function love.conf(game)
 
     game.modules.physics = false
 
-    game.screen.width = nexus.systems.defaults.width
-    game.screen.height = nexus.systems.defaults.height
-    game.screen.fullscreen = nexus.systems.defaults.fullscreen
+    game.screen.width = nexus.constants.FALLBACK_WIDTH
+    game.screen.height = nexus.constants.FALLBACK_HEIGHT
 
     if nexus.configures.graphics then
         game.screen.width = nexus.configures.graphics.width

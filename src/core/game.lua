@@ -175,10 +175,6 @@ function Game.setup()
     }
 
     on_start_game()
-    -- $game_party.setup_starting_members
-    -- $game_map.setup($data_system.start_map_id)
-    -- $game_player.moveto($data_system.start_x, $data_system.start_y)
-    -- $game_player.refresh
 end
 
 function Game.load(index)

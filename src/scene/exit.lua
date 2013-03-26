@@ -30,6 +30,7 @@
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Game                  = Core.import 'nexus.core.game'
+local SceneBase             = Core.import 'nexus.scene.base'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -45,7 +46,7 @@ function SceneExit.new()
 end
 
 function SceneExit.enter(instance)
-    Game.quit()
+    Game.exit()
 end
 
 function SceneExit.leave(instance)

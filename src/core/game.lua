@@ -45,7 +45,7 @@ local Scene                 = Core.import 'nexus.core.scene'
 local GamePlayer            = Core.import 'nexus.game.player'
 local SceneTitle            = Core.import 'nexus.scene.title'
 local SceneConsole          = Core.import 'nexus.scene.console'
-local SceneError            = Core.import 'nexus.scene.error'
+local SceneExit             = Core.import 'nexus.scene.exit'
 local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
@@ -100,6 +100,22 @@ local function adjust_screen_mode()
     end
 end
 
+local function check_game_requirement()
+    if not Configures then
+        error('You configure file is corrupted or an error occurred while loading!')
+    end
+
+    if not lg.isSupported('canvas') then
+        error('Your graphics card is not supported to use hardware texture render.')
+    end
+
+    if Systems.firstrun then
+        adjust_screen_mode()
+    end
+
+    return true
+end
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
@@ -125,14 +141,16 @@ end
 
 function Game.start()
     Data.loadTextData(OptionConfigures.language)
-    if Configures and not Systems.error and lg.isSupported('canvas') then
-        if Systems.firstrun then adjust_screen_mode() end
+
+    if check_game_requirement() then
         Scene.goto(SceneTitle.new(m_loaded))
-        if Systems.debug and Settings.console then Scene.enter(SceneConsole.new()) end
-        m_loaded = true
-    else
-        Scene.goto(SceneError.new(Data.getTranslatedText(Systems.error)))
+
+        if Systems.debug and Settings.console then
+            Scene.enter(SceneConsole.new())
+        end
     end
+
+    m_loaded = true
 end
 
 function Game.terminate()
@@ -199,7 +217,11 @@ function Game.reload()
 end
 
 function Game.quit()
-    le.push('quit')
+    Scene.enter(SceneExit.new())
+end
+
+function Game.exit()
+    le.push('exit')
 end
 
 function Game.getVersionString()

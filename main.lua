@@ -28,13 +28,23 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local l                     = love
+local la                    = l.audio
 local le                    = l.event
-local lt                    = l.timer
 local lg                    = l.graphics
+local lk                    = l.keyboard
+local lt                    = l.timer
+local os                    = os
+local math                  = math
+local debug                 = debug
+local table                 = table
+local pcall                 = pcall
+local print                 = print
+local string                = string
+local tostring              = tostring
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
-
+local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
@@ -45,6 +55,8 @@ local Graphics              = Core.import 'nexus.core.graphics'
 local Input                 = Core.import 'nexus.core.input'
 local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
+local FALLBACK_WIDTH        = Constants.FALLBACK_WIDTH
+local FALLBACK_HEIGHT       = Constants.FALLBACK_HEIGHT
 
 require 'src.base.object'
 
@@ -86,6 +98,9 @@ local HANDLERS              = {
         m_fps = 1 / framerate
     end,
     quit                    = function()
+        Game.quit()
+    end,
+    exit                    = function()
         m_running = false
     end
 }
@@ -93,58 +108,154 @@ local HANDLERS              = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Execution section                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-function love.run()
-    local dt = 0
+local function initialize()
+    m_running = true
+    m_loading = false
 
+    Audio.initialize()
+    Data.initialize()
+    Game.initialize()
+    Graphics.initialize()
+    Input.initialize()
+    Resource.initialize()
+    Scene.initialize()
+
+    Game.start()
+end
+
+local function finalize()
+    Game.terminate()
+
+    Scene.finalize()
+    Resource.finalize()
+    Input.finalize()
+    Graphics.finalize()
+    Game.finalize()
+    Data.finalize()
+    Audio.finalize()
+
+    m_running = false
+    m_loading = false
+end
+
+local function process()
+    le.pump()
+    for e, a, b, c, d in le.poll() do
+        local handler = HANDLERS[e]
+        if handler then handler(a, b, c, d) end
+    end
+    lt.step()
+end
+
+local function update(dt)
+    Audio.update(dt)
+    Game.update(dt)
+    Graphics.update(dt)
+    Input.update(dt)
+    Scene.update(dt)
+end
+
+local function render()
+    lg.clear()
+    Game.render()
+    Graphics.render()
+    Scene.render()
+    lg.present()
+
+    if not GraphicsConfigures.vsync then lt.sleep(m_fps) end
+end
+
+function l.errhand(message, layer)
+    local errors = {}
+    local trace = debug.traceback(tostring(message) .. '\n\n', 1 + (layer or 1))
+
+    table.insert(errors, 'Error:\n')
+
+    for line in string.gmatch(trace, '(.-)\n') do
+        if not string.match(line, 'boot.lua') then
+            line = string.gsub(line, 'stack traceback:', 'Traceback:\n')
+            table.insert(errors, line)
+        end
+    end
+
+    message = table.concat(errors, '\n')
+    message = string.gsub(message, '\t', '')
+    message = string.gsub(message, '%[string "(.-)"%]', '%1')
+
+    print(message)
+
+    if lg.isCreated() then
+        local event
+
+        la.stop()
+        le.clear()
+        lg.reset()
+        lk.setKeyRepeat(0)
+        lt.step()
+
+        lg.setFont(lg.newFont(14))
+        lg.setBackgroundColor(89, 157, 220)
+        lg.setColor(255, 255, 255, 255)
+
+        while true do
+            lg.clear()
+            lg.printf(message, 70, 70, lg.getWidth() - 140)
+            lg.present()
+
+            event, _, _, _ = le.wait()
+            if event == 'quit' or event == 'keypressed' then return end
+        end
+    end
+end
+
+function l.releaseerrhand(message, layer)
+    local message = string.format(Data.getTranslatedText('An error has occured that caused %s to stop.\nYou can notify %s about this at %s.'), l._release.title, l._release.author, l._release.url)
+
+    print(message)
+
+    if lg.isCreated() then
+        local event
+        local version = string.format(Data.getTranslatedText('LÖVE %s (%s) on %s.'), l._version, l._version_codename, l._os)
+        local font = lg.newFont(14)
+
+        lg.setCanvas()
+        lg.setShader()
+        lg.setMode(FALLBACK_WIDTH, FALLBACK_HEIGHT, false)
+
+        la.stop()
+        le.clear()
+        lg.reset()
+        lk.setKeyRepeat(0)
+        lt.step()
+
+        lg.setFont(font)
+        lg.setBackgroundColor(89, 157, 220)
+        lg.setColor(255, 255, 255, 255)
+
+        while true do
+            lg.clear()
+            lg.printf(message, 30, 30, lg.getWidth() - 60)
+            lg.printf(version, 30, lg.getHeight() - 30, lg.getWidth() - 60, 'right')
+            lg.present()
+
+            event, _, _, _ = le.wait()
+            if event == 'quit' or event == 'keypressed' then return end
+        end
+    end
+end
+
+function l.run()
     math.randomseed(os.time())
     math.random()
     math.random()
 
     while m_loading do
-        m_running = true
-        m_loading = false
-
-        Audio.initialize()
-        Data.initialize()
-        Game.initialize()
-        Graphics.initialize()
-        Input.initialize()
-        Resource.initialize()
-        Scene.initialize()
-
-        Game.start()
+        initialize()
         while m_running do
-            le.pump()
-            for e, a, b, c, d in le.poll() do
-                local handler = HANDLERS[e]
-                if handler then handler(a, b, c, d) end
-            end
-
-            lt.step()
-            dt = lt.getDelta()
-
-            Audio.update(dt)
-            Game.update(dt)
-            Graphics.update(dt)
-            Input.update(dt)
-            Scene.update(dt)
-
-            lg.clear()
-            Game.render()
-            Graphics.render()
-            Scene.render()
-            lg.present()
-
-            if not GraphicsConfigures.vsync then lt.sleep(m_fps) end
+            process()
+            update(lt.getDelta())
+            render()
         end
-        Game.terminate()
-
-        Scene.finalize()
-        Resource.finalize()
-        Input.finalize()
-        Graphics.finalize()
-        Game.finalize()
-        Data.finalize()
-        Audio.finalize()
+        finalize()
     end
 end

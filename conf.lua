@@ -87,15 +87,14 @@ nexus = {
             patch           = '0',
             build           = '0',
             stamp           = '20130315',
-            stage           = 'Development',
+            stage           = 'Development'
         },
         paths               = {
             configure       = 'config.dat',
             saving          = 'save-%02d.sav'
         },
         debug               = true,
-        firstrun            = false,
-        error               = nil
+        firstrun            = false
     },
     settings                = {
         showfps             = true,

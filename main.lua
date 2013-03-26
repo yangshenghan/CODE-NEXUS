@@ -107,9 +107,6 @@ local HANDLERS              = {
 -- | Execution section                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function initialize()
-    m_running = true
-    m_loading = false
-
     Audio.initialize()
     Data.initialize()
     Game.initialize()
@@ -131,9 +128,6 @@ local function finalize()
     Game.finalize()
     Data.finalize()
     Audio.finalize()
-
-    m_running = false
-    m_loading = false
 end
 
 local function process()
@@ -248,6 +242,9 @@ function l.run()
     math.random()
 
     while m_loading do
+        m_running = true
+        m_loading = false
+
         initialize()
         while m_running do
             process()

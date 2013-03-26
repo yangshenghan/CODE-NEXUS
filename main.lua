@@ -58,8 +58,6 @@ local Scene                 = Core.import 'nexus.core.scene'
 local FALLBACK_WIDTH        = Constants.FALLBACK_WIDTH
 local FALLBACK_HEIGHT       = Constants.FALLBACK_HEIGHT
 
-require 'src.base.object'
-
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --

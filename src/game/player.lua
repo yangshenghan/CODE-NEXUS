@@ -32,30 +32,26 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
-
 local Data                  = Core.import 'nexus.core.data'
+local GameObject            = Core.import 'nexus.game.object'
+local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Player                = {}
-
--- / ---------------------------------------------------------------------- \ --
--- | Local variables                                                        | --
--- \ ---------------------------------------------------------------------- / --
-local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
+local GamePlayer            = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function Player.new()
-    local instance = nexus.base.object.new(setmetatable(Player, {}))
+function GamePlayer.new()
+    local instance = GameObject.new(setmetatable(GamePlayer, {}))
     instance.object = Data.loadObjectData('player')
-    nexus.base.object.move(instance, 10, 10)
+    GameObject.move(instance, 10, 10)
     return instance
 end
 
-function Player.update(instance, dt)
+function GamePlayer.update(instance, dt)
     if instance.object.rushing then
         coroutine.resume(instance.object.rushing, dt)
     end
@@ -69,11 +65,12 @@ function Player.update(instance, dt)
     end
 end
 
-function Player.render(instance)
+function GamePlayer.render(instance)
     love.graphics.setColor(193, 47, 14)
     love.graphics.circle('fill', instance.object.rx, GraphicsConfigures.height - instance.object.ry, LOGICAL_GRID_SIZE / 2)
 end
-function Player.rush(instance)
+
+function GamePlayer.rush(instance)
     if not instance.object.rushing then
         instance.object.rushing = coroutine.create(function(dt)
             instance.object.rushing = nil
@@ -81,7 +78,7 @@ function Player.rush(instance)
     end
 end
 
-function Player.jump(instance)
+function GamePlayer.jump(instance)
     if not instance.object.jumping then
         instance.object.jumping = coroutine.create(function(dt)
             while instance.object.ry < (instance.object.y + 4) * LOGICAL_GRID_SIZE do
@@ -97,7 +94,7 @@ function Player.jump(instance)
     end
 end
 
-function Player.attack(instance)
+function GamePlayer.attack(instance)
     if not instance.object.attacking then
         instance.object.attacking = coroutine.create(function(dt)
             instance.object.attacking = nil
@@ -105,20 +102,20 @@ function Player.attack(instance)
     end
 end
 
-function Player.up(instance)
-    nexus.base.object.move(instance, false, instance.object.y + 1)
+function GamePlayer.up(instance)
+    GameObject.move(instance, false, instance.object.y + 1)
 end
 
-function Player.right(instance)
-    nexus.base.object.move(instance, instance.object.x + 1, false)
+function GamePlayer.right(instance)
+    GameObject.move(instance, instance.object.x + 1, false)
 end
 
-function Player.down(instance)
-    nexus.base.object.move(instance, false, instance.object.y - 1)
+function GamePlayer.down(instance)
+    GameObject.move(instance, false, instance.object.y - 1)
 end
 
-function Player.left(instance)
-    nexus.base.object.move(instance, instance.object.x - 1, false)
+function GamePlayer.left(instance)
+    GameObject.move(instance, instance.object.x - 1, false)
 end
 
-return Player
+return GamePlayer

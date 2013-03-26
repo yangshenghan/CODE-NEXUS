@@ -23,33 +23,39 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
-nexus.base.object           = {}
-
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
+local Configures            = Nexus.configures
 local SceneStage            = Core.import 'nexus.scene.stage'
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
-local t_default = {
-    create  = NEXUS_EMPTY_FUNCTION,
-    delete  = NEXUS_EMPTY_FUNCTION,
-    update  = NEXUS_EMPTY_FUNCTION,
-    render  = NEXUS_EMPTY_FUNCTION,
-    object  = {
-        x           = 0,    -- logical x position
-        y           = 0,    -- logical y position
-        rx          = 0,    -- real x position (logical x * LOGICAL_GRID_SIZE)
-        ry          = 0     -- real y potition (logical y * LOGICAL_GRID_SIZE)
-    },
-    x       = 0,
-    y       = 0
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local GameObject            = {
+    update                  = NEXUS_EMPTY_FUNCTION,
+    render                  = NEXUS_EMPTY_FUNCTION,
+    x                       = 0, -- logical x position
+    y                       = 0, -- logical y position
+    rx                      = 0, -- real x position (logical x * LOGICAL_GRID_SIZE)
+    ry                      = 0  -- real y potition (logical y * LOGICAL_GRID_SIZE)
 }
 
-function nexus.base.object.move(instance, x, y)
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function GameObject.new(derive)
+    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject }) })
+    return instance
+end
+
+function GameObject.move(instance, x, y)
     if x then
         instance.object.x = x
         instance.object.rx = x * LOGICAL_GRID_SIZE
@@ -60,21 +66,17 @@ function nexus.base.object.move(instance, x, y)
     end
 end
 
-function nexus.base.object.isMoving(instance)
+function GameObject.isMoving(instance)
     if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
     if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
     return false
 end
 
-function nexus.base.object.isPassable(instance, x, y)
+function GameObject.isPassable(instance, x, y)
     local stage = SceneStage.getCurrentStage()
     if x < 0 or y < 0 then return false end
     if x > stage.width / LOGICAL_GRID_SIZE or y > stage.height / LOGICAL_GRID_SIZE then return false end
     return true
 end
 
-function nexus.base.object.new(instance)
-    instance = table.merge(t_default, instance)
-    instance.create(instance)
-    return instance
-end
+return GameObject

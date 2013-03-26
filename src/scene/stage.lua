@@ -38,6 +38,7 @@ local Graphics              = Core.import 'nexus.core.graphics'
 local Input                 = Core.import 'nexus.core.input'
 local Scene                 = Core.import 'nexus.core.scene'
 local Viewport              = Core.import 'nexus.base.viewport'
+local GameObject            = Core.import 'nexus.game.object'
 local SceneBase             = Core.import 'nexus.scene.base'
 local SceneLoading          = Core.import 'nexus.scene.loading'
 local NEXUS_KEY             = Constants.KEYS
@@ -126,8 +127,6 @@ function SceneStage.enter(instance)
 end
 
 function SceneStage.leave(instance)
-    instance.player.delete(instance.player)
-
     for _, viewport in pairs(instance.viewports) do
         Viewport.dispose(viewport)
     end
@@ -155,19 +154,19 @@ function SceneStage.update(instance, dt)
         instance.player.attack(instance.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.LEFT) and nexus.base.object.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
+    if Input.isKeyDown(NEXUS_KEY.LEFT) and GameObject.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
         instance.player.left(instance.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.RIGHT) and nexus.base.object.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
+    if Input.isKeyDown(NEXUS_KEY.RIGHT) and GameObject.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
         instance.player.right(instance.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.UP) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
+    if Input.isKeyDown(NEXUS_KEY.UP) and GameObject.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
         instance.player.up(instance.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.DOWN) and nexus.base.object.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
+    if Input.isKeyDown(NEXUS_KEY.DOWN) and GameObject.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
         instance.player.down(instance.player)
     end
 

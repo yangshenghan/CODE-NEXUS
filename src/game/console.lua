@@ -122,7 +122,7 @@ function GameConsoleInput.initialize(executer)
         m_cursor = #m_commandline + 1
     end
 
-	t_hooks['tab'] = function()
+    t_hooks['tab'] = function()
         if f_autocomplete then
             return f_autocomplete()
         end
@@ -214,13 +214,17 @@ function GameConsoleInput.position()
     return m_cursor - #m_commandline - 1
 end
 
-function GameConsoleInput.push(key, code)
+function GameConsoleInput.push(key)
     if t_hooks[key] then
         t_hooks[key]()
-    elseif code > 31 and code < 256 then
-        table.insert(m_commandline, m_cursor, string.char(code))
+    else
+        table.insert(m_commandline, m_cursor, key)
         m_cursor = m_cursor + 1
     end
+end
+
+function GameConsoleInput.getInputHistory()
+    return t_history
 end
 
 -- / ---------------------------------------------------------------------- \ --

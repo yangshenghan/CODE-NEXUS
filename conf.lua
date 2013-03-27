@@ -33,8 +33,6 @@ local require               = require
 -- | Construction of the nexus table                                        | --
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
-    base                    = {},
-
     core                    = {
         read                = require 'src.system.read',
         save                = require 'src.system.save',
@@ -72,34 +70,27 @@ nexus = {
             F7              = 'f7',
             F8              = 'f8'
         },
+        VERSION             = {
+            MAJOR           = '0',
+            MINOR           = '2',
+            MICRO           = '0',
+            PATCH           = '0',
+            BUILD           = '0',
+            STAMP           = '20130315',
+            STAGE           = 'Development'
+        },
+        PATHS               = {
+            CONFIGURE       = 'config.dat',
+            SAVING          = 'save-%02d.sav'
+        },
+        DEBUG_MODE          = true,
+        FIRST_RUN           = false,
         EMPTY_FUNCTION      = function(...) end,
         SAVING_SLOT_SIZE    = 15,
         LOGICAL_GRID_SIZE   = 16,
         CONFIGURE_IDENTIFIER= 'configure',
         FALLBACK_WIDTH      = 640,
         FALLBACK_HEIGHT     = 360
-    },
-    systems                 = {  -- these should not be changed at runtime.
-        version             = {
-            major           = '0',
-            minor           = '2',
-            micro           = '0',
-            patch           = '0',
-            build           = '0',
-            stamp           = '20130315',
-            stage           = 'Development'
-        },
-        paths               = {
-            configure       = 'config.dat',
-            saving          = 'save-%02d.sav'
-        },
-        debug               = true,
-        firstrun            = false
-    },
-    settings                = {
-        showfps             = true,
-        console             = false,
-        level               = 5
     },
     configures              = {
         audios              = {
@@ -147,23 +138,26 @@ function love.conf(game)
     require 'bootstrap'
 
     local nexus = nexus
-    local filename = nexus.systems.paths.configure
+    local version = nexus.constants.VERSION
+    local debugmode = nexus.constants.DEBUG_MODE
+    local filename = nexus.constants.PATHS.CONFIGURE
+    local identifier = nexus.constants.CONFIGURE_IDENTIFIER
 
     love.filesystem.setIdentity('code-nexus')
     if not nexus.core.exists(filename) then
-        nexus.core.save(filename, nexus.configures, nexus.constants.CONFIGURE_IDENTIFIER)
-        nexus.systems.firstrun = true
+        nexus.core.save(filename, nexus.configures, identifier)
+        nexus.constants.FIRST_RUN = true
     end
     nexus.configures = nexus.core.read(filename)
 
-    game.title = 'CODE NEXUS'
-    if nexus.systems.debug then
-        game.title = 'CODE NEXUS ' .. nexus.systems.version.stage .. ' (Build ' .. nexus.systems.version.build .. ' - ' .. nexus.systems.version.stamp .. ')'
+    game.title = 'filename'
+    if debugmode then
+        game.title = 'CODE NEXUS ' .. version.STAGE .. ' (Build ' .. version.BUILD .. ' - ' .. version.STAMP .. ')'
     end
     game.author = 'Yang Sheng Han'
     game.url = 'http://yangshenghan.twbbs.org'
     game.version = '0.8.0'
-    game.release = not nexus.systems.debug
+    game.release = not debugmode
 
     game.modules.physics = false
 

@@ -33,20 +33,18 @@ local lg                    = l.graphics
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Systems               = Nexus.systems
-local SystemsVersion        = Systems.version
-local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local Constants             = Nexus.constants
 local OptionConfigures      = Configures.options
 local Data                  = Core.import 'nexus.core.data'
 local Graphics              = Core.import 'nexus.core.graphics'
 local Scene                 = Core.import 'nexus.core.scene'
+local GameConsole           = Core.import 'nexus.game.console'
 local GamePlayer            = Core.import 'nexus.game.player'
 local SceneTitle            = Core.import 'nexus.scene.title'
-local SceneConsole          = Core.import 'nexus.scene.console'
 local SceneExit             = Core.import 'nexus.scene.exit'
-local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
+local NEXUS_FIRST_RUN       = Constants.FIRST_RUN
+local NEXUS_VERSION         = Constants.VERSION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -62,10 +60,12 @@ local t_saving_data         = nil
 
 local t_game_objects        = nil
 
-local MAJOR                 = SystemsVersion.major
-local MINOR                 = SystemsVersion.minor
-local MICRO                 = SystemsVersion.micro
-local PATCH                 = SystemsVersion.patch
+local MAJOR                 = NEXUS_VERSION.MAJOR
+local MINOR                 = NEXUS_VERSION.MINOR
+local MICRO                 = NEXUS_VERSION.MICRO
+local PATCH                 = NEXUS_VERSION.PATCH
+local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
+local SAVING_FILENAME       = Constants.PATHS.SAVING
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -109,9 +109,7 @@ local function check_game_requirement()
         error('Your graphics card is not supported to use hardware texture render.')
     end
 
-    if Systems.firstrun then
-        adjust_screen_mode()
-    end
+    if NEXUS_FIRST_RUN then adjust_screen_mode() end
 
     return true
 end
@@ -144,10 +142,6 @@ function Game.start()
 
     if check_game_requirement() then
         Scene.goto(SceneTitle.new(m_loaded))
-
-        if Systems.debug and Settings.console then
-            Scene.enter(SceneConsole.new())
-        end
     end
 
     m_loaded = true
@@ -202,7 +196,7 @@ end
 
 function Game.exists()
     for index = 1, SAVING_SLOT_SIZE do
-        local filename = string.format(Systems.paths.saving, index)
+        local filename = string.format(SAVING_FILENAME, index)
         if Core.exists(filename) then return true end
     end
     return false

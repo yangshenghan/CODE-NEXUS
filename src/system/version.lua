@@ -31,8 +31,8 @@ local m_version             = nil
 
 return function()
     if not m_version then
-        local version = nexus.systems.version
-        m_version = tonumber(version.major) * 2 ^ 24 + tonumber(version.minor) * 2 ^ 16 + tonumber(version.micro) * 2 ^ 8 + tonumber(version.patch)
+        local VERSION = nexus.constants.VERSION
+        m_version = tonumber(VERSION.MAJOR) * 2 ^ 24 + tonumber(VERSION.MINOR) * 2 ^ 16 + tonumber(VERSION.MICRO) * 2 ^ 8 + tonumber(VERSION.PATCH)
     end
     return m_version
 end

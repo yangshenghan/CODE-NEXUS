@@ -34,7 +34,6 @@ local lg                    = l.graphics
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Settings              = Nexus.settings
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
@@ -52,6 +51,8 @@ local Graphics              = {}
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
+local m_showfps             = true
+
 local m_framerate           = 60
 
 local m_framecount          = 0
@@ -102,7 +103,7 @@ function Graphics.reset()
 end
 
 function Graphics.update(dt)
-    if Settings.showfps then
+    if m_showfps then
         local fps = lt.getFPS()
         lg.setCaption(m_caption .. ' - FPS: ' .. fps)
     end
@@ -212,8 +213,8 @@ function Graphics.toggleFullscreen()
 end
 
 function Graphics.toggleFPS()
-    Settings.showfps = not Settings.showfps
-    if not Settings.showfps then lg.setCaption(m_caption) end
+    m_showfps = not m_showfps
+    if not m_showfps then lg.setCaption(m_caption) end
 end
 
 function Graphics.addViewport(viewport)

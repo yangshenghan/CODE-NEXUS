@@ -41,7 +41,7 @@ local KeyboardConfigures    = Configures.keyboards
 local Game                  = Core.import 'nexus.core.game'
 local Graphics              = Core.import 'nexus.core.graphics'
 
-local SceneConsole          = Core.import 'nexus.scene.console'
+local GameConsole           = Core.import 'nexus.game.console'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -138,7 +138,7 @@ function Input.update(dt)
     if lk.isDown('f9') then
         if not m_system_f9 then
             m_system_f9 = true
-            SceneConsole.toggleConsole()
+            GameConsole.toggle()
         end
     else
         m_system_f9 = false
@@ -153,7 +153,7 @@ function Input.update(dt)
         m_system_f12 = false
     end
 
-    if lk.isDown('lalt') or lk.isDown('ralt') then
+    if lk.isDown('lalt', 'ralt') then
         if lk.isDown('f4') then Game.quit() end
         if lk.isDown('return') then Graphics.toggleFullscreen() end
     end

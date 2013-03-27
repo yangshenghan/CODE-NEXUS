@@ -30,6 +30,15 @@
 local l                     = love
 local lg                    = l.graphics
 local lk                    = l.keyboard
+local math                  = math
+local table                 = table
+local pcall                 = pcall
+local pairs                 = pairs
+local ipairs                = ipairs
+local unpack                = unpack
+local string                = string
+local tostring              = tostring
+local coroutine             = coroutine
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
@@ -161,7 +170,7 @@ function GameConsoleInput.initialize(executer)
         for t in string.gmatch(current, '[^%.]+') do
             tables[#tables + 1] = t
         end
-        local pattern = table.concat{'^', (tables[#tables] or ''):gsub('[%[%]%(%)]', function(s) return '%'..s end), '.*'}
+        local pattern = table.concat{'^', string.gsub(tables[#tables] or '', '[%[%]%(%)]', function(s) return '%' .. s end), '.*'}
 
         tables[#tables] = nil
 
@@ -175,8 +184,8 @@ function GameConsoleInput.initialize(executer)
 
         local completions = {}
         for key, val in pairs(search or {}) do
-            if key:match(pattern) then
-                completions[#completions + 1] = {key = key:sub(pattern:len()-2):reverse(), type = type(val)}
+            if string.match(key, pattern) then
+                completions[#completions + 1] = {key = string.reverse(string.sub(key, string.len(pattern) - 2)), type = type(val)}
             end
         end
 
@@ -188,7 +197,7 @@ function GameConsoleInput.initialize(executer)
             while true do
                 for _, c in ipairs(completions) do
                     local advance = #c.key
-                    for char in c.key:gmatch('.') do
+                    for char in string.gmatch(c.key, '.') do
                         table.insert(m_commandline, m_cursor, char)
                     end
                     m_cursor = m_cursor + advance
@@ -290,7 +299,7 @@ function GameConsoleOutput.render(ox, oy, position)
 
     lg.setColor(color[1], color[2], color[3], color[4] / 3)
 
-    position = t_lines[#t_lines]:len() + position - 1
+    position = string.len(t_lines[#t_lines]) + position - 1
     local char_offset = position % m_characters_per_line
     local line_offset = math.floor(position / m_characters_per_line)
 
@@ -306,10 +315,10 @@ end
 function GameConsoleOutput.push(...)
     local str = table.concat{...}
     local added = 0
-    for line in str:gmatch('[^\n]+') do
+    for line in string.gmatch(str, '[^\n]+') do
         while string.len(line) > m_characters_per_line do
-            t_lines[#t_lines + 1] = line:sub(1, m_characters_per_line)
-            line = line:sub(m_characters_per_line+1)
+            t_lines[#t_lines + 1] = string.sub(line, 1, m_characters_per_line)
+            line = string.sub(line, m_characters_per_line+1)
             added = added + 1
         end
         t_lines[#t_lines + 1] = line
@@ -321,7 +330,7 @@ end
 function GameConsoleOutput.pushc(c, ...)
     if not c then return end
     local line = t_lines[#t_lines]
-    if line:len() + 1 < m_characters_per_line then
+    if string.len(line) + 1 < m_characters_per_line then
         line = line .. c
     else
         line = c

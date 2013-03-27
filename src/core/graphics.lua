@@ -225,19 +225,13 @@ function Graphics.removeViewport(viewport)
 end
 
 function Graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
-    width = width or nexus.configures.graphics.width
-    height = height or nexus.configures.graphics.height
-    fullscreen = fullscreen or nexus.configures.graphics.fullscreen
-    vsync = vsync or nexus.configures.graphics.vsync
-    fsaa = fsaa or nexus.configures.graphics.fsaa
+    GraphicsConfigures.width = width or GraphicsConfigures.width
+    GraphicsConfigures.height = height or GraphicsConfigures.height
+    GraphicsConfigures.fullscreen = fullscreen ~= nil and fullscreen or GraphicsConfigures.fullscreen 
+    GraphicsConfigures.vsync = vsync ~= nil and vsync or GraphicsConfigures.vsync 
+    GraphicsConfigures.fsaa = fsaa or GraphicsConfigures.fsaa
 
-    lg.setMode(width, height, fullscreen, vsync, fsaa)
-
-    nexus.configures.graphics.width = width
-    nexus.configures.graphics.height = height
-    nexus.configures.graphics.fillscreen = fullscreen
-    nexus.configures.graphics.vsync = vsync
-    nexus.configures.graphics.fsaa = fsaa
+    lg.setMode(GraphicsConfigures.width, GraphicsConfigures.height, GraphicsConfigures.fullscreen, GraphicsConfigures.vsync, GraphicsConfigures.fsaa)
 
     -- Game.saveGameConfigure()
 end

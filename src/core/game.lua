@@ -157,11 +157,11 @@ function Game.terminate()
 end
 
 -- function Game.changeGameplayConfigures()
-    -- nexus.game.saveGameConfigure()
+    -- Game.saveGameConfigure()
 -- end
 
 -- function Game.saveGameConfigure()
-    -- nexus.core.save(Systems.paths.configure, nexus.configures, nexus.constants.CONFIGURE_IDENTIFIER)
+    -- Core.save(Systems.paths.configure, Configures, Constants.CONFIGURE_IDENTIFIER)
 -- end
 
 function Game.setup()
@@ -203,7 +203,7 @@ end
 function Game.exists()
     for index = 1, SAVING_SLOT_SIZE do
         local filename = string.format(Systems.paths.saving, index)
-        if nexus.core.exists(filename) then return true end
+        if Core.exists(filename) then return true end
     end
     return false
 end

@@ -43,13 +43,13 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Game                  = Core.import 'nexus.core.game'
+local Graphics              = Core.import 'nexus.core.graphics'
 local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 local GameConsole           = Core.import 'nexus.game.console'
 local SceneBase             = Core.import 'nexus.scene.base'
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
-
 local NEXUS_DEBUG_MODE      = Constants.DEBUG_MODE
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | [ The submodule GameConsoleInput of the GameConsole                  ] | --
@@ -79,6 +79,9 @@ local f_executer            = nil
 
 local f_autocomplete        = nil
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
 local function chars(s)
     local t = {}
     for c in string.gmatch(s, '.') do
@@ -95,6 +98,9 @@ function position()
     return m_cursor - #m_commandline - 1
 end
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
 function GameConsoleInput.initialize(executer)
     f_executer = executer or NEXUS_EMPTY_FUNCTION
 
@@ -279,6 +285,9 @@ local m_characters_per_line = 0
 
 local t_lines               = {}
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
 function GameConsoleOutput.initialize(font, width, height, spacing)
     GameConsoleOutput.reset(font, width, height, spacing)
 end
@@ -369,20 +378,20 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GameConsole           = {}
-
-GameConsole.reset = NEXUS_EMPTY_FUNCTION
-GameConsole.print = NEXUS_EMPTY_FUNCTION
-GameConsole.toggle = NEXUS_EMPTY_FUNCTION
-GameConsole.setFilterLevel = NEXUS_EMPTY_FUNCTION
-GameConsole.registerConsoleCommand = NEXUS_EMPTY_FUNCTION
-GameConsole.unregisterConsoleCommand = NEXUS_EMPTY_FUNCTION
-GameConsole.clearRegisteredCommands = NEXUS_EMPTY_FUNCTION
-GameConsole.showErrorMessage = NEXUS_EMPTY_FUNCTION
-GameConsole.showWarningMessage = NEXUS_EMPTY_FUNCTION
-GameConsole.showInformationMessage = NEXUS_EMPTY_FUNCTION
-GameConsole.showLogMessage = NEXUS_EMPTY_FUNCTION
-GameConsole.showDebugMessage = NEXUS_EMPTY_FUNCTION
+local GameConsole           = {
+    reset                   = NEXUS_EMPTY_FUNCTION,
+    print                   = NEXUS_EMPTY_FUNCTION,
+    toggle                  = NEXUS_EMPTY_FUNCTION,
+    setFilterLevel          = NEXUS_EMPTY_FUNCTION,
+    registerCommand         = NEXUS_EMPTY_FUNCTION,
+    unregisterCommand       = NEXUS_EMPTY_FUNCTION,
+    clearRegisteredCommands = NEXUS_EMPTY_FUNCTION,
+    showErrorMessage        = NEXUS_EMPTY_FUNCTION,
+    showWarningMessage      = NEXUS_EMPTY_FUNCTION,
+    showInformationMessage  = NEXUS_EMPTY_FUNCTION,
+    showLogMessage          = NEXUS_EMPTY_FUNCTION,
+    showDebugMessage        = NEXUS_EMPTY_FUNCTION,
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -670,6 +679,22 @@ end
 -- | [ Public functions of the console                                    ] | --
 -- \ ---------------------------------------------------------------------- / --
 if NEXUS_DEBUG_MODE then
+    do
+        local lt            = l.timer
+        local NEXUS_VERSION = Constants.VERSION
+
+        local render        = Scene.render
+
+        function Scene.render(...)
+            render(...)
+
+            lg.setColor(255, 255, 255, 255)
+            lg.printf(string.format('NOT FINAL GAME'), 0, 60, Graphics.getScreenWidth(), 'center')
+            lg.printf(string.format('FPS: %d', lt.getFPS()), 8, 8, 128)
+            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), NEXUS_VERSION.STAGE, l._os), 0, Graphics.getScreenHeight() - 24, Graphics.getScreenWidth() - 8, 'right')
+        end
+    end
+
     function GameConsole.reset(font, width, height, spacing)
         GameConsoleInput.initialize(function(command)
             GameConsoleOutput.push(m_prompt, command)

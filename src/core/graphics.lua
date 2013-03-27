@@ -105,7 +105,7 @@ end
 function Graphics.update(dt)
     if m_showfps then
         local fps = lt.getFPS()
-        lg.setCaption(m_caption .. ' - FPS: ' .. fps)
+        lg.setCaption(string.format('%s - FPS: %d', m_caption, fps))
     end
 
     table.sort(t_viewports, viewport_zorder_sorter)

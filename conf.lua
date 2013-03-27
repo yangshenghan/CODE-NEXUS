@@ -72,11 +72,11 @@ nexus = {
         },
         VERSION             = {
             MAJOR           = '0',
-            MINOR           = '2',
+            MINOR           = '3',
             MICRO           = '0',
             PATCH           = '0',
             BUILD           = '0',
-            STAMP           = '20130315',
+            STAMP           = '20130328',
             STAGE           = 'Development'
         },
         PATHS               = {
@@ -150,9 +150,9 @@ function love.conf(game)
     end
     nexus.configures = nexus.core.read(filename)
 
-    game.title = 'filename'
+    game.title = 'CODE NEXUS'
     if debugmode then
-        game.title = 'CODE NEXUS ' .. version.STAGE .. ' (Build ' .. version.BUILD .. ' - ' .. version.STAMP .. ')'
+        game.title = 'CODE NEXUS ' .. '(Build ' .. version.BUILD .. ' - ' .. version.STAMP .. ')'
     end
     game.author = 'Yang Sheng Han'
     game.url = 'http://yangshenghan.twbbs.org'

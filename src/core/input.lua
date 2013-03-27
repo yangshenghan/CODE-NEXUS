@@ -103,26 +103,24 @@ end
 
 function Input.update(dt)
     for key, keys in pairs(t_controls) do
-        for _, keycode in pairs(keys) do
-            if lk.isDown(keycode) then
-                if t_pressed[key] then
-                    t_triggered[key] = false
-                    t_counter[key] = t_counter[key] + 1
-                    if t_counter[key] > 15 then
-                        t_counter[key] = 0
-                    end
-                else
-                    t_triggered[key] = true
-                end
-                t_pressed[key] = true
-                t_released[key] = false
-            else
-                if t_pressed[key] then
+        if lk.isDown(unpack(keys)) then
+            if t_pressed[key] then
+                t_triggered[key] = false
+                t_counter[key] = t_counter[key] + 1
+                if t_counter[key] > 15 then
                     t_counter[key] = 0
-                    t_released[key] = true
                 end
-                t_pressed[key] = false
+            else
+                t_triggered[key] = true
             end
+            t_pressed[key] = true
+            t_released[key] = false
+        else
+            if t_pressed[key] then
+                t_counter[key] = 0
+                t_released[key] = true
+            end
+            t_pressed[key] = false
         end
     end
 

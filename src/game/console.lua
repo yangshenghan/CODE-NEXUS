@@ -52,13 +52,16 @@ local NEXUS_DEBUG_MODE      = Constants.DEBUG_MODE
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
--- | [ The submodule GameConsoleInput of the GameConsole                  ] | --
--- \ ---------------------------------------------------------------------- / --
-
--- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local GameConsole           = {}
 local GameConsoleInput      = {}
+local GameConsoleOutput     = {}
+local SceneConsole          = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | [ The submodule GameConsoleInput of the GameConsole                  ] | --
+-- \ ---------------------------------------------------------------------- / --
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -258,11 +261,6 @@ end
 -- \ ---------------------------------------------------------------------- / --
 
 -- / ---------------------------------------------------------------------- \ --
--- | Declare object                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local GameConsoleOutput     = {}
-
--- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_font                = nil
@@ -376,28 +374,11 @@ end
 -- \ ---------------------------------------------------------------------- / --
 
 -- / ---------------------------------------------------------------------- \ --
--- | Declare object                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local GameConsole           = {
-    reset                   = NEXUS_EMPTY_FUNCTION,
-    print                   = NEXUS_EMPTY_FUNCTION,
-    toggle                  = NEXUS_EMPTY_FUNCTION,
-    setFilterLevel          = NEXUS_EMPTY_FUNCTION,
-    registerCommand         = NEXUS_EMPTY_FUNCTION,
-    unregisterCommand       = NEXUS_EMPTY_FUNCTION,
-    clearRegisteredCommands = NEXUS_EMPTY_FUNCTION,
-    showErrorMessage        = NEXUS_EMPTY_FUNCTION,
-    showWarningMessage      = NEXUS_EMPTY_FUNCTION,
-    showInformationMessage  = NEXUS_EMPTY_FUNCTION,
-    showLogMessage          = NEXUS_EMPTY_FUNCTION,
-    showDebugMessage        = NEXUS_EMPTY_FUNCTION,
-}
-
--- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_level               = 5
+local m_level               = NEXUS_DEBUG_MODE and 5 or 0
 local m_chunk               = nil
+local m_console             = false
 local m_prompt              = '> '
 
 -- / ---------------------------------------------------------------------- \ --
@@ -407,14 +388,98 @@ function GameConsole.initialize(font, width, height, spacing)
     GameConsole.reset(font, width, height, spacing)
 end
 
+function GameConsole.reset(font, width, height, spacing)
+    GameConsoleInput.initialize(function(command)
+        GameConsoleOutput.push(m_prompt, command)
+        command = string.gsub(command, '^=%s?', 'return ')
+        command = string.gsub(command, '^return%s+(.*)(%s*)$', 'print(%1)%2')
+        m_chunk = m_chunk and table.concat({m_chunk, command}, ' ') or command
+        local ok, out = pcall(function() assert(loadstring(m_chunk))() end)
+        if not ok and string.match(out, '\'<eof>\'') then
+            m_prompt = '| '
+            t_history[#t_history] = nil
+        else
+            m_prompt = '> '
+            if out and string.len(out) > 0 then GameConsoleOutput.push(out) end
+            t_history[#t_history] = m_chunk
+            m_chunk = nil
+        end
+    end)
+    GameConsoleOutput.initialize(font, width, height, spacing)
+
+    GameConsole.print([[
+/ ******************************************************************************** \
+|                                  [ CODE NEXUS ]                                  |
+|                           == Console for Code Nexus ==                           |
+|                                                                      Version 0.3 |
+| -------------------------------------------------------------------------------- |
+| Use <F9> to toggle the console window. Call quit() or exit() to exit the game.   |
+| Try hitting <Tab> to complete your current input.                                |
+| A leading '=' prints the calling result.                                         |
+| -------------------------------------------------------------------------------- |
+|                           !!!   N  O  T  I  C  E   !!!                           |
+| Use console to control code nexus might cause the game behaves abnormal. Please  |
+| understand clearly what you are doing now. You can type 'help' to see the notes. |
+\ ******************************************************************************** /
+]])
+    GameConsole.print()
+end
+
+function GameConsole.print(...)
+    local argc, args = select('#', ...), {...}
+    for i = 1, argc do
+        args[i] = (args[i] == nil) and 'nil' or tostring(args[i])
+    end
+    if argc == 0 then args = {' '} end
+    GameConsoleOutput.push(table.concat(args, ' '))
+end
+
+function GameConsole.toggle()
+    if m_console then
+        Scene.leave()
+    else
+        Scene.enter(SceneConsole.new())
+    end
+end
+
+function GameConsole.registerConsoleCommand(command, callback)
+end
+
+function GameConsole.unregisterConsoleCommand(command)
+end
+
+function GameConsole.clearRegisteredCommands()
+end
+
+function GameConsole.setFilterLevel(level)
+    if level < 0 then level = 0 end
+    if level > 5 then level = 5 end
+    m_level = level
+end
+
+function GameConsole.showErrorMessage(...)
+    if m_level > 0 then GameConsole.print('[ ERROR ]', ...) end
+end
+
+function GameConsole.showWarningMessage(...)
+    if m_level > 1 then GameConsole.print('[WARNING]', ...) end
+end
+
+function GameConsole.showInformationMessage(...)
+    if m_level > 2 then GameConsole.print('[I N F O]', ...) end
+end
+
+function GameConsole.showLogMessage(...)
+    if m_level > 3 then GameConsole.print('[ L O G ]', ...) end
+end
+
+function GameConsole.showDebugMessage(...)
+    if m_level > 4 then GameConsole.print('[ DEBUG ]', ...) end
+end
+
 -- / ---------------------------------------------------------------------- \ --
 -- | [ The scene of the console                                           ] | --
 -- \ ---------------------------------------------------------------------- / --
-
--- / ---------------------------------------------------------------------- \ --
--- | Declare object                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local SceneConsole          = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -424,8 +489,6 @@ local m_flag                = nil
 local m_pressed             = nil
 
 local m_repeated            = nil
-
-local m_console             = false
 
 local t_instance            = nil
 
@@ -676,121 +739,27 @@ function SceneConsole.leave(instance)
 end
 
 -- / ---------------------------------------------------------------------- \ --
--- | [ Public functions of the console                                    ] | --
+-- | [ Game hooks in debug mode                                           ] | --
 -- \ ---------------------------------------------------------------------- / --
 if NEXUS_DEBUG_MODE then
-    do
-        local lt            = l.timer
-        local NEXUS_VERSION = Constants.VERSION
+    local lt                = l.timer
+    local NEXUS_VERSION     = Constants.VERSION
 
-        local render        = Scene.render
+    local update            = Scene.update
+    local render            = Scene.render
 
-        function Scene.render(...)
-            render(...)
+    function Scene.update(...)
+        update(...)
+    end
 
+    function Scene.render(...)
+        render(...)
+
+        if not m_console then
             lg.setColor(255, 255, 255, 255)
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, Graphics.getScreenWidth(), 'center')
             lg.printf(string.format('FPS: %d', lt.getFPS()), 8, 8, 128)
             lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), NEXUS_VERSION.STAGE, l._os), 0, Graphics.getScreenHeight() - 24, Graphics.getScreenWidth() - 8, 'right')
-        end
-    end
-
-    function GameConsole.reset(font, width, height, spacing)
-        GameConsoleInput.initialize(function(command)
-            GameConsoleOutput.push(m_prompt, command)
-            command = string.gsub(command, '^=%s?', 'return ')
-            command = string.gsub(command, '^return%s+(.*)(%s*)$', 'print(%1)%2')
-            m_chunk = m_chunk and table.concat({m_chunk, command}, ' ') or command
-            local ok, out = pcall(function() assert(loadstring(m_chunk))() end)
-            if not ok and string.match(out, '\'<eof>\'') then
-                m_prompt = '| '
-                t_history[#t_history] = nil
-            else
-                m_prompt = '> '
-                if out and string.len(out) > 0 then GameConsoleOutput.push(out) end
-                t_history[#t_history] = m_chunk
-                m_chunk = nil
-            end
-        end)
-        GameConsoleOutput.initialize(font, width, height, spacing)
-
-        GameConsole.print([[
-/ ******************************************************************************** \
-|                                  [ CODE NEXUS ]                                  |
-|                           == Console for Code Nexus ==                           |
-|                                                                      Version 0.3 |
-| -------------------------------------------------------------------------------- |
-| Use <F9> to toggle the console window. Call quit() or exit() to exit the game.   |
-| Try hitting <Tab> to complete your current input.                                |
-| A leading '=' prints the calling result.                                         |
-| -------------------------------------------------------------------------------- |
-|                           !!!   N  O  T  I  C  E   !!!                           |
-| Use console to control code nexus might cause the game behaves abnormal. Please  |
-| understand clearly what you are doing now. You can type 'help' to see the notes. |
-\ ******************************************************************************** /
-]])
-        GameConsole.print()
-    end
-
-    function GameConsole.print(...)
-        local argc, args = select('#', ...), {...}
-        for i = 1, argc do
-            args[i] = (args[i] == nil) and 'nil' or tostring(args[i])
-        end
-        if argc == 0 then args = {' '} end
-        GameConsoleOutput.push(table.concat(args, ' '))
-    end
-
-    function GameConsole.toggle()
-        if m_console then
-            Scene.leave()
-        else
-            Scene.enter(SceneConsole.new())
-        end
-    end
-
-    function GameConsole.setFilterLevel(level)
-        if level < 0 then level = 0 end
-        if level > 5 then level = 5 end
-        m_level = level
-    end
-
-    function GameConsole.registerConsoleCommand(command, callback)
-    end
-
-    function GameConsole.unregisterConsoleCommand(command)
-    end
-
-    function GameConsole.clearRegisteredCommands()
-    end
-
-    function GameConsole.showErrorMessage(...)
-        if m_level > 0 then
-            GameConsole.print('[ ERROR ]', ...)
-        end
-    end
-
-    function GameConsole.showWarningMessage(...)
-        if m_level > 1 then
-            GameConsole.print('[WARNING]', ...)
-        end
-    end
-
-    function GameConsole.showInformationMessage(...)
-        if m_level > 2 then
-            GameConsole.print('[I N F O]', ...)
-        end
-    end
-
-    function GameConsole.showLogMessage(...)
-        if m_level > 3 then
-            GameConsole.print('[ L O G ]', ...)
-        end
-    end
-
-    function GameConsole.showDebugMessage(...)
-        if m_level > 4 then
-            GameConsole.print('[ DEBUG ]', ...)
         end
     end
 end

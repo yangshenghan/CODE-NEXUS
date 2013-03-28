@@ -1,0 +1,67 @@
+CODE NEXUS 0.3
+==============
+
+Additions
+---------
+ * Added debug information.
+
+Improvements
+------------
+ * Used string.format() to format caption.
+ * Simplified Input.update().
+
+Bugfixes
+--------
+ * Fixed the title of the game in release mode.
+
+CODE NEXUS 0.2
+==============
+
+Additions
+---------
+ * Added Core.Audio.
+ * Added Core.Data.
+ * Added Core.Game.
+ * Added Core.Graphics.
+ * Added Core.Input.
+ * Added Core.Resource.
+ * Added Core.Scene.
+ * Added Base.Color.
+ * Added Base.Rectangle.
+ * Added Base.Tone.
+ * Added Base.Viewport.
+ * Added GameConsole.
+ * Added SceneBase.
+ * Added SpriteBase.
+ * Added WindowBase.
+ * Added Alt + F4 to exit the game.
+
+Changes
+-------
+ * Changed the saving filename format.
+ * Changed the shortcut F4 to F9 to avoid key collision with fullscreen.
+ * Renamed all the "finalizer" to "finalize."
+ * Rename nexus.utility.getGameVersion() to nexus.core.getGameVersion().
+ * Rename nexus.utility.getVersionString() to nexus.core.getVersionString().
+ * Rename nexus.utility.upgradeGameData() to nexus.core.upgradeGameData().
+ * Rename nexus.utility.registerDataUpgrader() to nexus.core.registerDataUpgrader().
+ * Moved some funcions.
+
+Improvements
+------------
+ * Improved multi-language support.
+ * Supported skip splash for reloading game or return to title screen.
+
+Bugfixes
+--------
+ * Now Scene.clear() will leave scenes correctly.
+
+CODE NEXUS 0.1
+==============
+
+The first release of this game!
+
+ * Basic facilities.
+ * Multi-language support.
+ * The input subsystem.
+ * Basic scenes, prologue stage, and loading screen.

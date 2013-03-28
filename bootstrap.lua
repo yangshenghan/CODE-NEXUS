@@ -119,7 +119,7 @@ end
 -- \ ---------------------------------------------------------------------- / --
 if NEXUS_DEBUG_MODE then
 
-return function(enable)
+return function(instance, enable)
     if not enable then return NEXUS_EMPTY_FUNCTION end
 
     -- / ------------------------------------------------------------------ \ --

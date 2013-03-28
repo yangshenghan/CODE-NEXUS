@@ -169,7 +169,9 @@ return function(instance, enable)
 
             lg.setColor(255, 255, 255, 255)
             lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
-            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, GraphicsConfigures.fullscreen and 'fullscreen' or 'windowed', GraphicsConfigures.vsync and 'enabled' or 'disabled', GraphicsConfigures.fsaa), m_x_offset, m_y_offset + m_line_height, width, 'left')
+            lg.printf(string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, 'left')
+            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, GraphicsConfigures.fullscreen and 'fullscreen' or 'windowed', GraphicsConfigures.vsync and 'enabled' or 'disabled', GraphicsConfigures.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')
+            lg.printf(string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, 'left')
 
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
             lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), NEXUS_VERSION.STAGE, l._os), 0, Graphics.getScreenHeight() - 24, Graphics.getScreenWidth() - 8, 'right')

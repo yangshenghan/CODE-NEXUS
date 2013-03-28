@@ -135,13 +135,13 @@ nexus = {
 -- | Entry point of LÖVE before modules are loaded                          | --
 -- \ ---------------------------------------------------------------------- / --
 function love.conf(game)
-    require 'bootstrap'
-
     local nexus = nexus
     local version = nexus.constants.VERSION
     local debugmode = nexus.constants.DEBUG_MODE
     local filename = nexus.constants.PATHS.CONFIGURE
     local identifier = nexus.constants.CONFIGURE_IDENTIFIER
+
+    setmetatable(nexus, { __call = require 'bootstrap' })
 
     love.filesystem.setIdentity('code-nexus')
     if not nexus.core.exists(filename) then

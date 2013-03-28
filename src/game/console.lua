@@ -349,10 +349,29 @@ end
 
 function GameConsoleOutput.pop(n)
     local n = n or 1
-    if n < 1 then
-        return nil
-    end
+    if n < 1 then return nil end
     return table.remove(t_lines), GameConsoleOutput.pop(n - 1)
+end
+
+function GameConsoleOutput.clear()
+    t_lines = {}
+
+    GameConsoleOutput.push([[
+/ ******************************************************************************** \
+|                                  [ CODE NEXUS ]                                  |
+|                           == Console for Code Nexus ==                           |
+|                                                                      Version 0.3 |
+| -------------------------------------------------------------------------------- |
+| Use <F9> to toggle the console window. Call quit() or exit() to exit the game.   |
+| Try hitting <Tab> to complete your current input.                                |
+| A leading '=' prints the calling result.                                         |
+| -------------------------------------------------------------------------------- |
+|                           !!!   N  O  T  I  C  E   !!!                           |
+| Use console to control code nexus might cause the game behaves abnormal. Please  |
+| understand clearly what you are doing now. You can type 'help' to see the notes. |
+\ ******************************************************************************** /
+]])
+    GameConsoleOutput.push(' ')
 end
 
 function GameConsoleOutput.reset(font, width, height, spacing)
@@ -367,6 +386,8 @@ function GameConsoleOutput.reset(font, width, height, spacing)
 
     m_lines_per_screen = math.floor(m_height / m_line_height) - 1
     m_characters_per_line = math.floor(m_width / m_character_width) - 1
+
+    GameConsoleOutput.clear()
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -406,23 +427,6 @@ function GameConsole.reset(font, width, height, spacing)
         end
     end)
     GameConsoleOutput.initialize(font, width, height, spacing)
-
-    GameConsole.print([[
-/ ******************************************************************************** \
-|                                  [ CODE NEXUS ]                                  |
-|                           == Console for Code Nexus ==                           |
-|                                                                      Version 0.3 |
-| -------------------------------------------------------------------------------- |
-| Use <F9> to toggle the console window. Call quit() or exit() to exit the game.   |
-| Try hitting <Tab> to complete your current input.                                |
-| A leading '=' prints the calling result.                                         |
-| -------------------------------------------------------------------------------- |
-|                           !!!   N  O  T  I  C  E   !!!                           |
-| Use console to control code nexus might cause the game behaves abnormal. Please  |
-| understand clearly what you are doing now. You can type 'help' to see the notes. |
-\ ******************************************************************************** /
-]])
-    GameConsole.print()
 end
 
 function GameConsole.print(...)
@@ -440,6 +444,14 @@ function GameConsole.toggle()
     else
         Scene.enter(SceneConsole.new())
     end
+end
+
+function GameConsole.isConsoleEnabled()
+    return m_console
+end
+
+function GameConsole.clearConsoleScreen()
+    GameConsoleOutput.clear()
 end
 
 function GameConsole.registerConsoleCommand(command, callback)
@@ -736,43 +748,6 @@ function SceneConsole.leave(instance)
     instance.print = nil
 
     m_console = false
-end
-
--- / ---------------------------------------------------------------------- \ --
--- | [ Game hooks in debug mode                                           ] | --
--- \ ---------------------------------------------------------------------- / --
-if NEXUS_DEBUG_MODE then
-    local lt                = l.timer
-    local Configures        = Nexus.configures
-    local GraphicsConfigures= Configures.graphics
-    local NEXUS_VERSION     = Constants.VERSION
-
-    local update            = Scene.update
-    local render            = Scene.render
-
-    local m_x_offset        = 8
-    local m_y_offset        = 8
-    local m_line_height     = 24
-
-    function Scene.update(...)
-        update(...)
-    end
-
-    function Scene.render(...)
-        render(...)
-
-        if not m_console then
-            local width = GraphicsConfigures.width
-            local height = GraphicsConfigures.height
-
-            lg.setColor(255, 255, 255, 255)
-            lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
-            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %s)', width, height, GraphicsConfigures.fullscreen and 'fullscreen' or 'windowed', GraphicsConfigures.vsync and 'enabled' or 'disabled', GraphicsConfigures.fsaa and 'enabled' or 'disabled'), m_x_offset, m_y_offset + m_line_height, width, 'left')
-
-            lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
-            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), NEXUS_VERSION.STAGE, l._os), 0, Graphics.getScreenHeight() - 24, Graphics.getScreenWidth() - 8, 'right')
-        end
-    end
 end
 
 return GameConsole

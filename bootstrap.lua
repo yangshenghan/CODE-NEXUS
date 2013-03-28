@@ -35,6 +35,14 @@ local tostring              = tostring
 local coroutine             = coroutine
 local setmetatable          = setmetatable
 local getmetatable          = getmetatable
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Constants             = Nexus.constants
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
+local NEXUS_VERSION         = Constants.VERSION
+local NEXUS_DEBUG_MODE      = Constants.DEBUG_MODE
+local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -103,4 +111,78 @@ function coroutine.resume(...)
     local success, result = f_coroutine_resume(...)
     if not success then error(tostring(result), 2) end
     return success, result
+end
+
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Debug functions                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+if NEXUS_DEBUG_MODE then
+
+return function(enable)
+    if not enable then return NEXUS_EMPTY_FUNCTION end
+
+    -- / ------------------------------------------------------------------ \ --
+    -- | Import modules                                                     | --
+    -- \ ------------------------------------------------------------------ / --
+    local l                 = love
+    local lt                = l.timer
+    local lg                = l.graphics
+    Game                    = Core.import 'nexus.core.game'
+    Graphics                = Core.import 'nexus.core.graphics'
+    Scene                   = Core.import 'nexus.core.scene'
+    GameConsole             = Core.import 'nexus.game.console'
+
+    -- / ------------------------------------------------------------------ \ --
+    -- | Declare object                                                     | --
+    -- \ ------------------------------------------------------------------ / --
+    local Debug             = {}
+
+    -- / ------------------------------------------------------------------ \ --
+    -- | Local variables                                                    | --
+    -- \ ------------------------------------------------------------------ / --
+    local m_x_offset        = 8
+    local m_y_offset        = 8
+    local m_line_height     = 24
+
+    -- / ------------------------------------------------------------------ \ --
+    -- | Member functions                                                   | --
+    -- \ ------------------------------------------------------------------ / --
+    function Debug.profiler()
+    end
+    -- / ------------------------------------------------------------------ \ --
+    -- | Game hooks in debug mode                                           | --
+    -- \ ------------------------------------------------------------------ / --
+    local update            = Scene.update
+    local render            = Scene.render
+
+    function Scene.update(...)
+        update(...)
+    end
+
+    function Scene.render(...)
+        render(...)
+
+        if not GameConsole.isConsoleEnabled() then
+            local width = GraphicsConfigures.width
+            local height = GraphicsConfigures.height
+
+            lg.setColor(255, 255, 255, 255)
+            lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
+            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %s)', width, height, GraphicsConfigures.fullscreen and 'fullscreen' or 'windowed', GraphicsConfigures.vsync and 'enabled' or 'disabled', GraphicsConfigures.fsaa and 'enabled' or 'disabled'), m_x_offset, m_y_offset + m_line_height, width, 'left')
+
+            lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
+            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), NEXUS_VERSION.STAGE, l._os), 0, Graphics.getScreenHeight() - 24, Graphics.getScreenWidth() - 8, 'right')
+        end
+    end
+
+    return Debug
+end
+
+end
+
+return function()
+    return setmetatable({}, {
+        __index             = NEXUS_EMPTY_FUNCTION
+    })
 end

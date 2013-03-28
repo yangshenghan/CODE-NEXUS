@@ -107,6 +107,8 @@ local HANDLERS              = {
 -- | Execution section                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function initialize()
+    Nexus(true)
+
     Audio.initialize()
     Data.initialize()
     Game.initialize()
@@ -128,6 +130,8 @@ local function finalize()
     Game.finalize()
     Data.finalize()
     Audio.finalize()
+
+    Nexus(false)
 end
 
 local function process()

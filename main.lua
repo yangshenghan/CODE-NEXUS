@@ -216,7 +216,14 @@ function l.releaseerrhand(message, layer)
 
         lg.setCanvas()
         lg.setShader()
-        lg.setMode(FALLBACK_WIDTH, FALLBACK_HEIGHT, false)
+        lg.setMode(FALLBACK_WIDTH, FALLBACK_HEIGHT, {
+            fullscreen      = false,
+            vsync           = false,
+            fsaa            = 0,
+            borderless      = true,
+            resizable       = false,
+            centered        = true
+        })
 
         la.stop()
         le.clear()

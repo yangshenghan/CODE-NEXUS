@@ -123,7 +123,10 @@ nexus = {
             height          = 720,
             fullscreen      = false,
             vsync           = true,
-            fsaa            = 0
+            fsaa            = 0,
+            resizable       = false,
+            borderless      = false,
+            centered        = true
         },
         options             = {
             language        = 'en_US'
@@ -163,6 +166,9 @@ function love.conf(game)
 
     game.screen.width = nexus.constants.FALLBACK_WIDTH
     game.screen.height = nexus.constants.FALLBACK_HEIGHT
+    game.screen.resizable = nexus.configures.graphics.resizable
+    game.screen.borderless = nexus.configures.graphics.borderless
+    game.screen.centered = nexus.configures.graphics.centered
 
     if nexus.configures.graphics then
         game.screen.width = nexus.configures.graphics.width

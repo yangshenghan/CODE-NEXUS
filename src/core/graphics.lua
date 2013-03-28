@@ -234,7 +234,14 @@ function Graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsa
     GraphicsConfigures.vsync = vsync ~= nil and vsync or GraphicsConfigures.vsync 
     GraphicsConfigures.fsaa = fsaa or GraphicsConfigures.fsaa
 
-    lg.setMode(GraphicsConfigures.width, GraphicsConfigures.height, GraphicsConfigures.fullscreen, GraphicsConfigures.vsync, GraphicsConfigures.fsaa)
+    lg.setMode(GraphicsConfigures.width, GraphicsConfigures.height, {
+        fullscreen          = GraphicsConfigures.fullscreen,
+        vsync               = GraphicsConfigures.vsync,
+        fsaa                = GraphicsConfigures.fsaa,
+        borderless          = GraphicsConfigures.borderless,
+        resizable           = GraphicsConfigures.resizable,
+        centered            = GraphicsConfigures.centered
+    })
 
     -- Game.saveGameConfigure()
 end

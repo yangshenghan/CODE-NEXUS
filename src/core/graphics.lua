@@ -209,7 +209,9 @@ function Graphics.screenshot()
 end
 
 function Graphics.toggleFullscreen()
-    lg.toggleFullscreen()
+    if lg.toggleFullscreen() then
+        GraphicsConfigures.fullscreen = not GraphicsConfigures.fullscreen
+    end
 end
 
 function Graphics.toggleFPS()

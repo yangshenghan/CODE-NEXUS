@@ -44,6 +44,7 @@ function SceneNewGame.leave(instance)
 end
 
 function SceneNewGame.update(instance, dt)
+    if instance.idle then return end
 end
 
 return SceneNewGame

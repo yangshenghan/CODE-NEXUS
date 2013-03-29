@@ -47,19 +47,19 @@ function Scene.finalize()
 end
 
 function Scene.update(dt)
-    for _, scene in ipairs(t_scenes) do
-        if not scene.isIdle(scene) then scene.update(scene, dt) end
-    end
+    for _, scene in ipairs(t_scenes) do scene.update(scene, dt) end
 end
 
 function Scene.pause()
     local scene = Scene.getCurrentScene()
     scene.setIdle(scene, true)
+    scene.idleIn(current)
 end
 
 function Scene.resume()
     local scene = Scene.getCurrentScene()
     scene.setIdle(scene, false)
+    scene.idleOut(current)
 end
 
 function Scene.getCurrentScene()

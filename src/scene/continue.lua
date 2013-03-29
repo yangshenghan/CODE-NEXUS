@@ -58,6 +58,7 @@ function SceneContinue.leave(instance)
 end
 
 function SceneContinue.update(instance, dt)
+    if instance.idle then return end
 end
 
 return SceneContinue

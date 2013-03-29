@@ -58,6 +58,7 @@ function SceneOption.leave(instance)
 end
 
 function SceneOption.update(instance, dt)
+    if instance.idle then return end
 end
 
 return SceneOption

@@ -53,6 +53,7 @@ function SceneExit.leave(instance)
 end
 
 function SceneExit.update(instance, dt)
+    if instance.idle then return end
 end
 
 return SceneExit

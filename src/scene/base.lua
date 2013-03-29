@@ -38,8 +38,6 @@ local SceneBase             = {
     enter                   = NEXUS_EMPTY_FUNCTION,
     leave                   = NEXUS_EMPTY_FUNCTION,
     update                  = NEXUS_EMPTY_FUNCTION,
-    -- The render callback may be removed and managed in nexus.game
-    render                  = NEXUS_EMPTY_FUNCTION,
     idleIn                  = NEXUS_EMPTY_FUNCTION,
     idleOut                 = NEXUS_EMPTY_FUNCTION,
     idle                    = false

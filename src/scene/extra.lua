@@ -58,6 +58,7 @@ function SceneExtra.leave(instance)
 end
 
 function SceneExtra.update(instance, dt)
+    if instance.idle then return end
 end
 
 return SceneExtra

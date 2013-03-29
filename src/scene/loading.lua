@@ -56,6 +56,8 @@ function SceneLoading.enter(instance)
 end
 
 function SceneLoading.update(instance, dt)
+    if instance.idle then return end
+
     local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
     instance.scene.progress.setProgressValue(instance.scene.progress, progress)
 

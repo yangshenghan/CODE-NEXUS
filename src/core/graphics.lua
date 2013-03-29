@@ -67,8 +67,7 @@ local t_drawables           = {}
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-
-local function drawable_zorder_sorter(a, b)
+local function zsorter(a, b)
     if not a.viewport then return false end
     if not b.viewport then return true end
     if a.viewport.z == b.viewport.z then
@@ -108,7 +107,7 @@ function Graphics.update(dt)
         lg.setCaption(string.format('%s - FPS: %d', m_caption, fps))
     end
 
-    table.sort(t_drawables, drawable_zorder_sorter)
+    table.sort(t_drawables, zsorter)
 end
 
 function Graphics.render()

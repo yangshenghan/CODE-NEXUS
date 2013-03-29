@@ -68,7 +68,11 @@ nexus = {
             F5              = 'f5',
             F6              = 'f6',
             F7              = 'f7',
-            F8              = 'f8'
+            F8              = 'f8',
+            F9              = 'f9',
+            F10             = 'f10',
+            F11             = 'f11',
+            F12             = 'f12'
         },
         VERSION             = {
             MAJOR           = '0',
@@ -111,8 +115,11 @@ nexus = {
             right           = {'right'},
             down            = {'down'},
             left            = {'left'},
-            confirm         = {'return'},
-            cancel          = {'escape'}
+            confirm         = {'return', ' '},
+            cancel          = {'escape'},
+            shift           = {'lshift', 'rshift'},
+            alternative     = {'lalt', 'ralt'},
+            control         = {'lctrl', 'rctrl'}
         },
         joysticks           = {
         },

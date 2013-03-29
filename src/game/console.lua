@@ -42,9 +42,9 @@ local coroutine             = coroutine
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
+local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
 local Graphics              = Core.import 'nexus.core.graphics'
-local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 local GameConsole           = Core.import 'nexus.game.console'
 local SceneBase             = Core.import 'nexus.scene.base'
@@ -298,7 +298,7 @@ function GameConsoleOutput.render(ox, oy, position)
     lg.setFont(m_font)
     local lines_to_display = m_lines_per_screen - math.floor((m_height - oy) / m_line_height)
     for i = #t_lines, math.max(1, #t_lines - lines_to_display), -1 do
-    lg.print(t_lines[i], ox, oy - (#t_lines - i + 1) * m_line_height)
+        lg.print(t_lines[i], ox, oy - (#t_lines - i + 1) * m_line_height)
     end
     lg.setFont(current_font)
 
@@ -639,7 +639,7 @@ local KEYCODESMODIFIER      = {
 -- \ ---------------------------------------------------------------------- / --
 function SceneConsole.new()
     if not t_instance then
-        local font = Resource.loadFontData('inconsolata.otf', 16)
+        local font = Data.getFont('console')
         GameConsole.initialize(font)
         t_instance = SceneBase.new(SceneConsole)
     end

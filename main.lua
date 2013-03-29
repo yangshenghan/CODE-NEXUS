@@ -205,13 +205,13 @@ function l.errhand(message, layer)
 end
 
 function l.releaseerrhand(message, layer)
-    local message = string.format(Data.getTranslatedText('An error has occured that caused %s to stop.\nYou can notify %s about this at %s.'), l._release.title, l._release.author, l._release.url)
+    local message = string.format(Data.getText('An error has occured that caused %s to stop.\nYou can notify %s about this at %s.'), l._release.title, l._release.author, l._release.url)
 
     print(message)
 
     if lg.isCreated() then
         local event
-        local version = string.format(Data.getTranslatedText('LÖVE %s (%s) on %s.'), l._version, l._version_codename, l._os)
+        local version = string.format(Data.getText('LÖVE %s (%s) on %s.'), l._version, l._version_codename, l._os)
         local font = lg.newFont(14)
 
         lg.setCanvas()

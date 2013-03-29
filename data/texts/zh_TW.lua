@@ -26,7 +26,11 @@
 return {
     code        = 'zh_TW',
     language    = '繁體中文',
-    fonts       = {},
+    fonts       = {
+        name    = {'console'},
+        file    = {'inconsolata.otf'},
+        size    = {16}
+    },
     texts       = {
         ['New Game']        = '開新遊戲',
         ['Continue']        = '繼續遊戲',

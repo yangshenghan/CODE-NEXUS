@@ -132,30 +132,30 @@ function SceneTitle.enter(instance)
     instance.coroutines.update = coroutine.create(title_update_coroutine)
     instance.windows.command = WindowCommand.new(320, 240, {
         {
-            text    = Data.getTranslatedText('New Game'),
+            text    = Data.getText('New Game'),
             handler = function(...)
                 Game.setup()
                 Scene.goto(SceneStage.new('prologue'))
                 -- Scene.goto(SceneNewGame.new())
             end
         }, {
-            text    = Data.getTranslatedText('Continue'),
+            text    = Data.getText('Continue'),
             handler = function(...)
                 Scene.goto(SceneContinue.new())
             end,
             enabled = Game.exists()
         }, {
-            text    = Data.getTranslatedText('Extra'),
+            text    = Data.getText('Extra'),
             handler = function(...)
                 Scene.goto(SceneExtra.new())
             end
         }, {
-            text    = Data.getTranslatedText('Option'),
+            text    = Data.getText('Option'),
             handler = function(...)
                 Scene.goto(SceneOption.new())
             end
         }, {
-            text    = Data.getTranslatedText('Exit'),
+            text    = Data.getText('Exit'),
             handler = function(...)
                 Scene.goto(SceneExit.new())
             end

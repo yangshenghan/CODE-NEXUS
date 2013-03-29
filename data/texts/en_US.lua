@@ -26,7 +26,11 @@
 return {
     code        = 'en_US',
     language    = 'English (US)',
-    fonts       = {},
+    fonts       = {
+        name    = {'console'},
+        file    = {'inconsolata.otf'},
+        size    = {16}
+    },
     texts       = {
         ['New Game']        = 'New Game',
         ['Continue']        = 'Continue',

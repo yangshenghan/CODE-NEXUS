@@ -72,9 +72,9 @@ local function drawable_zorder_sorter(a, b)
     if not a.viewport then return false end
     if not b.viewport then return true end
     if a.viewport.z == b.viewport.z then
-        return a.viewport.z < b.viewport.z
-    else
         return a.z < b.z
+    else
+        return a.viewport.z < b.viewport.z
     end
 end
 

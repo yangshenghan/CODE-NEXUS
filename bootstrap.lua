@@ -89,8 +89,15 @@ end
 -- \ ---------------------------------------------------------------------- / --
 if NEXUS_DEBUG_MODE then
 
+local update                = nil
+local render                = nil
+
 return function(instance, enable)
-    if not enable then return NEXUS_EMPTY_FUNCTION end
+    if not enable then
+        Scene.update = update
+        Graphics.render = render
+        return NEXUS_EMPTY_FUNCTION
+    end
 
     -- / ------------------------------------------------------------------ \ --
     -- | Import modules                                                     | --
@@ -123,8 +130,8 @@ return function(instance, enable)
     -- / ------------------------------------------------------------------ \ --
     -- | Game hooks in debug mode                                           | --
     -- \ ------------------------------------------------------------------ / --
-    local update            = Scene.update
-    local render            = Graphics.render
+    update                  = Scene.update
+    render                  = Graphics.render
 
     function Scene.update(...)
         update(...)

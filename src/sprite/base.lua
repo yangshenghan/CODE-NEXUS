@@ -29,6 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Graphics              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
 local Viewport              = Core.import 'nexus.base.viewport'

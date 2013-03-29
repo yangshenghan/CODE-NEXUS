@@ -71,18 +71,16 @@ end
 -- \ ---------------------------------------------------------------------- / --
 function SpriteBase.new(derive, viewport)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = SpriteBase }) })
-    if viewport then
-        instance.viewport = viewport
-        Viewport.addDrawable(instance.viewport, instance)
-    end
     instance.color = Color.new(255, 255, 255, 255)
+    instance.viewport = viewport
     instance.rectangle = Rectangle.new()
+    Graphics.addDrawable(instance)
     return instance
 end
 
 function SpriteBase.dispose(instance)
     instance.render = nil
-    Viewport.removeDrawable(instance.viewport, instance)
+    Graphics.removeDrawable(instance)
 end
 
 function SpriteBase.disposed(instance)

@@ -60,35 +60,6 @@ function table.last(t)
     return t[#t]
 end
 
-function table.clone(t, m)
-    local u = {}
-
-    if m then
-        setmetatable(u, m)
-    else
-        setmetatable(u, getmetatable(t))
-    end
-
-    for key, value in pairs(t) do
-        if type(value) == 'table' then
-            u[key] = table.clone(value)
-        else
-            u[key] = value
-        end
-    end
-    return u
-end
-
-function table.merge(t, s)
-    local r = table.clone(t)
-
-    for key, value in pairs(s) do
-        r[key] = value
-    end
-
-    return r
-end
-
 function table.indexOf(t, v)
     for key, value in pairs(t) do
         if type(v) == 'function' then
@@ -112,7 +83,6 @@ function coroutine.resume(...)
     if not success then error(tostring(result), 2) end
     return success, result
 end
-
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Debug functions                                                        | --

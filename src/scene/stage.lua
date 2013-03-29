@@ -64,7 +64,7 @@ end
 
 function SceneStage.enter(instance)
     local canvas = lg.newCanvas()
-    local background = Graphics.getBackgroundViewport()
+    local background = Viewport.new()
     instance.gameobjects = Game.getGameObjects()
 
     -- Load stage data
@@ -91,6 +91,7 @@ function SceneStage.enter(instance)
     -- Draw basic grid for easy developing
     background.x = 0
     background.y = 0
+    background.z = 0
     background.visible = true
     background.dispose = NEXUS_EMPTY_FUNCTION
     background.disposed = NEXUS_EMPTY_FUNCTION
@@ -108,8 +109,10 @@ function SceneStage.enter(instance)
     end
     lg.setBlendMode('alpha')
     lg.setCanvas()
-    Viewport.addDrawable(instance.viewports[1], instance.player)
-    Viewport.addDrawable(Graphics.getBackgroundViewport(), background)
+    instance.player.viewport = instance.viewports[2]
+    background.viewport = instance.viewports[1]
+    Graphics.addDrawable(instance.player)
+    Graphics.addDrawable(background)
 
     -- Create objects
     for _, data in pairs(instance.stage.objects) do
@@ -121,16 +124,14 @@ function SceneStage.enter(instance)
         object.disposed = NEXUS_EMPTY_FUNCTION
         object.update = data.update or NEXUS_EMPTY_FUNCTION
         object.render = data.render or NEXUS_EMPTY_FUNCTION
-        Viewport.addDrawable(instance.viewports[1], object)
+        object.viewport = instance.viewports[2]
+        Graphics.addDrawable(object)
         table.insert(instance.objects, object)
     end
 end
 
 function SceneStage.leave(instance)
-    for _, viewport in pairs(instance.viewports) do
-        Viewport.dispose(viewport)
-    end
-
+    instance.viewports = {}
     instance.gameobjects = nil
     instance.objects = nil
     instance.player = nil

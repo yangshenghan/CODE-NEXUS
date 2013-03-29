@@ -38,6 +38,7 @@ local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowBase            = {
+    viewport                = nil,
     render                  = NEXUS_EMPTY_FUNCTION,
     update                  = NEXUS_EMPTY_FUNCTION,
     active                  = false,
@@ -56,13 +57,13 @@ local WindowBase            = {
 -- \ ---------------------------------------------------------------------- / --
 function WindowBase.new(derive)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = WindowBase }) })
-    Viewport.addDrawable(Graphics.getWindowViewport(), instance)
+    Graphics.addDrawable(instance)
     return instance
 end
 
 function WindowBase.dispose(instance)
     instance.render = nil
-    Viewport.removeDrawable(Graphics.getWindowViewport(), instance)
+    Graphics.removeDrawable(instance)
 end
 
 function WindowBase.disposed(instance)

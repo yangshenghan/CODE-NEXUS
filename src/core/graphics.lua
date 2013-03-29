@@ -41,6 +41,7 @@ local Data                  = Core.import 'nexus.core.data'
 -- local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 
+local Rectangle             = require 'src.base.rectangle'
 local Viewport              = require 'src.base.viewport'
 
 -- / ---------------------------------------------------------------------- \ --
@@ -61,17 +62,20 @@ local m_brightness          = 255
 
 local m_caption             = lg.getCaption()
 
-local t_viewports           = {}
-
-local t_background_viewport = nil
-
-local t_window_viewport     = nil
+local t_drawables           = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-local function viewport_zorder_sorter(a, b)
-    return a.z < b.z
+
+local function drawable_zorder_sorter(a, b)
+    if not a.viewport then return false end
+    if not b.viewport then return true end
+    if a.viewport.z == b.viewport.z then
+        return a.viewport.z < b.viewport.z
+    else
+        return a.z < b.z
+    end
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -93,13 +97,9 @@ function Graphics.finalize()
 end
 
 function Graphics.reset()
-    for _, viewport in pairs(t_viewports) do
-        Viewport.dispose(viewport)
-    end
+    for _, drawable in pairs(t_drawables) do drawable.dispose(drawable) end
 
-    t_viewports = {}
-    t_window_viewport = nil
-    t_background_viewport = nil
+    t_drawables = {}
 end
 
 function Graphics.update(dt)
@@ -108,17 +108,28 @@ function Graphics.update(dt)
         lg.setCaption(string.format('%s - FPS: %d', m_caption, fps))
     end
 
-    table.sort(t_viewports, viewport_zorder_sorter)
-
-    for _, viewport in pairs(t_viewports) do
-        viewport.update(viewport, dt)
-    end
+    table.sort(t_drawables, drawable_zorder_sorter)
 end
 
 function Graphics.render()
-    for _, viewport in pairs(t_viewports) do
-        if not Viewport.disposed(viewport) and viewport.visible then
-            Viewport.render(viewport)
+    for _, drawable in pairs(t_drawables) do
+        if not drawable.disposed(drawable) and drawable.visible then
+            if drawable.viewport then
+                local viewport = drawable.viewport
+                if viewport.visible then
+                    local u, v, w, h = Rectangle.get(viewport.rectangle)
+                    local dx = drawable.x - u
+                    local dy = drawable.y - v
+                    lg.push()
+                    lg.translate(viewport.ox, viewport.oy)
+                    if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
+                        drawable.render(drawable)
+                    end
+                    lg.pop()
+                end
+            else
+                drawable.render(drawable)
+            end
         end
     end
 
@@ -144,6 +155,14 @@ end
 function Graphics.transition(duration, transition, vague)
 end
 
+function Graphics.addDrawable(drawable)
+    table.insert(t_drawables, drawable)
+end
+
+function Graphics.removeDrawable(drawable)
+    table.removeValue(t_drawables, drawable)
+end
+
 function Graphics.getScreenWidth()
     return GraphicsConfigures.width
 end
@@ -160,22 +179,6 @@ end
 
 function Graphics.getBestScreenMode()
     return table.last(Graphics.getScreenModes())
-end
-
-function Graphics.getBackgroundViewport()
-    if not t_background_viewport then
-        t_background_viewport = Viewport.new()
-        t_background_viewport.z = 0
-    end
-    return t_background_viewport
-end
-
-function Graphics.getWindowViewport()
-    if not t_window_viewport then
-        t_window_viewport = Viewport.new()
-        t_window_viewport.z = 40
-    end
-    return t_window_viewport
 end
 
 function Graphics.getFramerate()
@@ -217,14 +220,6 @@ end
 function Graphics.toggleFPS()
     m_showfps = not m_showfps
     if not m_showfps then lg.setCaption(m_caption) end
-end
-
-function Graphics.addViewport(viewport)
-    table.insert(t_viewports, viewport)
-end
-
-function Graphics.removeViewport(viewport)
-    table.removeValue(t_viewports, viewport)
 end
 
 function Graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)

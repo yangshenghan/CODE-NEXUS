@@ -36,19 +36,11 @@ local Rectangle             = Core.import 'nexus.base.rectangle'
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Viewport              = {
-    drawables               = nil,
     visible                 = true,
     ox                      = 0,
     oy                      = 0,
     z                       = 0
 }
-
--- / ---------------------------------------------------------------------- \ --
--- | Private functions                                                      | --
--- \ ---------------------------------------------------------------------- / --
-local function drawable_zorder_sorter(a, b)
-    return a.z < b.z
-end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -65,52 +57,13 @@ function Viewport.new(...)
         local x, y, width, height = unpack({...})
         instance.rectangle = Rectangle.new(x, y, width, height)
     end
-    instance.drawables = {}
-
-    Graphics.addViewport(instance)
     return instance
-end
-
-function Viewport.addDrawable(instance, drawable)
-    table.insert(instance.drawables, drawable)
-end
-
-function Viewport.removeDrawable(instance, drawable)
-    table.removeValue(instance.drawables, drawable)
-end
-
-function Viewport.dispose(instance)
-    instance.drawables = nil
-
-    Graphics.removeViewport(instance)
-end
-
-function Viewport.disposed(instance)
-    return instance.drawables == nil
 end
 
 function Viewport.flash(instance, color, duration)
 end
 
 function Viewport.update(instance, dt)
-end
-
-function Viewport.render(instance)
-    local u, v, w, h = Rectangle.get(instance.rectangle)
-    table.sort(instance.drawables, drawable_zorder_sorter)
-
-    love.graphics.push()
-    love.graphics.translate(instance.ox, instance.oy)
-    for _, drawable in pairs(instance.drawables) do
-        if not drawable.disposed(drawable) and drawable.visible then
-            local dx = drawable.x - u
-            local dy = drawable.y - v
-            if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
-                drawable.render(drawable)
-            end
-        end
-    end
-    love.graphics.pop()
 end
 
 return Viewport

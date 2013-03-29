@@ -69,7 +69,7 @@ local function title_update_coroutine(instance, dt, timer)
 
     -- Show splash screens
     if not instance.skip then
-        local splash = SpriteBase.new({}, Graphics.getWindowViewport())
+        local splash = SpriteBase.new({})
         splash.x = Graphics.getScreenWidth() / 2
         splash.y = Graphics.getScreenHeight() / 2
         splash.setImage(splash, Resource.loadSystemImage('splash1.png'))
@@ -87,7 +87,7 @@ local function title_update_coroutine(instance, dt, timer)
     end
 
     -- Start animation of PRESS TO START message
-    local waiting = SpriteBase.new({}, Graphics.getWindowViewport())
+    local waiting = SpriteBase.new({})
     waiting.x = Graphics.getScreenWidth() / 2
     waiting.y = Graphics.getScreenHeight() / 2
     waiting.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue.png'))

@@ -52,12 +52,6 @@ function Scene.update(dt)
     end
 end
 
-function Scene.render()
-    for _, scene in ipairs(t_scenes) do
-        scene.render(scene)
-    end
-end
-
 function Scene.pause()
     local scene = Scene.getCurrentScene()
     scene.setIdle(scene, true)

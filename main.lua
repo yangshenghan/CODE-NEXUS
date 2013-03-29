@@ -153,9 +153,7 @@ end
 
 local function render()
     lg.clear()
-    Game.render()
     Graphics.render()
-    Scene.render()
     lg.present()
 
     if not GraphicsConfigures.vsync then lt.sleep(m_fps) end

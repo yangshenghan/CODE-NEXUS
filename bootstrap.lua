@@ -154,13 +154,13 @@ return function(instance, enable)
     -- | Game hooks in debug mode                                           | --
     -- \ ------------------------------------------------------------------ / --
     local update            = Scene.update
-    local render            = Scene.render
+    local render            = Graphics.render
 
     function Scene.update(...)
         update(...)
     end
 
-    function Scene.render(...)
+    function Graphics.render(...)
         render(...)
 
         if not GameConsole.isConsoleEnabled() then

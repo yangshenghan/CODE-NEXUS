@@ -128,9 +128,6 @@ end
 function Game.update(dt)
 end
 
-function Game.render()
-end
-
 function Game.pause()
 end
 

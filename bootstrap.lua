@@ -40,9 +40,11 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
-local NEXUS_VERSION         = Constants.VERSION
-local NEXUS_DEBUG_MODE      = Constants.DEBUG_MODE
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local VERSION               = Constants.VERSION
+local DEBUG_MODE            = Constants.DEBUG_MODE
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -87,7 +89,7 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Debug functions                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-if NEXUS_DEBUG_MODE then
+if DEBUG_MODE then
 
 local Game                  = nil
 local Graphics              = nil
@@ -101,7 +103,7 @@ return function(instance, enable)
     if not enable then
         Scene.update = update
         Graphics.render = render
-        return NEXUS_EMPTY_FUNCTION
+        return EMPTY_FUNCTION
     end
 
     -- / ------------------------------------------------------------------ \ --
@@ -156,7 +158,7 @@ return function(instance, enable)
             lg.printf(string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, 'left')
 
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
-            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), NEXUS_VERSION.STAGE, l._os), 0, Graphics.getScreenHeight() - 24, Graphics.getScreenWidth() - 8, 'right')
+            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), VERSION.STAGE, l._os), 0, REFERENCE_HEIGHT - 24, REFERENCE_WIDTH - 8, 'right')
         end
     end
 
@@ -167,6 +169,6 @@ end
 
 return function()
     return setmetatable({}, {
-        __index             = NEXUS_EMPTY_FUNCTION
+        __index             = EMPTY_FUNCTION
     })
 end

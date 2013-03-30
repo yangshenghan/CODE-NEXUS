@@ -29,8 +29,11 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
 local Rectangle             = Core.import 'nexus.base.rectangle'
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -49,10 +52,10 @@ function Viewport.new(...)
     local instance = setmetatable({}, { __index = Viewport })
     
     if ... == nil then
-        instance.rectangle = Rectangle.new(0, 0, Graphics.getScreenWidth(), Graphics.getScreenHeight())
+        instance.rectangle = Rectangle.new(0, 0, REFERENCE_WIDTH, REFERENCE_HEIGHT)
     elseif type(...) == 'table' then
         local args = ...
-        instance.rectangle = args.rectangle or Rectangle.new(args.x or 0, args.y or 0, args.width or Graphics.getScreenWidth(), args.height or Graphics.getScreenHeight())
+        instance.rectangle = args.rectangle or Rectangle.new(args.x or 0, args.y or 0, args.width or REFERENCE_WIDTH, args.height or REFERENCE_HEIGHT)
     else
         local x, y, width, height = unpack({...})
         instance.rectangle = Rectangle.new(x, y, width, height)

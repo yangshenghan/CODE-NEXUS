@@ -47,7 +47,9 @@ local SceneExtra            = Core.import 'nexus.scene.extra'
 local SceneOption           = Core.import 'nexus.scene.option'
 local SceneExit             = Core.import 'nexus.scene.exit'
 local WindowCommand         = Core.import 'nexus.window.command'
-local NEXUS_KEY             = Constants.KEYS
+local KEYS                  = Constants.KEYS
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -70,8 +72,8 @@ local function title_update_coroutine(instance, dt, timer)
     -- Show splash screens
     if not instance.skip then
         local splash = SpriteBase.new({})
-        splash.x = Graphics.getScreenWidth() / 2
-        splash.y = Graphics.getScreenHeight() / 2
+        splash.x = REFERENCE_WIDTH / 2
+        splash.y = REFERENCE_HEIGHT / 2
         splash.setImage(splash, Resource.loadSystemImage('splash1.png'))
         splash.opacity = 0
         wait(1000, function(dt)
@@ -89,12 +91,12 @@ local function title_update_coroutine(instance, dt, timer)
 
     -- Start animation of PRESS TO START message
     local waiting = SpriteBase.new({})
-    waiting.x = Graphics.getScreenWidth() / 2
-    waiting.y = Graphics.getScreenHeight() / 2
+    waiting.x = REFERENCE_WIDTH / 2
+    waiting.y = REFERENCE_HEIGHT / 2
     waiting.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue.png'))
     while true do
         local cycle, phase = math.modf((timer - 0.5) / 0.75)
-        if Input.isKeyTrigger(NEXUS_KEY.C) then break end
+        if Input.isKeyTrigger(KEYS.C) then break end
         if cycle % 2 == 0 then
             waiting.opacity = 1 - phase
         else

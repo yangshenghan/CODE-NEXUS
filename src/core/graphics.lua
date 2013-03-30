@@ -162,14 +162,6 @@ function Graphics.removeDrawable(drawable)
     table.removeValue(t_drawables, drawable)
 end
 
-function Graphics.getScreenWidth()
-    return GraphicsConfigures.width
-end
-
-function Graphics.getScreenHeight()
-    return GraphicsConfigures.height
-end
-
 function Graphics.getScreenModes()
     local modes = lg.getModes()
     table.sort(modes, function(a, b) return a.width * a.height < b.width * b.height end)

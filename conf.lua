@@ -93,6 +93,8 @@ nexus = {
         SAVING_SLOT_SIZE    = 15,
         LOGICAL_GRID_SIZE   = 16,
         CONFIGURE_IDENTIFIER= 'configure',
+        REFERENCE_WIDTH     = 1280,
+        REFERENCE_HEIGHT    = 720,
         FALLBACK_WIDTH      = 640,
         FALLBACK_HEIGHT     = 360
     },

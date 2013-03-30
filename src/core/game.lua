@@ -44,8 +44,13 @@ local GameConsole           = Core.import 'nexus.game.console'
 local GamePlayer            = Core.import 'nexus.game.player'
 local SceneTitle            = Core.import 'nexus.scene.title'
 local SceneExit             = Core.import 'nexus.scene.exit'
-local NEXUS_FIRST_RUN       = Constants.FIRST_RUN
-local NEXUS_VERSION         = Constants.VERSION
+local KEYS                  = Constants.KEYS
+local VERSION               = Constants.VERSION
+local FIRST_RUN             = Constants.FIRST_RUN
+local SAVING_FILENAME       = Constants.PATHS.SAVING
+local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -61,13 +66,10 @@ local t_saving_data         = nil
 
 local t_game_objects        = nil
 
-local MAJOR                 = NEXUS_VERSION.MAJOR
-local MINOR                 = NEXUS_VERSION.MINOR
-local MICRO                 = NEXUS_VERSION.MICRO
-local PATCH                 = NEXUS_VERSION.PATCH
-local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
-local SAVING_FILENAME       = Constants.PATHS.SAVING
-local NEXUS_KEY             = Constants.KEYS
+local MAJOR                 = VERSION.MAJOR
+local MINOR                 = VERSION.MINOR
+local MICRO                 = VERSION.MICRO
+local PATCH                 = VERSION.PATCH
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -88,8 +90,8 @@ end
 local function adjust_screen_mode()
     local best_screen_mode = Graphics.getBestScreenMode()
 
-    local ow = Graphics.getScreenWidth()
-    local oh = Graphics.getScreenHeight()
+    local ow = REFERENCE_WIDTH
+    local oh = REFERENCE_HEIGHT
     local bw = best_screen_mode.width
     local bh = best_screen_mode.height
 
@@ -111,7 +113,7 @@ local function check_game_requirement()
         error('Your graphics card is not supported to use hardware texture render.')
     end
 
-    if NEXUS_FIRST_RUN then adjust_screen_mode() end
+    if FIRST_RUN then adjust_screen_mode() end
 
     return true
 end
@@ -139,11 +141,11 @@ end
 function Game.start()
     Data.loadTextData(OptionConfigures.language)
 
-    Input.bindKeyEvent('graphics.togglefps', Input.TRIGGER, NEXUS_KEY.F1, Graphics.toggleFPS)
-    Input.bindKeyEvent('gameconsole.toggle', Input.TRIGGER, NEXUS_KEY.F9, GameConsole.toggle)
-    Input.bindKeyEvent('graphics.togglefullscreen', Input.TRIGGER, NEXUS_KEY.F11, Graphics.toggleFullscreen)
-    Input.bindKeyEvent('game.reload', Input.TRIGGER, NEXUS_KEY.F12, Game.reload)
-    Input.bindKeyEvent('game.quit', Input.TRIGGER, NEXUS_KEY.F4, NEXUS_KEY.ALTERNATIVE, Game.quit)
+    Input.bindKeyEvent('graphics.togglefps', Input.TRIGGER, KEYS.F1, Graphics.toggleFPS)
+    Input.bindKeyEvent('gameconsole.toggle', Input.TRIGGER, KEYS.F9, GameConsole.toggle)
+    Input.bindKeyEvent('graphics.togglefullscreen', Input.TRIGGER, KEYS.F11, Graphics.toggleFullscreen)
+    Input.bindKeyEvent('game.reload', Input.TRIGGER, KEYS.F12, Game.reload)
+    Input.bindKeyEvent('game.quit', Input.TRIGGER, KEYS.F4, KEYS.ALTERNATIVE, Game.quit)
 
     if check_game_requirement() then
         Scene.goto(SceneTitle.new())

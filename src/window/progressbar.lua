@@ -32,9 +32,12 @@ local li                    = l.image
 local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local WindowBase            = Core.import 'nexus.window.base'
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -53,9 +56,9 @@ local WindowProgressBar     = {
 -- \ ---------------------------------------------------------------------- / --
 function WindowProgressBar.new(x, y, width, height)
     local instance = WindowBase.new(WindowProgressBar)
-    instance.x = x or Graphics.getScreenWidth() * 0.15
-    instance.y = y or Graphics.getScreenHeight() * 0.8 - 60
-    instance.width = width or Graphics.getScreenWidth() * 0.7
+    instance.x = x or REFERENCE_WIDTH * 0.15
+    instance.y = y or REFERENCE_HEIGHT * 0.8 - 60
+    instance.width = width or REFERENCE_WIDTH * 0.7
     instance.height = height or 60
     instance.visible = true
 

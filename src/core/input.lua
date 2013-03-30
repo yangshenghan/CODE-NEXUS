@@ -162,8 +162,16 @@ function Input.bindKeyEvent(name, ...)
     end
 end
 
+function Input.bindKeyEvents(events)
+    for name, event in pairs(events) do Input.bindKeyEvent(name, unpack(event)) end
+end
+
 function Input.unbindKeyEvent(name)
     t_events[name] = nil
+end
+
+function Input.unbindKeyEvents(names)
+    for _, name in pairs(names) do Input.unbindKeyEvent(name) end
 end
 
 function Input.isKeyDown(key, modifiers)

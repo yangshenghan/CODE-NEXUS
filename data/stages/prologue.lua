@@ -27,17 +27,18 @@ local nexus                 = nexus
 
 local Nexus                 = nexus
 
-local Configures            = Nexus.configures
-local GraphicsConfigures    = Configures.graphics
+local Constants             = Nexus.constants
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 return {
     width       = 1280,
     height      = 720,
     objects     = {
         ground      = {
-            x           = GraphicsConfigures.width / 2,
-            y           = GraphicsConfigures.height - 50 / 2,
-            width       = GraphicsConfigures.width,
+            x           = REFERENCE_WIDTH / 2,
+            y           = REFERENCE_HEIGHT - 50 / 2,
+            width       = REFERENCE_WIDTH,
             height      = 50,
             bodyType    = 'static',
             render      = function(instance)
@@ -46,9 +47,9 @@ return {
             end
         },
         sky         = {
-            x           = GraphicsConfigures.width / 2,
+            x           = REFERENCE_WIDTH / 2,
             y           = 50 / 2,
-            width       = GraphicsConfigures.width,
+            width       = REFERENCE_WIDTH,
             height      = 50,
             bodyType    = 'static',
             render      = function(instance)
@@ -58,9 +59,9 @@ return {
         },
         leftwall    = {
             x           = 50 / 2,
-            y           = GraphicsConfigures.height / 2,
+            y           = REFERENCE_HEIGHT / 2,
             width       = 50,
-            height      = GraphicsConfigures.height,
+            height      = REFERENCE_HEIGHT,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
@@ -68,10 +69,10 @@ return {
             end
         },
         rightwall   = {
-            x           = GraphicsConfigures.width - 50 / 2,
-            y           = GraphicsConfigures.height / 2,
+            x           = REFERENCE_WIDTH - 50 / 2,
+            y           = REFERENCE_HEIGHT / 2,
             width       = 50,
-            height      = GraphicsConfigures.height,
+            height      = REFERENCE_HEIGHT,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)

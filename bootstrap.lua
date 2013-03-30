@@ -148,8 +148,8 @@ return function(instance, enable)
         render(...)
 
         if not GameConsole.isConsoleEnabled() then
-            local width = GraphicsConfigures.width
-            local height = GraphicsConfigures.height
+            local width = REFERENCE_WIDTH
+            local height = REFERENCE_HEIGHT
 
             lg.setColor(255, 255, 255, 255)
             lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')

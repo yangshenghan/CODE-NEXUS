@@ -31,9 +31,9 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
-local GraphicsConfigures    = Configures.graphics
 local Data                  = Core.import 'nexus.core.data'
 local GameObject            = Core.import 'nexus.game.object'
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
@@ -67,7 +67,7 @@ end
 
 function GamePlayer.render(instance)
     love.graphics.setColor(193, 47, 14)
-    love.graphics.circle('fill', instance.object.rx, GraphicsConfigures.height - instance.object.ry, LOGICAL_GRID_SIZE / 2)
+    love.graphics.circle('fill', instance.object.rx, REFERENCE_HEIGHT - instance.object.ry, LOGICAL_GRID_SIZE / 2)
 end
 
 function GamePlayer.rush(instance)

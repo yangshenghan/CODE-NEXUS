@@ -143,7 +143,7 @@ function Game.start()
 
     Input.bindKeyEvent('graphics.togglefps', Input.TRIGGER, NEXUS_KEY.F1, Graphics.toggleFPS)
     Input.bindKeyEvent('gameconsole.toggle', Input.TRIGGER, NEXUS_KEY.F9, GameConsole.toggle)
-    Input.bindKeyEvent('graphics.togglefullscreen', Input.TRIGGER, NEXUS_KEY.F11, Graphics.toggleFullscreen())
+    Input.bindKeyEvent('graphics.togglefullscreen', Input.TRIGGER, NEXUS_KEY.F11, Graphics.toggleFullscreen)
     Input.bindKeyEvent('game.reload', Input.TRIGGER, NEXUS_KEY.F12, Game.reload)
     Input.bindKeyEvent('game.quit', Input.TRIGGER, NEXUS_KEY.F4, NEXUS_KEY.ALTERNATIVE, Game.quit)
 

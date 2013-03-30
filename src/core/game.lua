@@ -38,6 +38,7 @@ local Constants             = Nexus.constants
 local OptionConfigures      = Configures.options
 local Data                  = Core.import 'nexus.core.data'
 local Graphics              = Core.import 'nexus.core.graphics'
+local Input                 = Core.import 'nexus.core.input'
 local Scene                 = Core.import 'nexus.core.scene'
 local GameConsole           = Core.import 'nexus.game.console'
 local GamePlayer            = Core.import 'nexus.game.player'
@@ -66,6 +67,7 @@ local MICRO                 = NEXUS_VERSION.MICRO
 local PATCH                 = NEXUS_VERSION.PATCH
 local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
 local SAVING_FILENAME       = Constants.PATHS.SAVING
+local NEXUS_KEY             = Constants.KEYS
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -136,6 +138,26 @@ end
 
 function Game.start()
     Data.loadTextData(OptionConfigures.language)
+
+    Input.bindKeyEvent('togglefps', Input.TRIGGER, NEXUS_KEY.F1, function()
+        Graphics.toggleFPS()
+    end)
+
+    Input.bindKeyEvent('console.toggle', Input.TRIGGER, NEXUS_KEY.F9, function()
+        GameConsole.toggle()
+    end)
+
+    Input.bindKeyEvent('togglefullscreen', Input.TRIGGER, NEXUS_KEY.F11, function()
+        Graphics.toggleFullscreen()
+    end)
+
+    Input.bindKeyEvent('game.reload', Input.TRIGGER, NEXUS_KEY.F12, function()
+        Game.reload()
+    end)
+
+    Input.bindKeyEvent('game.quit', Input.TRIGGER, NEXUS_KEY.F4, NEXUS_KEY.ALTERNATIVE, function()
+        Game.quit()
+    end)
 
     if check_game_requirement() then
         Scene.goto(SceneTitle.new(m_loaded))

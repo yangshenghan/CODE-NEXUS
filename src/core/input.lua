@@ -33,6 +33,7 @@ local lk                    = l.keyboard
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local MouseConfigures       = Configures.mouses
 local KeyboardConfigures    = Configures.keyboards
@@ -46,16 +47,17 @@ local GameConsole           = Core.import 'nexus.game.console'
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Input                 = {}
+local Input                 = {
+    PRESS                   = 'press',
+    REPEAT                  = 'repeat',
+    RELEASE                 = 'release',
+    TRIGGER                 = 'trigger'
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_system_f1           = false
-
-local m_system_f9           = false
-
-local m_system_f12          = false
+local t_events              = {}
 
 local t_pressed             = {}
 
@@ -66,6 +68,14 @@ local t_triggered           = {}
 local t_counter             = {}
 
 local t_controls            = KeyboardConfigures
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function check_modifier_pressed(modifiers)
+    if modifiers then return t_pressed[modifiers] end
+    return true
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -96,9 +106,7 @@ function Input.reset()
     t_triggered = {}
     t_released = {}
     t_pressed = {}
-    m_system_f1 = false
-    m_system_f9 = false
-    m_system_f12 = false
+    t_events = {}
 end
 
 function Input.update(dt)
@@ -124,36 +132,9 @@ function Input.update(dt)
         end
     end
 
-    if lk.isDown('f1') then
-        if not m_system_f1 then
-            m_system_f1 = true
-            Graphics.toggleFPS()
-        end
-    else
-        m_system_f1 = false
-    end
-
-    if lk.isDown('f9') then
-        if not m_system_f9 then
-            m_system_f9 = true
-            GameConsole.toggle()
-        end
-    else
-        m_system_f9 = false
-    end
-
-    if lk.isDown('f12') then
-        if not m_system_f12 then
-            m_system_f12 = true
-            Game.reload()
-        end
-    else
-        m_system_f12 = false
-    end
-
-    if lk.isDown('lalt', 'ralt') then
-        if lk.isDown('f4') then Game.quit() end
-        if lk.isDown('return') then Graphics.toggleFullscreen() end
+    for name, event in pairs(t_events) do
+        local t, k, m, f = unpack(event)
+        if t == Input.PRESS and Input.isKeyDown(k, m) or t == Input.REPEAT and Input.isKeyRepeat(k, m) or t == Input.RELEASE and Input.isKeyUp(k, m) or t == Input.TRIGGER and Input.isKeyTrigger(k, m) then f() end
     end
 end
 
@@ -170,20 +151,34 @@ end
     -- nexus.game.saveGameConfigure()
 -- end
 
-function Input.isKeyDown(key)
-    return t_pressed[key] 
+function Input.bindKeyEvent(name, ...)
+    local args = {...}
+
+    if #args == 4 then
+        t_events[name] = {args[1], args[2], args[3], args[4]}
+    else
+        t_events[name] = {args[1], args[2], nil, args[3]}
+    end
+end
+
+function Input.unbindKeyEvent(name)
+    t_events[name] = nil
+end
+
+function Input.isKeyDown(key, modifiers)
+    return t_pressed[key] and check_modifier_pressed(modifiers)
 end
 
 function Input.isKeyUp(key)
     return t_released[key]
 end
 
-function Input.isKeyTrigger(key)
-    return t_triggered[key]
+function Input.isKeyTrigger(key, modifiers)
+    return t_triggered[key] and check_modifier_pressed(modifiers)
 end
 
-function Input.isKeyRepeat(key)
-    return t_pressed[key] and t_counter[key] == 0
+function Input.isKeyRepeat(key, modifiers)
+    return t_pressed[key] and t_counter[key] == 0 and check_modifier_pressed(modifiers)
 end
 
 return Input

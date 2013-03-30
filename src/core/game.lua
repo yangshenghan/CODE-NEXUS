@@ -55,8 +55,6 @@ local Game                  = {}
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_loaded              = false
-
 local m_version             = nil
 
 local t_saving_data         = nil
@@ -148,8 +146,7 @@ function Game.start()
     Input.bindKeyEvent('game.quit', Input.TRIGGER, NEXUS_KEY.F4, NEXUS_KEY.ALTERNATIVE, Game.quit)
 
     if check_game_requirement() then
-        Scene.goto(SceneTitle.new(m_loaded))
-        m_loaded = true
+        Scene.goto(SceneTitle.new())
     end
 end
 

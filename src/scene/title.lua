@@ -85,6 +85,7 @@ local function title_update_coroutine(instance, dt, timer)
         end)
         splash.dispose(splash)
     end
+    SceneTitle.skip = true
 
     -- Start animation of PRESS TO START message
     local waiting = SpriteBase.new({})

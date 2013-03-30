@@ -97,7 +97,7 @@ local function current()
     return table.concat(m_commandline)
 end
 
-function position()
+local function position()
     return m_cursor - #m_commandline - 1
 end
 

@@ -89,6 +89,11 @@ end
 -- \ ---------------------------------------------------------------------- / --
 if NEXUS_DEBUG_MODE then
 
+local Game                  = nil
+local Graphics              = nil
+local Scene                 = nil
+local GameConsole           = nil
+
 local update                = nil
 local render                = nil
 

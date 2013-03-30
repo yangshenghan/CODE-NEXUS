@@ -127,7 +127,7 @@ local function serialize(data, cfunctions)
     local value_serializers
 
     local size = 2
-    local buffer = {'function __deserialize() local _='}
+    local buffer = {'return '}
     local listed = {}
     local psize = 1
     local pbuffer = {}
@@ -238,7 +238,6 @@ local function serialize(data, cfunctions)
     buffer[size] = t
     buffer[size + 1] = ' '
     buffer[size + 2] = table.concat(pbuffer)
-    buffer[size + 3] = 'return _ end'
     return table.concat(buffer)
 end
 

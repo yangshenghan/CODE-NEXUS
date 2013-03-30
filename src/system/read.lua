@@ -84,9 +84,7 @@ local function decompress(data)
 end
 
 local function deserialize(data)
-    assert(type(data) == 'string')
-    assert(loadstring(data))()
-    return __deserialize()
+    return loadstring(data)()
 end
 
 return function(filename)

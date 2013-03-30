@@ -63,8 +63,6 @@ local FALLBACK_HEIGHT       = Constants.FALLBACK_HEIGHT
 -- \ ---------------------------------------------------------------------- / --
 local m_fps                 = 1 / Graphics.getFramerate()
 
-local m_loaded              = false
-
 local m_loading             = true
 
 local m_running             = true

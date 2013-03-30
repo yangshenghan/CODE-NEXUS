@@ -55,6 +55,8 @@ local Game                  = {}
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
+local m_loaded              = false
+
 local m_version             = nil
 
 local t_saving_data         = nil
@@ -139,31 +141,16 @@ end
 function Game.start()
     Data.loadTextData(OptionConfigures.language)
 
-    Input.bindKeyEvent('togglefps', Input.TRIGGER, NEXUS_KEY.F1, function()
-        Graphics.toggleFPS()
-    end)
-
-    Input.bindKeyEvent('console.toggle', Input.TRIGGER, NEXUS_KEY.F9, function()
-        GameConsole.toggle()
-    end)
-
-    Input.bindKeyEvent('togglefullscreen', Input.TRIGGER, NEXUS_KEY.F11, function()
-        Graphics.toggleFullscreen()
-    end)
-
-    Input.bindKeyEvent('game.reload', Input.TRIGGER, NEXUS_KEY.F12, function()
-        Game.reload()
-    end)
-
-    Input.bindKeyEvent('game.quit', Input.TRIGGER, NEXUS_KEY.F4, NEXUS_KEY.ALTERNATIVE, function()
-        Game.quit()
-    end)
+    Input.bindKeyEvent('graphics.togglefps', Input.TRIGGER, NEXUS_KEY.F1, Graphics.toggleFPS)
+    Input.bindKeyEvent('gameconsole.toggle', Input.TRIGGER, NEXUS_KEY.F9, GameConsole.toggle)
+    Input.bindKeyEvent('graphics.togglefullscreen', Input.TRIGGER, NEXUS_KEY.F11, Graphics.toggleFullscreen())
+    Input.bindKeyEvent('game.reload', Input.TRIGGER, NEXUS_KEY.F12, Game.reload)
+    Input.bindKeyEvent('game.quit', Input.TRIGGER, NEXUS_KEY.F4, NEXUS_KEY.ALTERNATIVE, Game.quit)
 
     if check_game_requirement() then
         Scene.goto(SceneTitle.new(m_loaded))
+        m_loaded = true
     end
-
-    m_loaded = true
 end
 
 function Game.terminate()

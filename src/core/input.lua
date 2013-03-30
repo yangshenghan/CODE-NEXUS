@@ -129,6 +129,7 @@ function Input.update(dt)
                 t_released[key] = true
             end
             t_pressed[key] = false
+            t_triggered[key] = false
         end
     end
 

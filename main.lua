@@ -132,7 +132,7 @@ local function finalize()
     Nexus(false)
 end
 
-local function process()
+local function handle()
     le.pump()
     for e, a, b, c, d in le.poll() do
         local handler = HANDLERS[e]
@@ -254,7 +254,7 @@ function l.run()
 
         initialize()
         while m_running do
-            process()
+            handle()
             update(lt.getDelta())
             render()
         end

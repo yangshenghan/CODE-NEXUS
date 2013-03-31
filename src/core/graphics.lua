@@ -64,9 +64,11 @@ local m_framecount          = 0
 
 local m_brightness          = 255
 
-local m_current_height      = GraphicsConfigures.height
+local m_fullscreen          = GraphicsConfigures.fullscreen
 
-local m_current_fullscreen  = GraphicsConfigures.fullscreen
+local m_screen_offsetx      = 0
+
+local m_screen_offsety      = 0
 
 local m_caption             = lg.getCaption()
 
@@ -112,6 +114,7 @@ end
 -- \ ---------------------------------------------------------------------- / --
 function Graphics.initialize()
     -- local icon = Resource.loadImage('icon.png')
+    local width, height = fix_aspect_ratio(GraphicsConfigures.width, GraphicsConfigures.height)
 
     Graphics.setFramerate(60)
     Graphics.setFramecount(0)
@@ -119,6 +122,9 @@ function Graphics.initialize()
 
     -- lg.setIcon(icon)
     lg.reset()
+
+    m_screen_offsetx = (lg.getWidth() - width) * 0.5
+    m_screen_offsety = (lg.getHeight() - height) * 0.5
 end
 
 function Graphics.finalize()
@@ -142,8 +148,8 @@ end
 
 function Graphics.render()
     lg.push()
-    lg.translate(0, (lg.getHeight() - m_current_height) * 0.5)
-    lg.scale(lg.getWidth() / REFERENCE_WIDTH)
+    lg.translate(m_screen_offsetx, m_screen_offsety)
+    lg.scale(math.min(lg.getWidth() / REFERENCE_WIDTH, lg.getHeight() / REFERENCE_HEIGHT))
 
     for _, drawable in pairs(t_drawables) do
         if not drawable.disposed(drawable) and drawable.visible then
@@ -241,7 +247,7 @@ end
 function Graphics.toggleFullscreen()
     local width = GraphicsConfigures.width
     local height = GraphicsConfigures.height
-    local fullscreen = not m_current_fullscreen
+    local fullscreen = not m_fullscreen
 
     if fullscreen then
         local best_screen_mode = Graphics.getBestScreenMode()
@@ -274,10 +280,6 @@ function Graphics.changeGraphicsConfigures(save, width, height, fullscreen, vsyn
             centered            = GraphicsConfigures.centered
         })
 
-        if fullscreen then
-            width, height = fix_aspect_ratio(width, height)
-        end
-
         if save then
             GraphicsConfigures.width = width
             GraphicsConfigures.height = height
@@ -285,11 +287,16 @@ function Graphics.changeGraphicsConfigures(save, width, height, fullscreen, vsyn
             GraphicsConfigures.vsync = vsync
             GraphicsConfigures.fsaa = fsaa
 
-            -- Game.saveGameConfigure()
+            Game.saveGameConfigure()
         end
 
-        m_current_height = height
-        m_current_fullscreen = fullscreen
+        if fullscreen then
+            width, height = fix_aspect_ratio(width, height)
+        end
+
+        m_fullscreen = fullscreen
+        m_screen_offsetx = (lg.getWidth() - width) * 0.5
+        m_screen_offsety = (lg.getHeight() - height) * 0.5
     end
 end
 

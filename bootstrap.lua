@@ -39,7 +39,6 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
-local GraphicsConfigures    = Configures.graphics
 local VERSION               = Constants.VERSION
 local DEBUG_MODE            = Constants.DEBUG_MODE
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
@@ -143,8 +142,7 @@ return function(instance, enable)
     end
 
     function Graphics.render(...)
-        local width = lg.getWidth()
-        local height = lg.getHeight()
+        local width, height, fullscreen, vsync, fsaa = lg.getMode()
 
         render(...)
 
@@ -152,7 +150,7 @@ return function(instance, enable)
             lg.setColor(255, 255, 255, 255)
             lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
             lg.printf(string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, 'left')
-            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, GraphicsConfigures.fullscreen and 'fullscreen' or 'windowed', GraphicsConfigures.vsync and 'enabled' or 'disabled', GraphicsConfigures.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')
+            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, fullscreen and 'fullscreen' or 'windowed', vsync and 'enabled' or 'disabled', fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')
             lg.printf(string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, 'left')
 
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')

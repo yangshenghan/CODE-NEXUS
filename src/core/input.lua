@@ -39,11 +39,6 @@ local MouseConfigures       = Configures.mouses
 local KeyboardConfigures    = Configures.keyboards
 -- local JoystickConfigures    = Configures.joysticks
 
-local Game                  = Core.import 'nexus.core.game'
-local Graphics              = Core.import 'nexus.core.graphics'
-
-local GameConsole           = Core.import 'nexus.game.console'
-
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
@@ -149,7 +144,7 @@ function Input.reload()
 end
 
 -- function Input.changeInputConfigures()
-    -- nexus.game.saveGameConfigure()
+    -- Game.saveGameConfigure()
 -- end
 
 function Input.bindKeyEvent(name, ...)

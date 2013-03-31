@@ -147,9 +147,7 @@ local function update(dt)
 end
 
 local function render()
-    lg.clear()
     Graphics.render()
-    lg.present()
 
     if not GraphicsConfigures.vsync then lt.sleep(m_fps) end
 end

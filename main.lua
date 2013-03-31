@@ -83,9 +83,6 @@ local HANDLERS              = {
             Scene.pause()
         end
     end,
-    resize                  = function(width, height)
-        Graphics.changeGraphicsConfigures(width, height)
-    end,
     reload                  = function()
         m_loading = true
         m_running = false

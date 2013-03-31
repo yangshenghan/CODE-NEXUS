@@ -43,8 +43,6 @@ local GraphicsConfigures    = Configures.graphics
 local VERSION               = Constants.VERSION
 local DEBUG_MODE            = Constants.DEBUG_MODE
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
-local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
-local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -145,12 +143,12 @@ return function(instance, enable)
     end
 
     function Graphics.render(...)
+        local width = lg.getWidth()
+        local height = lg.getHeight()
+
         render(...)
 
         if not GameConsole.isConsoleEnabled() then
-            local width = REFERENCE_WIDTH
-            local height = REFERENCE_HEIGHT
-
             lg.setColor(255, 255, 255, 255)
             lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
             lg.printf(string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, 'left')
@@ -158,7 +156,7 @@ return function(instance, enable)
             lg.printf(string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, 'left')
 
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
-            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), VERSION.STAGE, l._os), 0, REFERENCE_HEIGHT - 24, REFERENCE_WIDTH - 8, 'right')
+            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), VERSION.STAGE, l._os), 0, height - 24, width - 8, 'right')
         end
     end
 

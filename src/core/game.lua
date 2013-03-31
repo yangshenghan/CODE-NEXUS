@@ -96,11 +96,7 @@ local function adjust_screen_mode()
     local bh = best_screen_mode.height
 
     if ow > bw or oh > bh or ow * oh > bw * bh then
-        if bw > bh then
-            Graphics.changeGraphicsConfigures(bw, bw * 9 / 16, fullscreen)
-        else
-            Graphics.changeGraphicsConfigures(bh * 16 / 9, bh, fullscreen)
-        end
+        Graphics.changeGraphicsConfigures(true, bw, bh)
     end
 end
 

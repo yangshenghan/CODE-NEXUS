@@ -34,6 +34,7 @@ local lg                    = l.graphics
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 
@@ -43,6 +44,9 @@ local Scene                 = Core.import 'nexus.core.scene'
 
 local Rectangle             = require 'src.base.rectangle'
 local Viewport              = require 'src.base.viewport'
+
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -60,6 +64,10 @@ local m_framecount          = 0
 
 local m_brightness          = 255
 
+local m_current_height      = GraphicsConfigures.height
+
+local m_current_fullscreen  = GraphicsConfigures.fullscreen
+
 local m_caption             = lg.getCaption()
 
 local t_drawables           = {}
@@ -75,6 +83,28 @@ local function zsorter(a, b)
     else
         return a.viewport.z < b.viewport.z
     end
+end
+
+local function fix_aspect_ratio(width, height)
+    local best_screen_mode = Graphics.getBestScreenMode()
+
+    if width > height then
+        height = width * 9 / 16
+    else
+        width = height * 16 / 9
+    end
+
+    if width > best_screen_mode.width then
+        width = best_screen_mode.width
+        height = width * 9 / 16
+    end
+
+    if height > best_screen_mode.height then
+        height = best_screen_mode.height
+        width = height * 16 / 9
+    end
+
+    return width, height
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -111,6 +141,10 @@ function Graphics.update(dt)
 end
 
 function Graphics.render()
+    lg.push()
+    lg.translate(0, (lg.getHeight() - m_current_height) * 0.5)
+    lg.scale(lg.getWidth() / REFERENCE_WIDTH)
+
     for _, drawable in pairs(t_drawables) do
         if not drawable.disposed(drawable) and drawable.visible then
             if drawable.viewport then
@@ -131,6 +165,8 @@ function Graphics.render()
             end
         end
     end
+
+    lg.pop()
 
     m_framecount = m_framecount + 1
 end
@@ -203,9 +239,17 @@ function Graphics.screenshot()
 end
 
 function Graphics.toggleFullscreen()
-    if lg.toggleFullscreen() then
-        GraphicsConfigures.fullscreen = not GraphicsConfigures.fullscreen
+    local width = GraphicsConfigures.width
+    local height = GraphicsConfigures.height
+    local fullscreen = not m_current_fullscreen
+
+    if fullscreen then
+        local best_screen_mode = Graphics.getBestScreenMode()
+        width = best_screen_mode.width
+        height = best_screen_mode.height
     end
+
+    Graphics.changeGraphicsConfigures(false, width, height, fullscreen)
 end
 
 function Graphics.toggleFPS()
@@ -213,23 +257,40 @@ function Graphics.toggleFPS()
     if not m_showfps then lg.setCaption(m_caption) end
 end
 
-function Graphics.changeGraphicsConfigures(width, height, fullscreen, vsync, fsaa)
-    GraphicsConfigures.width = width or GraphicsConfigures.width
-    GraphicsConfigures.height = height or GraphicsConfigures.height
-    GraphicsConfigures.fullscreen = fullscreen ~= nil and fullscreen or GraphicsConfigures.fullscreen 
-    GraphicsConfigures.vsync = vsync ~= nil and vsync or GraphicsConfigures.vsync 
-    GraphicsConfigures.fsaa = fsaa or GraphicsConfigures.fsaa
+function Graphics.changeGraphicsConfigures(save, width, height, fullscreen, vsync, fsaa)
+    local width = width or GraphicsConfigures.width
+    local height = height or GraphicsConfigures.height
+    local fullscreen = fullscreen ~= nil and fullscreen or GraphicsConfigures.fullscreen
+    local vsync = vsync ~= nil and vsync or GraphicsConfigures.vsync
+    local fsaa = fsaa or GraphicsConfigures.fsaa
 
-    lg.setMode(GraphicsConfigures.width, GraphicsConfigures.height, {
-        fullscreen          = GraphicsConfigures.fullscreen,
-        vsync               = GraphicsConfigures.vsync,
-        fsaa                = GraphicsConfigures.fsaa,
-        borderless          = GraphicsConfigures.borderless,
-        resizable           = GraphicsConfigures.resizable,
-        centered            = GraphicsConfigures.centered
-    })
+    if lg.checkMode(width, height, fullscreen) then
+        lg.setMode(width, height, {
+            fullscreen          = fullscreen,
+            vsync               = vsync,
+            fsaa                = fsaa,
+            borderless          = GraphicsConfigures.borderless,
+            resizable           = GraphicsConfigures.resizable,
+            centered            = GraphicsConfigures.centered
+        })
 
-    -- Game.saveGameConfigure()
+        if fullscreen then
+            width, height = fix_aspect_ratio(width, height)
+        end
+
+        if save then
+            GraphicsConfigures.width = width
+            GraphicsConfigures.height = height
+            GraphicsConfigures.fullscreen = fullscreen
+            GraphicsConfigures.vsync = vsync
+            GraphicsConfigures.fsaa = fsaa
+
+            -- Game.saveGameConfigure()
+        end
+
+        m_current_height = height
+        m_current_fullscreen = fullscreen
+    end
 end
 
 return Graphics

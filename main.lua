@@ -67,6 +67,8 @@ local m_loading             = true
 
 local m_running             = true
 
+local m_screen_freezed      = false
+
 local HANDLERS              = {
     focus                   = function(focus)
         if focus then
@@ -86,6 +88,9 @@ local HANDLERS              = {
     reload                  = function()
         m_loading = true
         m_running = false
+    end,
+    freeze                  = function(freezed)
+        m_screen_freezed = freezed
     end,
     framerate               = function(framerate)
         m_fps = 1 / framerate
@@ -147,7 +152,11 @@ local function update(dt)
 end
 
 local function render()
-    Graphics.render()
+    if not m_screen_freezed then
+        lg.clear()
+        Graphics.render()
+        lg.present()
+    end
 
     if not GraphicsConfigures.vsync then lt.sleep(m_fps) end
 end

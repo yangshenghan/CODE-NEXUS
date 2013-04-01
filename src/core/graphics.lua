@@ -58,8 +58,6 @@ local Graphics              = {}
 -- \ ---------------------------------------------------------------------- / --
 local m_showfps             = true
 
-local m_screen_freezed      = false
-
 local m_framerate           = 60
 
 local m_framecount          = 0
@@ -169,35 +167,31 @@ function Graphics.render()
     lg.translate(m_screen_offsetx, m_screen_offsety)
     lg.scale(math.min(lg.getWidth() / REFERENCE_WIDTH, lg.getHeight() / REFERENCE_HEIGHT))
 
-    if not m_screen_freezed then
-        lg.clear()
-        lg.setColor(255, 255, 255, 255)
+    lg.setColor(255, 255, 255, 255)
 
-        for _, drawable in pairs(t_drawables) do
-            if not drawable.disposed(drawable) and drawable.visible then
-                if drawable.viewport then
-                    local viewport = drawable.viewport
-                    if viewport.visible then
-                        local u, v, w, h = Rectangle.get(viewport.rectangle)
-                        local dx = drawable.x - u
-                        local dy = drawable.y - v
-                        lg.push()
-                        lg.translate(viewport.ox, viewport.oy)
-                        if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
-                            drawable.render(drawable)
-                        end
-                        lg.pop()
+    for _, drawable in pairs(t_drawables) do
+        if not drawable.disposed(drawable) and drawable.visible then
+            if drawable.viewport then
+                local viewport = drawable.viewport
+                if viewport.visible then
+                    local u, v, w, h = Rectangle.get(viewport.rectangle)
+                    local dx = drawable.x - u
+                    local dy = drawable.y - v
+                    lg.push()
+                    lg.translate(viewport.ox, viewport.oy)
+                    if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
+                        drawable.render(drawable)
                     end
-                else
-                    drawable.render(drawable)
+                    lg.pop()
                 end
+            else
+                drawable.render(drawable)
             end
         end
-
-        lg.setColor(0, 0, 0, 255 - m_brightness)
-        lg.rectangle('fill', 0, 0, lg.getWidth(), lg.getHeight())
-        lg.present()
     end
+
+    lg.setColor(0, 0, 0, 255 - m_brightness)
+    lg.rectangle('fill', 0, 0, lg.getWidth(), lg.getHeight())
 
     lg.pop()
 
@@ -225,11 +219,11 @@ function Graphics.fadeOut(duration)
 end
 
 function Graphics.freeze()
-    m_screen_freezed = true
+    le.push('freeze', true)
 end
 
 function Graphics.transition(duration, transition, vague)
-    m_screen_freezed = false
+    le.push('freeze', false)
 end
 
 function Graphics.addDrawable(drawable)

@@ -78,6 +78,12 @@ local m_caption             = lg.getCaption()
 
 local t_drawables           = {}
 
+local t_torenders           = nil
+
+local t_viewports           = nil
+
+local t_toppest_viewport    = nil
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
@@ -129,6 +135,9 @@ function Graphics.initialize()
 
     m_screen_offsetx = (lg.getWidth() - width) * 0.5
     m_screen_offsety = (lg.getHeight() - height) * 0.5
+
+    t_toppest_viewport = Viewport.new()
+    t_toppest_viewport.visible = true
 end
 
 function Graphics.finalize()
@@ -138,10 +147,16 @@ end
 function Graphics.reset()
     for _, drawable in pairs(t_drawables) do drawable.dispose(drawable) end
 
+    t_toppest_viewport = nil
+    t_viewports = nil
+    t_torenders = nil
     t_drawables = {}
 end
 
 function Graphics.update(dt)
+    t_torenders = {}
+    t_viewports = {}
+
     if m_showfps then
         local fps = lt.getFPS()
         lg.setCaption(string.format('%s - FPS: %d', m_caption, fps))
@@ -160,6 +175,27 @@ function Graphics.update(dt)
     end
 
     table.sort(t_drawables, zsorter)
+    for _, drawable in pairs(t_drawables) do
+        local viewport = drawable.viewport
+        if not viewport then viewport = t_toppest_viewport end
+        if viewport.visible then
+            local u, v, w, h = Rectangle.get(viewport.rectangle)
+
+            if not t_torenders[viewport] then
+                table.insert(t_viewports, viewport)
+                t_torenders[viewport] = {}
+            end
+
+            if drawable.visible then
+                local dx = drawable.x - u
+                local dy = drawable.y - v
+
+                if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
+                    table.insert(t_torenders[viewport], drawable)
+                end
+            end
+        end
+    end
 end
 
 function Graphics.render()
@@ -169,25 +205,11 @@ function Graphics.render()
 
     lg.setColor(255, 255, 255, 255)
 
-    for _, drawable in pairs(t_drawables) do
-        if not drawable.disposed(drawable) and drawable.visible then
-            if drawable.viewport then
-                local viewport = drawable.viewport
-                if viewport.visible then
-                    local u, v, w, h = Rectangle.get(viewport.rectangle)
-                    local dx = drawable.x - u
-                    local dy = drawable.y - v
-                    lg.push()
-                    lg.translate(viewport.ox, viewport.oy)
-                    if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
-                        drawable.render(drawable)
-                    end
-                    lg.pop()
-                end
-            else
-                drawable.render(drawable)
-            end
-        end
+    for _, viewport in pairs(t_viewports) do
+        lg.push()
+        lg.translate(viewport.ox, viewport.oy)
+        for _, drawable in pairs(t_torenders[viewport]) do drawable.render(drawable) end
+        lg.pop()
     end
 
     lg.setColor(0, 0, 0, 255 - m_brightness)

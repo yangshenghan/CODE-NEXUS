@@ -44,7 +44,8 @@ local WindowMessage         = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-local function f_message_coroutine()
+local function f_message_coroutine(instance)
+    instance.coroutine = nil
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -66,10 +67,10 @@ function WindowMessage.update(instance, dt)
     local message = objects.message
 
     if instance.coroutine then
-        coroutine.resume(instance.coroutine)
+        coroutine.resume(instance.coroutine, instance)
     elseif message.isBusy() then
         instance.coroutine = coroutine.create(f_message_coroutine)
-        coroutine.resume(instance.coroutine)
+        coroutine.resume(instance.coroutine, instance)
     else
         message.visible = false
     end

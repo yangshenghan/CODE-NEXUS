@@ -42,6 +42,7 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowMessage         = {
+    font                    = nil,
     texts                   = nil,
     coroutine               = nil
 }
@@ -58,8 +59,7 @@ local function new_line_x(instance)
 end
 
 local function calculate_line_height(instance, texts)
-    local font = Game.message.font
-    return font.getHeight(font, '|')
+    return instance.font.getHeight(instance.font, '|')
 end
 
 local function need_new_page(instance, texts, pos)
@@ -88,8 +88,7 @@ local function process_new_page(instance, texts, pos)
 end
 
 local function process_normal_character(instance, c, pos)
-    local font = Game.message.font
-    local width = font.getWidth(font, c)
+    local width = instance.font.getWidth(instance.font, c)
     table.insert(instance.texts, {c, pos[1], pos[2]})
     pos[1] = pos[1] + width
     coroutine.yield()
@@ -143,6 +142,7 @@ function WindowMessage.new()
     instance.width = REFERENCE_WIDTH
     instance.height = 4 * lineheight + 2 * padding
     instance.texts = {}
+    instance.font = lg.newFont(24)
     return instance
 end
 

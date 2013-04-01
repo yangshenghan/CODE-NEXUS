@@ -27,8 +27,6 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local l                     = love
-local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Data                  = Core.import 'nexus.core.data'
@@ -37,7 +35,6 @@ local Data                  = Core.import 'nexus.core.data'
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local GameMessage           = {
-    font                    = nil,
     texts                   = nil,
     position                = 2,
     POSITION_TOP            = 0,
@@ -50,7 +47,6 @@ local GameMessage           = {
 -- \ ---------------------------------------------------------------------- / --
 function GameMessage.new()
     local instance = setmetatable({}, { __index = GameMessage })
-    instance.font = lg.newFont(24)
     GameMessage.clear(instance)
     return instance
 end

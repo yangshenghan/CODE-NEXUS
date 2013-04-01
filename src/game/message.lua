@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Data                  = Core.import 'nexus.core.data'
@@ -35,19 +37,26 @@ local Data                  = Core.import 'nexus.core.data'
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local GameMessage           = {
+    font                    = nil,
     texts                   = nil,
-    visible                 = false,
-    POSITION_TOP            = 1,
-    POSITION_BOTTOM         = 0
+    position                = 2,
+    POSITION_TOP            = 0,
+    POSITION_MIDDLE         = 1,
+    POSITION_BOTTOM         = 2
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function GameMessage.new()
-    local instance = setmetatable(GameMessage, {})
+    local instance = setmetatable({}, { __index = GameMessage })
+    instance.font = lg.newFont(24)
     GameMessage.clear(instance)
     return instance
+end
+
+function GameMessage.isBusy(instance)
+    return #instance.texts > 0
 end
 
 function GameMessage.clear(instance)
@@ -56,6 +65,10 @@ end
 
 function GameMessage.push(instance, text)
     instance.texts[#instance.texts + 1] = text
+end
+
+function GameMessage.getAllTexts(instance)
+    return table.concat(instance.texts, '\n')
 end
 
 return GameMessage

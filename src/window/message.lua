@@ -30,14 +30,22 @@
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Input                 = Core.import 'nexus.core.input'
+local Game                  = Core.import 'nexus.core.game'
 local WindowBase            = Core.import 'nexus.window.base'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local WindowMessage         = {}
+local WindowMessage         = {
+    coroutine               = nil
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function f_message_coroutine()
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -51,6 +59,20 @@ function WindowMessage.new(x, y, commands)
     instance.width = REFERENCE_WIDTH
     instance.height = 4 * lineheight + 2 * padding
     return instance
+end
+
+function WindowMessage.update(instance, dt)
+    local objects = Game.getGameObjects()
+    local message = objects.message
+
+    if instance.coroutine then
+        coroutine.resume(instance.coroutine)
+    elseif message.isBusy() then
+        instance.coroutine = coroutine.create(f_message_coroutine)
+        coroutine.resume(instance.coroutine)
+    else
+        message.visible = false
+    end
 end
 
 return WindowMessage

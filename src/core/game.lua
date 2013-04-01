@@ -42,6 +42,7 @@ local Input                 = Core.import 'nexus.core.input'
 local Scene                 = Core.import 'nexus.core.scene'
 local GameConsole           = Core.import 'nexus.game.console'
 local GamePlayer            = Core.import 'nexus.game.player'
+local GameMessage           = Core.import 'nexus.game.message'
 local SceneTitle            = Core.import 'nexus.scene.title'
 local SceneExit             = Core.import 'nexus.scene.exit'
 local KEYS                  = Constants.KEYS
@@ -163,7 +164,7 @@ function Game.setup()
     t_saving_data = Data.loadScriptData('setup')
     t_game_objects = {
         player              = GamePlayer.new(),
-        -- messgae             = GameMessage.new(),
+        messgae             = GameMessage.new(),
         -- story               = GameStory.new(),
         -- stage               = GameStage.new(),
         -- system              = GameSystem.new()
@@ -176,7 +177,7 @@ function Game.load(index)
     -- local data = Core.load()
     t_game_objects = {
         player              = data.player,
-        -- messgae             = data.messgae,
+        messgae             = data.messgae,
         -- story               = data.story,
         -- stage               = data.stage,
         -- system              = data.system

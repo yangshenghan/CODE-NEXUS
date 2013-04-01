@@ -65,7 +65,6 @@ end
 function SceneStage.enter(instance)
     local canvas = lg.newCanvas()
     local background = Viewport.new()
-    instance.gameobjects = Game.getGameObjects()
 
     -- Load stage data
     instance.map = Data.loadMapData(instance.name)
@@ -73,7 +72,7 @@ function SceneStage.enter(instance)
     instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
-    instance.player = instance.gameobjects.player
+    instance.player = Game.player
     instance.player.z = 30
     instance.player.visible = true
     instance.player.dispose = NEXUS_EMPTY_FUNCTION
@@ -132,7 +131,6 @@ end
 
 function SceneStage.leave(instance)
     instance.viewports = {}
-    instance.gameobjects = nil
     instance.objects = nil
     instance.player = nil
     instance.script = nil

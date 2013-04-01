@@ -55,7 +55,13 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Game                  = {}
+local Game                  = {
+    player                  = nil,
+    -- message                 = nil,
+    -- story                   = nil,
+    -- stage                   = nil,
+    -- system                  = nil
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -63,8 +69,6 @@ local Game                  = {}
 local m_version             = nil
 
 local t_saving_data         = nil
-
-local t_game_objects        = nil
 
 local MAJOR                 = VERSION.MAJOR
 local MINOR                 = VERSION.MINOR
@@ -121,7 +125,11 @@ function Game.initialize()
 end
 
 function Game.finalize()
-    t_game_objects = {}
+    -- Game.system = nil
+    -- Game.stage = nil
+    -- Game.story = nil
+    -- Game.message = nil
+    Game.player = nil
     t_saving_data = {}
 end
 
@@ -161,26 +169,22 @@ end
 
 function Game.setup()
     t_saving_data = Data.loadScriptData('setup')
-    t_game_objects = {
-        player              = GamePlayer.new(),
-        -- messgae             = GameMessage.new(),
-        -- story               = GameStory.new(),
-        -- stage               = GameStage.new(),
-        -- system              = GameSystem.new()
-    }
+    Game.player = GamePlayer.new()
+    -- Game.message = GameMessage.new()
+    -- Game.story = GameStory.new()
+    -- Game.stage = GameStage.new()
+    -- Game.system = GameSystem.new()
 
     on_start_game()
 end
 
 function Game.load(index)
     -- local data = Core.load()
-    t_game_objects = {
-        player              = data.player,
-        -- messgae             = data.messgae,
-        -- story               = data.story,
-        -- stage               = data.stage,
-        -- system              = data.system
-    }
+    Game.player = data.player
+    -- Game.message = data.message
+    -- Game.story = data.story
+    -- Game.stage = data.stage
+    -- Game.system = data.system
 
     on_after_load()
     return false
@@ -220,10 +224,6 @@ function Game.getVersionString()
         m_version = MAJOR .. '.' .. MINOR .. '.' .. MICRO
     end
     return m_version
-end
-
-function Game.getGameObjects()
-    return t_game_objects
 end
 
 return Game

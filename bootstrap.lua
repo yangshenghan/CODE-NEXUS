@@ -93,11 +93,15 @@ local Graphics              = nil
 local Scene                 = nil
 local GameConsole           = nil
 
+local lggm                  = nil
+local lgsm                  = nil
 local update                = nil
 local render                = nil
 
 return function(instance, enable)
     if not enable then
+        lg.getMode = lggm
+        lg.setMode = lgsm
         Scene.update = update
         Graphics.render = render
         return EMPTY_FUNCTION
@@ -131,18 +135,39 @@ return function(instance, enable)
     -- \ ------------------------------------------------------------------ / --
     function Debug.profiler()
     end
+
     -- / ------------------------------------------------------------------ \ --
     -- | Game hooks in debug mode                                           | --
     -- \ ------------------------------------------------------------------ / --
+    lggm                    = lg.getMode
+    lgsm                    = lg.setMode
     update                  = Scene.update
     render                  = Graphics.render
+
+    if l._version ~= '0.9.0' then
+        function lg.getMode()
+            local width, height, fullscreen, vsync, fsaa = lggm()
+            return width, height, {
+                fullscreen  = fullscreen,
+                vsync       = vsync,
+                fsaa        = fsaa,
+                resizeable  = false,
+                borderless  = false,
+                centered    = true
+            }
+        end
+
+        function lg.setMode(width, height, flags)
+            lgsm(width, height, flags.fullscreen, flags.vsync, flags.fsaa)
+        end
+    end
 
     function Scene.update(...)
         update(...)
     end
 
     function Graphics.render(...)
-        local width, height, fullscreen, vsync, fsaa = lg.getMode()
+        local width, height, flags = lg.getMode()
 
         render(...)
 
@@ -150,7 +175,7 @@ return function(instance, enable)
             lg.setColor(255, 255, 255, 255)
             lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
             lg.printf(string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, 'left')
-            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, fullscreen and 'fullscreen' or 'windowed', vsync and 'enabled' or 'disabled', fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')
+            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, flags.fullscreen and 'fullscreen' or 'windowed', flags.vsync and 'enabled' or 'disabled', flags.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')
             lg.printf(string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, 'left')
 
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')

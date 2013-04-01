@@ -51,7 +51,7 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function WindowMessage.new(x, y, commands)
+function WindowMessage.new()
     local padding = 12
     local lineheight = 24
     local instance = WindowBase.new(WindowMessage)
@@ -63,12 +63,9 @@ function WindowMessage.new(x, y, commands)
 end
 
 function WindowMessage.update(instance, dt)
-    local objects = Game.getGameObjects()
-    local message = objects.message
-
     if instance.coroutine then
         coroutine.resume(instance.coroutine, instance)
-    elseif message.isBusy() then
+    elseif Game.message.isBusy() then
         instance.coroutine = coroutine.create(f_message_coroutine)
         coroutine.resume(instance.coroutine, instance)
     else

@@ -33,8 +33,10 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Game                  = Core.import 'nexus.core.game'
+local Input                 = Core.import 'nexus.core.input'
 local GameMessage           = Core.import 'nexus.game.message'
 local WindowBase            = Core.import 'nexus.window.base'
+local KEYS                  = Constants.KEYS
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
@@ -62,6 +64,10 @@ local function calculate_line_height(instance, texts)
     return instance.font.getHeight(instance.font, '|')
 end
 
+local function pause_input(instance)
+    while not Input.isKeyTrigger(KEYS.CONFIRM) do coroutine.yield() end
+end
+
 local function need_new_page(instance, texts, pos)
     return pos[2] + pos[4] > 4 * calculate_line_height(instance, texts) and string.len(texts) > 0
 end
@@ -79,11 +85,13 @@ local function process_new_line(instance, texts, pos)
     pos[2] = pos[2] + pos[4]
     pos[4] = calculate_line_height(instance, texts)
     if need_new_page(instance, texts, pos) then
+        pause_input(instance)
         new_page(instance, texts, pos)
     end
 end
 
 local function process_new_page(instance, texts, pos)
+    pause_input(instance)
     new_page(instance, texts, pos)
 end
 
@@ -122,6 +130,7 @@ local function f_message_coroutine(instance)
     update_message_placement(instance)
     while GameMessage.isBusy(Game.message) do 
         process_all_texts(instance)
+        pause_input(instance)
         GameMessage.clear(Game.message)
         coroutine.yield()
     end

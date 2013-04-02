@@ -99,20 +99,12 @@ local update                = nil
 local render                = nil
 
 return function(instance, enable)
-    if not enable then
-        lg.getMode = lggm
-        lg.setMode = lgsm
-        Scene.update = update
-        Graphics.render = render
-        return EMPTY_FUNCTION
-    end
-
     -- / ------------------------------------------------------------------ \ --
     -- | Import modules                                                     | --
     -- \ ------------------------------------------------------------------ / --
-    local l                 = love
-    local lt                = l.timer
-    local lg                = l.graphics
+    local l                     = love
+    local lt                    = l.timer
+    local lg                    = l.graphics
     Game                    = Core.import 'nexus.core.game'
     Graphics                = Core.import 'nexus.core.graphics'
     Scene                   = Core.import 'nexus.core.scene'
@@ -134,6 +126,14 @@ return function(instance, enable)
     -- | Member functions                                                   | --
     -- \ ------------------------------------------------------------------ / --
     function Debug.profiler()
+    end
+
+    if not enable then
+        lg.getMode = lggm
+        lg.setMode = lgsm
+        Scene.update = update
+        Graphics.render = render
+        return EMPTY_FUNCTION
     end
 
     -- / ------------------------------------------------------------------ \ --

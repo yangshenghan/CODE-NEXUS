@@ -179,4 +179,11 @@ function SceneTitle.update(instance, dt)
     coroutine.resume(instance.coroutines.update, instance, dt, lt.getMicroTime())
 end
 
+function SceneTitle.__debug(instance)
+    return {
+        'SeceneTitle',
+        'Nothing to show.'
+    }
+end
+
 return SceneTitle

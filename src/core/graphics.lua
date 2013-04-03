@@ -222,7 +222,7 @@ function Graphics.render()
     for _, viewport in pairs(t_viewports) do
         lg.push()
         lg.translate(viewport.ox, viewport.oy)
-        for _, drawable in pairs(t_torenders[viewport]) do print(drawable) drawable.render(drawable) end
+        for _, drawable in pairs(t_torenders[viewport]) do drawable.render(drawable) end
         lg.pop()
     end
     lg.setShader()

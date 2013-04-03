@@ -154,4 +154,12 @@ function SceneStage.getCurrentStage()
     return scene.stage
 end
 
+function SceneStage.__debug(instance)
+    local messages = { 'SceneStage' }
+    if instance.player then
+        table.insert(messages, string.format('Player location: <%d, %d> (%d, %d)', instance.player.object.x, instance.player.object.y, instance.player.object.rx, instance.player.object.ry))
+    end
+    return messages
+end
+
 return SceneStage

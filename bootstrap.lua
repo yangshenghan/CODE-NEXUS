@@ -95,6 +95,10 @@ local GameConsole           = nil
 
 local lggm                  = nil
 local lgsm                  = nil
+local sc                    = nil
+local sg                    = nil
+local se                    = nil
+local sl                    = nil
 local update                = nil
 local render                = nil
 
@@ -113,7 +117,10 @@ return function(instance, enable)
     -- / ------------------------------------------------------------------ \ --
     -- | Declare object                                                     | --
     -- \ ------------------------------------------------------------------ / --
-    local Debug             = {}
+    local Debug                 = {
+        messages                = nil,
+        scenes                  = {}
+    }
 
     -- / ------------------------------------------------------------------ \ --
     -- | Local variables                                                    | --
@@ -141,6 +148,10 @@ return function(instance, enable)
     -- \ ------------------------------------------------------------------ / --
     lggm                    = lg.getMode
     lgsm                    = lg.setMode
+    sc                      = Scene.change
+    sg                      = Scene.goto
+    se                      = Scene.enter
+    sl                      = Scene.leave
     update                  = Scene.update
     render                  = Graphics.render
 
@@ -174,11 +185,45 @@ return function(instance, enable)
         end
     end
 
+    function Scene.change(scene)
+        Debug.scenes[#Debug.scenes] = scene
+        return sc(scene)
+    end
+
+    function Scene.goto(scene)
+        table.insert(Debug.scenes, scene)
+        return sg(scene)
+    end
+
+    function Scene.enter(scene)
+        table.insert(Debug.scenes, scene)
+        return se(scene)
+    end
+
+    function Scene.leave(scene)
+        if #Debug.scenes == 0 then return end
+        table.remove(Debug.scenes, scene)
+        return sl(scene)
+    end
+
     function Scene.update(...)
         update(...)
+
+        Debug.messages = {}
+        for _, scene in ipairs(Debug.scenes) do
+            if scene.__debug then
+                local messages = scene.__debug(scene);
+                table.insert(Debug.messages, 1, {
+                    table.remove(messages, 1),
+                    #messages,
+                    table.concat(messages, '\n')
+                })
+            end
+        end
     end
 
     function Graphics.render(...)
+        local position = 0
         local width, height, flags = lg.getMode()
 
         render(...)
@@ -193,6 +238,17 @@ return function(instance, enable)
 
             lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
             lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), VERSION.STAGE, l._os), 0, height - 24, width - 8, 'right')
+
+            for _, message in ipairs(Debug.messages) do
+                local name, lines, messages = unpack(message)
+                lg.setColor(255, 255, 0, 255)
+                lg.print(name, 24, 120 + position * m_line_height)
+
+                lg.setColor(255, 255, 255, 255)
+                lg.print(messages, 32, 120 + (position + 1) * m_line_height)
+
+                position = position + lines + 1
+            end
         end
     end
 

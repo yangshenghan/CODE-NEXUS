@@ -119,12 +119,15 @@ local function fix_aspect_ratio(width, height)
     return width, height
 end
 
+local function calaulate_screen_offset(width, height)
+    return (lg.getWidth() - width) * 0.5, (lg.getHeight() - height) * 0.5
+end
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Graphics.initialize()
     -- local icon = Resource.loadImage('icon.png')
-    local width, height = fix_aspect_ratio(GraphicsConfigures.width, GraphicsConfigures.height)
 
     Graphics.setFramerate(60)
     Graphics.setFramecount(0)
@@ -134,8 +137,7 @@ function Graphics.initialize()
     lg.reset()
     lg.setDefaultFilter('linear', 'nearest')
 
-    m_screen_offsetx = (lg.getWidth() - width) * 0.5
-    m_screen_offsety = (lg.getHeight() - height) * 0.5
+    m_screen_offsetx, m_screen_offsety = calaulate_screen_offset(fix_aspect_ratio(lg.getWidth(), lg.getHeight()))
 
     t_toppest_viewport = Viewport.new()
     t_toppest_viewport.visible = true
@@ -348,8 +350,7 @@ function Graphics.changeGraphicsConfigures(save, width, height, fullscreen, vsyn
         end
 
         m_fullscreen = fullscreen
-        m_screen_offsetx = (lg.getWidth() - width) * 0.5
-        m_screen_offsety = (lg.getHeight() - height) * 0.5
+        m_screen_offsetx, m_screen_offsety = calaulate_screen_offset(width, height)
     end
 end
 

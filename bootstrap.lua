@@ -145,6 +145,10 @@ return function(instance, enable)
     render                  = Graphics.render
 
     if l._version ~= '0.9.0' then
+        function lg.setDefaultFilter(...)
+            return lg.setDefaultImageFilter(...)
+        end
+
         function lg.getMode()
             local width, height, fullscreen, vsync, fsaa = lggm()
             return width, height, {

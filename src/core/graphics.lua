@@ -132,6 +132,7 @@ function Graphics.initialize()
 
     -- lg.setIcon(icon)
     lg.reset()
+    lg.setDefaultFilter('linear', 'nearest')
 
     m_screen_offsetx = (lg.getWidth() - width) * 0.5
     m_screen_offsety = (lg.getHeight() - height) * 0.5

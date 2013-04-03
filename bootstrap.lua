@@ -105,10 +105,10 @@ return function(instance, enable)
     local l                     = love
     local lt                    = l.timer
     local lg                    = l.graphics
-    Game                    = Core.import 'nexus.core.game'
-    Graphics                = Core.import 'nexus.core.graphics'
-    Scene                   = Core.import 'nexus.core.scene'
-    GameConsole             = Core.import 'nexus.game.console'
+    Game                        = Core.import 'nexus.core.game'
+    Graphics                    = Core.import 'nexus.core.graphics'
+    Scene                       = Core.import 'nexus.core.scene'
+    GameConsole                 = Core.import 'nexus.game.console'
 
     -- / ------------------------------------------------------------------ \ --
     -- | Declare object                                                     | --
@@ -185,6 +185,7 @@ return function(instance, enable)
 
         if not GameConsole.isConsoleEnabled() then
             lg.setColor(255, 255, 255, 255)
+
             lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
             lg.printf(string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, 'left')
             lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, flags.fullscreen and 'fullscreen' or 'windowed', flags.vsync and 'enabled' or 'disabled', flags.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')

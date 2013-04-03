@@ -63,21 +63,12 @@ function SceneStage.new(name)
 end
 
 function SceneStage.enter(instance)
-    local canvas = lg.newCanvas()
-    local background = Viewport.new()
-
     -- Load stage data
     instance.map = Data.loadMapData(instance.name)
     instance.stage = Data.loadStageData(instance.name)
     instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
-    instance.player = Game.player
-    instance.player.z = 30
-    instance.player.visible = true
-    instance.player.dispose = NEXUS_EMPTY_FUNCTION
-    instance.player.disposed = NEXUS_EMPTY_FUNCTION
-    instance.objects = { instance.player }
     instance.viewports = {
         Viewport.new(),
         Viewport.new(),
@@ -87,31 +78,15 @@ function SceneStage.enter(instance)
     instance.viewports[2].z = 20
     instance.viewports[3].z = 30
 
-    -- Draw basic grid for easy developing
-    background.x = 0
-    background.y = 0
-    background.z = 0
-    background.visible = true
-    background.dispose = NEXUS_EMPTY_FUNCTION
-    background.disposed = NEXUS_EMPTY_FUNCTION
-    background.render = function(instance)
-        Graphics.clear()
-        lg.draw(canvas)
-    end
-    lg.setCanvas(canvas)
-    lg.setBlendMode('premultiplied')
-    lg.setColor(255, 255, 255, 32)
-    for j = 0, 45 do
-        for i = 0, 80 do
-            lg.rectangle('line', 16 * i, 16 * j, 16, 16)
-        end
-    end
-    lg.setBlendMode('alpha')
-    lg.setCanvas()
+    instance.player = Game.player
+    instance.player.z = 30
+    instance.player.visible = true
+    instance.player.dispose = NEXUS_EMPTY_FUNCTION
+    instance.player.disposed = NEXUS_EMPTY_FUNCTION
     instance.player.viewport = instance.viewports[2]
-    background.viewport = instance.viewports[1]
     Graphics.addDrawable(instance.player)
-    Graphics.addDrawable(background)
+
+    instance.objects = { instance.player }
 
     -- Create objects
     for _, data in pairs(instance.stage.objects) do

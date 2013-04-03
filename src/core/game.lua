@@ -110,10 +110,6 @@ local function check_game_requirement()
         error('You configure file is corrupted or an error occurred while loading!')
     end
 
-    if not lg.isSupported('canvas') then
-        error('Your graphics card is not supported to use hardware texture render.')
-    end
-
     if FIRST_RUN then adjust_screen_mode() end
 
     return true

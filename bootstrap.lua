@@ -149,6 +149,14 @@ return function(instance, enable)
             return lg.setDefaultImageFilter(...)
         end
 
+        function lg.newShader(...)
+            return lg.newPixelEffect(...)
+        end
+
+        function lg.setShader(...)
+            return lg.setPixelEffect(...)
+        end
+
         function lg.getMode()
             local width, height, fullscreen, vsync, fsaa = lggm()
             return width, height, {

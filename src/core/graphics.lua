@@ -148,6 +148,7 @@ function Graphics.initialize()
         extern number brightness;
         vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
             color.a = color.a * brightness / 255;
+            if ( color.r != 1.0 && color.g != 1.0 && color.b != 1.0 ) { return color; }
             return Texel(texture, tcoordinates) * color;
         }
     ]])

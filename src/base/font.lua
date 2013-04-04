@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Resource              = Core.import 'nexus.core.resource'
@@ -44,7 +46,19 @@ local Font                  = {
     delete                  = false,
     outline                 = true,
     shadow                  = true,
-    size                    = 24
+    align                   = 0,
+    rotate                  = 0,
+    zx                      = 1,
+    zy                      = 1,
+    ox                      = 0,
+    oy                      = 0,
+    sx                      = 0,
+    sy                      = 0,
+    size                    = 24,
+    ALIGN_LEFT              = 0,
+    ALIGN_JUSTIFY           = 1,
+    ALIGN_CENTER            = 2,
+    ALIGN_RIGHT             = 3
 }
 
 -- / ---------------------------------------------------------------------- \ --
@@ -58,6 +72,23 @@ function Font.new(name, size)
     instance.size = size
     instance.font = Resource.loadFontData(name, size)
     return instance
+end
+
+function Font.text(instance, text, ...)
+    local x, y, width, height = ...
+    local scissor = { lg.getScissor() }
+
+    love.graphics.setScissor(x, y, width, height)
+    if instance.align == Font.ALIGN_RIGHT then
+        lg.printf(text, x, y, width, 'right', rotate, zx, zy, ox, oy, sx, sy)
+    elseif instance.align == Font.ALIGN_CENTER then
+        lg.printf(text, x, y, width, 'center', rotate, zx, zy, ox, oy, sx, sy)
+    elseif instance.align == Font.ALIGN_JUSTIFY then
+        lg.printf(text, x, y, width, 'justify', rotate, zx, zy, ox, oy, sx, sy)
+    else
+        lg.printf(text, x, y, width, 'left', rotate, zx, zy, ox, oy, sx, sy)
+    end
+    love.graphics.setScissor(unpack(scissor))
 end
 
 return Font

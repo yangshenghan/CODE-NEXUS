@@ -29,8 +29,9 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Color                 = Core.import 'nexus.base.color'
 local Resource              = Core.import 'nexus.core.resource'
+local Color                 = Core.import 'nexus.base.color'
+local Font                  = Core.import 'nexus.base.font'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -109,7 +110,7 @@ end
 function Data.loadTextData(filename)
     local texts = load_data_resource('data/texts/', filename)
     for index, font in ipairs(texts.fonts.name) do
-        t_fonts[font] = Resource.loadFontData(texts.fonts.file[index], texts.fonts.size[index])
+        t_fonts[font] = Font.new(texts.fonts.file[index], texts.fonts.size[index])
     end
     t_texts = texts.texts
     t_formats = texts.formats

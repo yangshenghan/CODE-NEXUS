@@ -88,9 +88,12 @@ end
 -- \ ---------------------------------------------------------------------- / --
 if DEBUG_MODE then
 
+local Data                  = nil
 local Game                  = nil
 local Graphics              = nil
 local Scene                 = nil
+local Color                 = nil
+local Font                  = nil
 local GameConsole           = nil
 
 local lggm                  = nil
@@ -109,9 +112,12 @@ return function(instance, enable)
     local l                     = love
     local lt                    = l.timer
     local lg                    = l.graphics
+    Data                        = Core.import 'nexus.core.data'
     Game                        = Core.import 'nexus.core.game'
     Graphics                    = Core.import 'nexus.core.graphics'
     Scene                       = Core.import 'nexus.core.scene'
+    Color                       = Core.import 'nexus.base.color'
+    Font                        = Core.import 'nexus.base.font'
     GameConsole                 = Core.import 'nexus.game.console'
 
     -- / ------------------------------------------------------------------ \ --
@@ -128,6 +134,8 @@ return function(instance, enable)
     local m_x_offset        = 8
     local m_y_offset        = 8
     local m_line_height     = 24
+    local t_title_color     = Color.new(255, 255, 0, 255)
+    local t_default_color   = Color.new(255, 255, 255, 255)
 
     -- / ------------------------------------------------------------------ \ --
     -- | Member functions                                                   | --
@@ -138,7 +146,11 @@ return function(instance, enable)
     if not enable then
         lg.getMode = lggm
         lg.setMode = lgsm
-        Scene.update = update
+        Scene.change = sc
+        Scene.goto = sg
+        Scene.enter = se
+        Scene.leave = sl
+        Graphics.update = update
         Graphics.render = render
         return EMPTY_FUNCTION
     end
@@ -152,7 +164,7 @@ return function(instance, enable)
     sg                      = Scene.goto
     se                      = Scene.enter
     sl                      = Scene.leave
-    update                  = Scene.update
+    update                  = Graphics.update
     render                  = Graphics.render
 
     if l._version ~= '0.9.0' then
@@ -166,6 +178,10 @@ return function(instance, enable)
 
         function lg.setShader(...)
             return lg.setPixelEffect(...)
+        end
+
+        function lg.getShader(...)
+            return lg.getPixelEffect(...)
         end
 
         function lg.getMode()
@@ -206,7 +222,7 @@ return function(instance, enable)
         return sl(scene)
     end
 
-    function Scene.update(...)
+    function Graphics.update(...)
         update(...)
 
         Debug.messages = {}
@@ -229,23 +245,31 @@ return function(instance, enable)
         render(...)
 
         if not GameConsole.isConsoleEnabled() then
-            lg.setColor(255, 255, 255, 255)
+            local font = Data.getFont('debug')
+            local size = font.size
 
-            lg.printf(string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, 'left')
-            lg.printf(string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, 'left')
-            lg.printf(string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, flags.fullscreen and 'fullscreen' or 'windowed', flags.vsync and 'enabled' or 'disabled', flags.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, 'left')
-            lg.printf(string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, 'left')
+            font.color = t_default_color
 
-            lg.printf(string.format('NOT FINAL GAME'), 0, 60, width, 'center')
-            lg.printf(string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), VERSION.STAGE, l._os), 0, height - 24, width - 8, 'right')
+            Font.text(font, string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, m_line_height)
+            Font.text(font, string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, m_line_height)
+            Font.text(font, string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, flags.fullscreen and 'fullscreen' or 'windowed', flags.vsync and 'enabled' or 'disabled', flags.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, m_line_height)
+            Font.text(font, string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, m_line_height)
+
+            font.size = 48
+            font.bold = true
+            Font.text(font, string.format('NOT FINAL GAME'), 0, 60, width, 2 * m_line_height, Font.ALIGN_CENTER)
+
+            font.size = size
+            font.bold = false
+            Font.text(font, string.format('CODE NEXUS %s (%s) on %s.', Game.getVersionString(), VERSION.STAGE, l._os), 0, height - 24, width - 8, m_line_height, Font.ALIGN_RIGHT)
 
             for _, message in ipairs(Debug.messages) do
                 local name, lines, messages = unpack(message)
-                lg.setColor(255, 255, 0, 255)
-                lg.print(name, 24, 120 + position * m_line_height)
+                font.color = t_title_color
+                Font.text(font, name, 24, 120 + position * m_line_height, width, m_line_height)
 
-                lg.setColor(255, 255, 255, 255)
-                lg.print(messages, 32, 120 + (position + 1) * m_line_height)
+                font.color = t_default_color
+                Font.text(font, messages, 32, 120 + (position + 1) * m_line_height, width, m_line_height)
 
                 position = position + lines + 1
             end

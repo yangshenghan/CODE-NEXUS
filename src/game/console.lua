@@ -46,6 +46,7 @@ local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
 local Graphics              = Core.import 'nexus.core.graphics'
 local Scene                 = Core.import 'nexus.core.scene'
+local Font                  = Core.import 'nexus.base.font'
 local GameConsole           = Core.import 'nexus.game.console'
 local SceneBase             = Core.import 'nexus.scene.base'
 local NEXUS_DEBUG_MODE      = Constants.DEBUG_MODE
@@ -294,13 +295,10 @@ function GameConsoleOutput.render(ox, oy, position)
     assert(ox and oy)
     if not position then return end
 
-    local current_font = lg.getFont() or m_font
-    lg.setFont(m_font)
     local lines_to_display = m_lines_per_screen - math.floor((m_height - oy) / m_line_height)
     for i = #t_lines, math.max(1, #t_lines - lines_to_display), -1 do
-        lg.print(t_lines[i], ox, oy - (#t_lines - i + 1) * m_line_height)
+        Font.text(m_font, t_lines[i], ox, oy - (#t_lines - i + 1) * m_line_height)
     end
-    lg.setFont(current_font)
 
     local color = {lg.getColor()}
 
@@ -375,13 +373,14 @@ function GameConsoleOutput.clear()
 end
 
 function GameConsoleOutput.reset(font, width, height, spacing)
-    m_font = font or lg.getFont()
+    m_font = font
+    -- m_font = font or lg.getFont()
     m_width = width or lg.getWidth()
     m_height = height or lg.getHeight()
     m_spacing = spacing or 4
 
-    m_character_width = m_font.getWidth(m_font, '_')
-    m_character_height = m_font.getHeight(m_font, '|')
+    m_character_width = Font.getWidth(m_font, '_')
+    m_character_height = Font.getHeight(m_font, '|')
     m_line_height = m_character_height + m_spacing
 
     m_lines_per_screen = math.floor(m_height / m_line_height) - 1
@@ -639,77 +638,79 @@ local KEYCODESMODIFIER      = {
 -- \ ---------------------------------------------------------------------- / --
 function SceneConsole.new()
     if not t_instance then
-        local font = Data.getFont('console').font
-        GameConsole.initialize(font)
+        GameConsole.initialize(Data.getFont('console'))
         t_instance = SceneBase.new(SceneConsole)
     end
     return t_instance
 end
 
-function SceneConsole.update(instance, dt)
-    if not m_flag or not lk.isDown(m_flag) then
-        m_flag = nil
-        m_pressed = nil
-        m_repeated = nil
-    end
-
-    m_flag = nil
-    for code, key in pairs(KEYCODES) do
-        if lk.isDown(key) then
-            local char = key
-            if KEYCODESMODIFIER[code] and (lk.isDown('lshift', 'rshift') or (lk.isDown('capslock') and code > 0x60 and code <= 0x7A)) then
-                char = KEYCODESMODIFIER[code]
-            end
-            if char == 'escape' then Scene.leave() end
-
-            if m_pressed then
-                if m_pressed >= 15 then
-                    m_pressed = nil
-                    m_repeated = 0
-                else
-                    m_flag = key
-                    m_pressed = m_pressed + 1
-                end
-            end
-
-            if m_repeated then
-                if m_repeated >= 3 then
-                    m_repeated = 0
-                else
-                    m_flag = key
-                    m_repeated = m_repeated + 1
-                end
-            end
-
-            if not m_pressed and not m_repeated then m_pressed = 0 end
-            if not m_flag then
-                m_flag = key
-                GameConsoleInput.push(char)
-            end
-        end
-    end
-end
-
-function SceneConsole.render(instance)
-    local color = { lg.getColor() }
-    lg.setColor(34, 34, 34, 180)
-    lg.rectangle('fill', 2, 2, lg.getWidth() - 4, lg.getHeight() - 4)
-    lg.setColor(240, 240, 0, 255)
-
-    local s = table.concat{m_prompt, current(), ' '}
-    local n = GameConsoleOutput.push(s)
-    GameConsoleOutput.render(4, lg.getHeight() - 4, position())
-    GameConsoleOutput.pop(n)
-
-    lg.setColor(unpack(color))
-end
-
 function SceneConsole.enter(instance)
+    instance.u = Graphics.update
+    instance.r = Graphics.render
     instance.print = print
     instance.printf = printf
     instance.reset = reset
     instance.quit = quit
     instance.exit = exit
+
+    Graphics.update = function(...)
+        instance.u(...)
+
+        if not m_flag or not lk.isDown(m_flag) then
+            m_flag = nil
+            m_pressed = nil
+            m_repeated = nil
+        end
+
+        m_flag = nil
+        for code, key in pairs(KEYCODES) do
+            if lk.isDown(key) then
+                local char = key
+                if KEYCODESMODIFIER[code] and (lk.isDown('lshift', 'rshift') or (lk.isDown('capslock') and code > 0x60 and code <= 0x7A)) then
+                    char = KEYCODESMODIFIER[code]
+                end
+                if char == 'escape' then Scene.leave() end
+
+                if m_pressed then
+                    if m_pressed >= 15 then
+                        m_pressed = nil
+                        m_repeated = 0
+                    else
+                        m_flag = key
+                        m_pressed = m_pressed + 1
+                    end
+                end
+
+                if m_repeated then
+                    if m_repeated >= 3 then
+                        m_repeated = 0
+                    else
+                        m_flag = key
+                        m_repeated = m_repeated + 1
+                    end
+                end
+
+                if not m_pressed and not m_repeated then m_pressed = 0 end
+                if not m_flag then
+                    m_flag = key
+                    GameConsoleInput.push(char)
+                end
+            end
+        end
+    end
+
+    Graphics.render = function(...)
+        instance.r(...)
+
+        lg.setColor(34, 34, 34, 180)
+        lg.rectangle('fill', 2, 2, lg.getWidth() - 4, lg.getHeight() - 4)
+        lg.setColor(240, 240, 0, 255)
+
+        local s = table.concat{m_prompt, current(), ' '}
+        local n = GameConsoleOutput.push(s)
+        GameConsoleOutput.render(4, lg.getHeight() - 4, position())
+        GameConsoleOutput.pop(n)
+    end
 
     print = function(...)
         return GameConsole.print(...)
@@ -740,12 +741,16 @@ function SceneConsole.leave(instance)
     reset = instance.reset
     printf = instance.printf
     print = instance.print
+    Graphics.render = instance.r
+    Graphics.update = instance.u
 
     instance.exit = nil
     instance.quit = nil
     instance.reset = nil
     instance.printf = nil
     instance.print = nil
+    instance.r = nil
+    instance.u = nil
 
     m_console = false
 end

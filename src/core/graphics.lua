@@ -205,14 +205,16 @@ function Graphics.update(dt)
 end
 
 function Graphics.render()
+    local scale = math.min(lg.getWidth() / REFERENCE_WIDTH, lg.getHeight() / REFERENCE_HEIGHT)
     lg.push()
     lg.translate(m_screen_offsetx, m_screen_offsety)
-    lg.scale(math.min(lg.getWidth() / REFERENCE_WIDTH, lg.getHeight() / REFERENCE_HEIGHT))
+    lg.scale(scale)
 
     for _, viewport in pairs(t_viewports) do
+        local x, y, w, h = Rectangle.get(viewport.rectangle)
         lg.push()
         lg.translate(viewport.ox, viewport.oy)
-        lg.setScissor(Rectangle.get(viewport.rectangle))
+        lg.setScissor(x * scale, y * scale, w * scale, h * scale)
         for _, drawable in pairs(t_torenders[viewport]) do drawable.render(drawable) end
         lg.setScissor()
         lg.pop()

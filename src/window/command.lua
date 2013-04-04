@@ -32,7 +32,10 @@ local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
+local Data                  = Core.import 'nexus.core.data'
 local Input                 = Core.import 'nexus.core.input'
+local Color                 = Core.import 'nexus.base.color'
+local Font                  = Core.import 'nexus.base.font'
 local WindowBase            = Core.import 'nexus.window.base'
 local NEXUS_KEY             = Constants.KEYS
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
@@ -41,10 +44,18 @@ local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowCommand         = {
+    font                    = nil,
     size                    = 0,
     cursor                  = 1,
     commands                = {}
 }
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local t_default_color       = Color.new(255, 255, 255, 255)
+local t_disabled_color      = Color.new(255, 255, 255, 128)
+local t_selected_color      = Color.new(255, 255, 0, 255)
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -52,7 +63,7 @@ local WindowCommand         = {
 local function move_cursor_up(instance, wrap)
     instance.cursor = instance.cursor - 1
     if instance.cursor < 1 then
-        instance.cursor = wrap and instance.size or 1 
+        instance.cursor = wrap and instance.size or 1
     end
 end
 
@@ -70,6 +81,7 @@ function WindowCommand.new(x, y, commands)
     local instance = WindowBase.new(WindowCommand)
     instance.x = x or instance.x
     instance.y = y or instance.y
+    instance.font = Data.getFont('message')
     if commands then WindowCommand.addCommands(instance, commands) end
     return instance
 end
@@ -93,14 +105,14 @@ end
 function WindowCommand.render(instance)
     for index, command in ipairs(instance.commands) do
         if command.enabled then
-            lg.setColor(255, 255, 255)
+            instance.font.color = t_default_color
         else
-            lg.setColor(255, 255, 255, 128)
+            instance.font.color = t_disabled_color
         end
         if instance.cursor == index then
-            lg.setColor(255, 255, 0)
+            instance.font.color = t_selected_color
         end
-        lg.print(command.text, instance.x, instance.y + index * 20) 
+        Font.text(instance.font, command.text, instance.x, instance.y + index * 32)
     end
 end
 

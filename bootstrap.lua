@@ -150,7 +150,7 @@ return function(instance, enable)
         Scene.goto = sg
         Scene.enter = se
         Scene.leave = sl
-        Scene.update = update
+        Graphics.update = update
         Graphics.render = render
         return EMPTY_FUNCTION
     end
@@ -164,7 +164,7 @@ return function(instance, enable)
     sg                      = Scene.goto
     se                      = Scene.enter
     sl                      = Scene.leave
-    update                  = Scene.update
+    update                  = Graphics.update
     render                  = Graphics.render
 
     if l._version ~= '0.9.0' then
@@ -222,7 +222,7 @@ return function(instance, enable)
         return sl(scene)
     end
 
-    function Scene.update(...)
+    function Graphics.update(...)
         update(...)
 
         Debug.messages = {}
@@ -255,9 +255,9 @@ return function(instance, enable)
             Font.text(font, string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, flags.fullscreen and 'fullscreen' or 'windowed', flags.vsync and 'enabled' or 'disabled', flags.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, m_line_height)
             Font.text(font, string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, m_line_height)
 
-            font.size = 24
+            font.size = 48
             font.bold = true
-            Font.text(font, string.format('NOT FINAL GAME'), 0, 60, width, m_line_height, Font.ALIGN_CENTER)
+            Font.text(font, string.format('NOT FINAL GAME'), 0, 60, width, 2 * m_line_height, Font.ALIGN_CENTER)
 
             font.size = size
             font.bold = false

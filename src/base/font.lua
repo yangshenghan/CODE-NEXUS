@@ -98,6 +98,14 @@ function Font.text(instance, text, ...)
     local color = { lg.getColor() }
     local scissor = { lg.getScissor() }
 
+    if not width then
+        width = lg.getWidth()
+        scissorw = width
+    end
+    if not height then
+        height = lg.getHeight()
+        scissorh = height
+    end
     if not align then align = Font.ALIGN_LEFT end
 
     if Font.getHeight(instance) ~= instance.size then

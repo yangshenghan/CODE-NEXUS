@@ -639,7 +639,7 @@ local KEYCODESMODIFIER      = {
 -- \ ---------------------------------------------------------------------- / --
 function SceneConsole.new()
     if not t_instance then
-        local font = Data.getFont('console')
+        local font = Data.getFont('console').font
         GameConsole.initialize(font)
         t_instance = SceneBase.new(SceneConsole)
     end

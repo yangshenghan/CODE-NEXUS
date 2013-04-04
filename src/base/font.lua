@@ -31,115 +31,33 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Resource              = Core.import 'nexus.core.resource'
 local Color                 = Core.import 'nexus.base.color'
-local Font                  = Core.import 'nexus.base.font'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Data                  = {}
-
--- / ---------------------------------------------------------------------- \ --
--- | Local variables                                                        | --
--- \ ---------------------------------------------------------------------- / --
-local t_fonts               = {}
-
-local t_texts               = {}
-
-local t_caches              = {}
-
-local t_colors              = {}
-
-local t_formats             = {}
-
--- / ---------------------------------------------------------------------- \ --
--- | Private functions                                                      | --
--- \ ---------------------------------------------------------------------- / --
-local function load_data_resource(folder, filename)
-    local path = folder .. filename .. '.lua'
-
-    if not t_caches[path] then
-        t_caches[path] = Core.load(path)
-    end
-
-    return t_caches[path]
-end
+local Font                  = {
+    color                   = nil,
+    outline_color           = nil,
+    bold                    = false,
+    italic                  = false,
+    underline               = false,
+    delete                  = false,
+    outline                 = true,
+    shadow                  = true,
+    size                    = 24
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function Data.initialize()
-    t_colors = Data.loadDatabaseData('colors')
+function Font.new(name, size)
+    local instance = setmetatable({}, { __index = Font })
+    instance.color = Color.new(255, 255, 255, 255)
+    instance.outline_color = Color.new(0, 0, 0, 128)
+    instance.name = name
+    instance.size = size
+    instance.font = Resource.loadFontData(name, size)
+    return instance
 end
 
-function Data.finalize()
-    Data.reset()
-end
-
-function Data.reset()
-    t_formats = {}
-    t_colors = {}
-    t_caches = {}
-    t_texts = {}
-    t_fonts = {}
-end
-
-function Data.loadDatabaseData(filename)
-    return load_data_resource('data/databases/', filename)
-end
-
-function Data.loadExtraData(filename)
-    return load_data_resource('data/extras/', filename)
-end
-
-function Data.loadMapData(filename)
-    return load_data_resource('data/maps/', filename)
-end
-
-function Data.loadObjectData(filename)
-    return load_data_resource('data/objects/', filename)
-end
-
-function Data.loadScriptData(filename)
-    return load_data_resource('data/scripts/', filename)
-end
-
-function Data.loadStageData(filename)
-    return load_data_resource('data/stages/', filename)
-end
-
-function Data.loadTextData(filename)
-    local texts = load_data_resource('data/texts/', filename)
-    for index, font in ipairs(texts.fonts.name) do
-        t_fonts[font] = Font.new(texts.fonts.file[index], texts.fonts.size[index])
-    end
-    t_texts = texts.texts
-    t_formats = texts.formats
-    return texts
-end
-
-function Data.getFont(font)
-    return t_fonts[font]
-end
-
-function Data.getText(text)
-    return t_texts[text] or text
-end
-
-function Data.getFormat(format)
-    return t_formats[format] or format
-end
-
-function Data.getTranslationList()
-end
-
-function Data.getColor(index)
-    local color = t_colors[index]
-    if color then return Color.get(color) end
-    return 0, 0, 0, 0
-end
-
--- function Data.changeOptionConfigures()
-    -- Game.saveGameConfigure()
--- end
-
-return Data
+return Font

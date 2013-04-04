@@ -32,8 +32,10 @@ local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
+local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
 local Input                 = Core.import 'nexus.core.input'
+local Font                  = Core.import 'nexus.base.font'
 local GameMessage           = Core.import 'nexus.game.message'
 local WindowBase            = Core.import 'nexus.window.base'
 local KEYS                  = Constants.KEYS
@@ -61,7 +63,7 @@ local function new_line_x(instance)
 end
 
 local function calculate_line_height(instance, texts)
-    return instance.font.getHeight(instance.font, '|')
+    return Font.getLineHeight(instance.font)
 end
 
 local function pause_input(instance)
@@ -144,14 +146,14 @@ end
 -- \ ---------------------------------------------------------------------- / --
 function WindowMessage.new()
     local padding = 12
-    local lineheight = 24
+    local lineheight = 32
     local instance = WindowBase.new(WindowMessage)
-    instance.x = 0
+    instance.x = 16
     instance.y = 0
     instance.width = REFERENCE_WIDTH
     instance.height = 4 * lineheight + 2 * padding
     instance.texts = {}
-    instance.font = lg.newFont(24)
+    instance.font = Data.getFont('message')
     return instance
 end
 
@@ -167,10 +169,9 @@ function WindowMessage.update(instance, dt)
 end
 
 function WindowMessage.render(instance)
-    lg.setColor(255, 255, 255, 255)
     for _, text in ipairs(instance.texts) do
         local c, x, y = unpack(text)
-        lg.print(c, instance.x + x, instance.y + y)
+        Font.text(instance.font, c, instance.x + x, instance.y + y, instance.width - instance.x, Font.getLineHeight(instance.font))
     end
 end
 

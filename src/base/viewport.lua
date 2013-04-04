@@ -40,6 +40,7 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- \ ---------------------------------------------------------------------- / --
 local Viewport              = {
     visible                 = true,
+    rectangle               = nil,
     ox                      = 0,
     oy                      = 0,
     z                       = 0

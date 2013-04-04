@@ -38,6 +38,8 @@ local Color                 = Core.import 'nexus.base.color'
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Font                  = {
+    name                    = nil,
+    font                    = nil,
     color                   = nil,
     outline_color           = nil,
     bold                    = false,
@@ -46,14 +48,7 @@ local Font                  = {
     delete                  = false,
     outline                 = true,
     shadow                  = true,
-    align                   = 0,
     rotate                  = 0,
-    zx                      = 1,
-    zy                      = 1,
-    ox                      = 0,
-    oy                      = 0,
-    sx                      = 0,
-    sy                      = 0,
     size                    = 24,
     ALIGN_LEFT              = 0,
     ALIGN_JUSTIFY           = 1,
@@ -71,24 +66,136 @@ function Font.new(name, size)
     instance.name = name
     instance.size = size
     instance.font = Resource.loadFontData(name, size)
+    Font.setLineHeight(instance, size)
     return instance
 end
 
+function Font.getHeight(instance)
+    return instance.font.getHeight(instance.font)
+end
+
+function Font.getLineHeight(instance)
+    return instance.font.getLineHeight(instance.font)
+end
+
+function Font.setLineHeight(instance, lineheight)
+    return instance.font.setLineHeight(instance.font, lineheight)
+end
+
+function Font.getWidth(instance, line)
+    return instance.font.getWidth(instance.font, line)
+end
+
+function Font.getWrap(instance, text, width)
+    return instance.font.getWrap(instance.font, text, width)
+end
+
 function Font.text(instance, text, ...)
-    local x, y, width, height = ...
+    local x, y, width, height, align = ...
+    local scissorx, scissory, scissorw, scissorh = ...
+
+    local sx, sy, zx, zy = 0, 0, 1, 1
+    local color = { lg.getColor() }
     local scissor = { lg.getScissor() }
 
-    love.graphics.setScissor(x, y, width, height)
-    if instance.align == Font.ALIGN_RIGHT then
-        lg.printf(text, x, y, width, 'right', rotate, zx, zy, ox, oy, sx, sy)
-    elseif instance.align == Font.ALIGN_CENTER then
-        lg.printf(text, x, y, width, 'center', rotate, zx, zy, ox, oy, sx, sy)
-    elseif instance.align == Font.ALIGN_JUSTIFY then
-        lg.printf(text, x, y, width, 'justify', rotate, zx, zy, ox, oy, sx, sy)
-    else
-        lg.printf(text, x, y, width, 'left', rotate, zx, zy, ox, oy, sx, sy)
+    if not align then align = Font.ALIGN_LEFT end
+
+    if Font.getHeight(instance) ~= instance.size then
+        instance.font = Resource.loadFontData(instance.name, instance.size)
     end
-    love.graphics.setScissor(unpack(scissor))
+
+    if instance.shadow then
+        scissorw = scissorw + 1
+        scissorh = scissorh + 1
+    end
+
+    if instance.italic then
+        sx = -0.5
+        scissorx = scissorx - instance.size * 0.5
+        scissorw = scissorw + instance.size * 0.5
+    end
+
+    if instance.bold then
+        scissorx = scissorx - instance.size * 0.5
+        scissorw = scissorw + instance.size * 0.5
+    end
+
+    lg.setFont(instance.font)
+
+    lg.setScissor(scissorx, scissory, scissorw, scissorh)
+
+    if align == Font.ALIGN_RIGHT then
+        x = math.ceil(x + (width - Font.getWidth(instance, text)))
+    elseif align == Font.ALIGN_CENTER then
+        x = math.ceil(x + (width - Font.getWidth(instance, text)) * 0.5)
+    elseif align == Font.ALIGN_JUSTIFY then
+        -- not implement
+    else
+        x = math.ceil(x)
+    end
+    y = math.ceil(y)
+
+    if instance.shadow then
+        lg.setColor(0, 0, 0, 255)
+
+        lg.print(text, x + 1, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+
+        if instance.delete then
+            lg.rectangle('fill', x + 1, y + height / 2 + 4, Font.getWidth(instance, text), 1)
+        end
+
+        if instance.underline then
+            lg.rectangle('fill', x + 1, y + height, Font.getWidth(instance, text), 1)
+        end
+    end
+
+    do
+        lg.setColor(Color.get(instance.outline_color))
+
+        if instance.bold then
+            lg.print(text, x - 1.5, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x - 1.5, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x - 1.5, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 1.5, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 1.5, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 1.5, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+        end
+
+        if instance.outline then
+            lg.print(text, x - 1, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x - 1, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x - 1, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 1, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 1, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 1, y + 1, instance.rotate, zx, zy, 0, 0, sx, sy)
+        end
+    end
+
+    do
+        lg.setColor(Color.get(instance.color))
+
+        if instance.bold then
+            lg.print(text, x - 0.5, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+            lg.print(text, x + 0.5, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+        end
+
+        lg.print(text, x, y, instance.rotate, zx, zy, 0, 0, sx, sy)
+
+        if instance.delete then
+            lg.rectangle('fill', x, y + 3 + height / 2, Font.getWidth(instance, text), 1)
+        end
+
+        if instance.underline then
+            lg.rectangle('fill', x, y + height - 1, Font.getWidth(instance, text), 1)
+        end
+    end
+
+    lg.setScissor(unpack(scissor))
+    lg.setColor(unpack(color))
 end
 
 return Font

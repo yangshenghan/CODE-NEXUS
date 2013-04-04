@@ -56,8 +56,6 @@ local Graphics              = {}
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_birghtness_shader   = nil
-
 local m_showfps             = true
 
 local m_framerate           = 60
@@ -143,14 +141,6 @@ function Graphics.initialize()
 
     t_toppest_viewport = Viewport.new()
     t_toppest_viewport.visible = true
-
-    m_birghtness_shader = lg.newShader([[
-        extern number brightness;
-        vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
-            color.a = color.a * brightness / 255;
-            return Texel(texture, tcoordinates) * color;
-        }
-    ]])
 end
 
 function Graphics.finalize()
@@ -187,6 +177,9 @@ function Graphics.update(dt)
         m_fadeout_duration = m_fadeout_duration - 1
     end
 
+    if m_brightness < 0 then m_brightness = 0 end
+    if m_brightness > 255 then m_brightness = 255 end
+
     table.sort(t_drawables, zsorter)
     for _, drawable in pairs(t_drawables) do
         local viewport = drawable.viewport
@@ -209,8 +202,6 @@ function Graphics.update(dt)
             end
         end
     end
-
-    m_birghtness_shader.send(m_birghtness_shader, 'brightness', m_brightness)
 end
 
 function Graphics.render()
@@ -218,14 +209,19 @@ function Graphics.render()
     lg.translate(m_screen_offsetx, m_screen_offsety)
     lg.scale(math.min(lg.getWidth() / REFERENCE_WIDTH, lg.getHeight() / REFERENCE_HEIGHT))
 
-    lg.setShader(m_birghtness_shader)
     for _, viewport in pairs(t_viewports) do
         lg.push()
         lg.translate(viewport.ox, viewport.oy)
+        lg.setScissor(Rectangle.get(viewport.rectangle))
         for _, drawable in pairs(t_torenders[viewport]) do drawable.render(drawable) end
+        lg.setScissor()
         lg.pop()
     end
-    lg.setShader()
+
+    if m_brightness < 255 then
+        lg.setColor(0, 0, 0, 255 - m_brightness)
+        lg.rectangle('fill', 0, 0, lg.getWidth(), lg.getHeight())
+    end
 
     lg.pop()
 

@@ -27,9 +27,9 @@ return {
     code        = 'zh_TW',
     language    = '繁體中文',
     fonts       = {
-        name    = {'console'},
-        file    = {'inconsolata.otf'},
-        size    = {16}
+        name    = {'message', 'console', 'debug'},
+        file    = {'inconsolata.otf', 'inconsolata.otf', 'inconsolata.otf'},
+        size    = {32, 16, 16}
     },
     texts       = {
         ['New Game']        = '開新遊戲',

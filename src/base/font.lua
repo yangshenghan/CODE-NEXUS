@@ -41,12 +41,11 @@ local Font                  = {
     name                    = nil,
     font                    = nil,
     color                   = nil,
-    outline_color           = nil,
+    outline                 = nil,
     bold                    = false,
     italic                  = false,
     underline               = false,
     delete                  = false,
-    outline                 = true,
     shadow                  = true,
     rotate                  = 0,
     size                    = 24,
@@ -62,7 +61,7 @@ local Font                  = {
 function Font.new(name, size)
     local instance = setmetatable({}, { __index = Font })
     instance.color = Color.new(255, 255, 255, 255)
-    instance.outline_color = Color.new(0, 0, 0, 128)
+    instance.outline = Color.new(0, 0, 0, 128)
     instance.name = name
     instance.size = size
     instance.font = Resource.loadFontData(name, size)
@@ -158,7 +157,7 @@ function Font.text(instance, text, ...)
     end
 
     do
-        lg.setColor(Color.get(instance.outline_color))
+        lg.setColor(Color.get(instance.outline))
 
         if instance.bold then
             lg.print(text, x - 1.5, y - 1, instance.rotate, zx, zy, 0, 0, sx, sy)

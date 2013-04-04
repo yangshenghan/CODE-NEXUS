@@ -207,6 +207,7 @@ return function(instance, enable)
     end
 
     function Scene.goto(scene)
+        if #Debug.scenes > 0 then table.remove(Debug.scenes) end
         table.insert(Debug.scenes, scene)
         return sg(scene)
     end
@@ -218,7 +219,7 @@ return function(instance, enable)
 
     function Scene.leave(scene)
         if #Debug.scenes == 0 then return end
-        table.remove(Debug.scenes, scene)
+        table.remove(Debug.scenes)
         return sl(scene)
     end
 

@@ -28,31 +28,30 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
-local NexusCore             = Nexus.core
+local Core                  = Nexus.core
 
-return {
-    control                 = {
-        levels              = 0x0000,
-        chips               = 0x0000
-    },
-    status                  = {
-        N                   = {
-            health          = 10,
-            energy          = 10
-        },
-        B                   = {
-            health          = 10,
-            energy          = 10
-        },
-        A                   = {
-            health          = 10,
-            energy          = 10
-        }
-    },
-    system                  = {
-        savingcount         = 0,
-        killedcount         = 0,
-        framecount          = 0,
-        gameversion         = NexusCore.version()
-    }
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local GameSystem            = {
+    savingcount             = 0,
+    killedcount             = 0,
+    framecount              = 0,
+    gameversion             = Core.version()
 }
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function GameSystem.new(data)
+    local instance = setmetatable({}, { __index = GameSystem })
+    if data then
+        instance.framecount = data.framecount
+        instance.savingcount = data.savingcount
+        instance.killedcount = data.killedcount
+        instance.gameversion = data.gameversion
+    end
+    return instance
+end
+
+return GameSystem

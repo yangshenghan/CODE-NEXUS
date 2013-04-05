@@ -48,6 +48,12 @@ local GameMessage           = {
 function GameMessage.new()
     local instance = setmetatable({}, { __index = GameMessage })
     GameMessage.clear(instance)
+
+    if data then
+        instance.texts = data.texts
+        instance.position = data.position
+    end
+
     return instance
 end
 

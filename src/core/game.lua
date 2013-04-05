@@ -43,6 +43,7 @@ local Scene                 = Core.import 'nexus.core.scene'
 local GameConsole           = Core.import 'nexus.game.console'
 local GamePlayer            = Core.import 'nexus.game.player'
 local GameMessage           = Core.import 'nexus.game.message'
+local GameSystem            = Core.import 'nexus.game.system'
 local SceneTitle            = Core.import 'nexus.scene.title'
 local SceneExit             = Core.import 'nexus.scene.exit'
 local KEYS                  = Constants.KEYS
@@ -58,18 +59,16 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- \ ---------------------------------------------------------------------- / --
 local Game                  = {
     player                  = nil,
-    -- message                 = nil,
+    message                 = nil,
     -- story                   = nil,
     -- stage                   = nil,
-    -- system                  = nil
+    system                  = nil
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_version             = nil
-
-local t_saving_data         = nil
 
 local MAJOR                 = VERSION.MAJOR
 local MINOR                 = VERSION.MINOR
@@ -84,12 +83,12 @@ local function on_start_game()
 end
 
 local function on_after_load()
-    Graphics.setFramecount(t_saving_data.system.framecount)
+    Graphics.setFramecount(Game.system.framecount)
 end
 
 local function on_before_save()
-    t_saving_data.system.framecount = Graphics.getFramecount()
-    t_saving_data.system.savingcount = t_saving_data.system.savingcount + 1
+    Game.system.framecount = Graphics.getFramecount()
+    Game.system.savingcount = Game.system.savingcount + 1
 end
 
 local function adjust_screen_mode()
@@ -122,12 +121,12 @@ function Game.initialize()
 end
 
 function Game.finalize()
-    -- Game.system = nil
-    -- Game.stage = nil
+    Game.system = nil
     -- Game.story = nil
-    -- Game.message = nil
     Game.player = nil
-    t_saving_data = {}
+
+    -- Game.stage = nil
+    Game.message = nil
 end
 
 function Game.update(dt)
@@ -148,9 +147,7 @@ function Game.start()
     Input.bindKeyEvent('game.reload', Input.TRIGGER, KEYS.F12, Game.reload)
     Input.bindKeyEvent('game.quit', Input.TRIGGER, KEYS.F4, KEYS.ALTERNATIVE, Game.quit)
 
-    if check_game_requirement() then
-        Scene.goto(SceneTitle.new())
-    end
+    if check_game_requirement() then Scene.goto(SceneTitle.new()) end
 end
 
 function Game.terminate()
@@ -165,23 +162,25 @@ end
 -- end
 
 function Game.setup()
-    t_saving_data = Data.loadScriptData('setup')
     Game.player = GamePlayer.new()
-    Game.message = GameMessage.new()
     -- Game.story = GameStory.new()
+    Game.system = GameSystem.new()
+
+    Game.message = GameMessage.new()
     -- Game.stage = GameStage.new()
-    -- Game.system = GameSystem.new()
 
     on_start_game()
 end
 
 function Game.load(index)
     -- local data = Core.load()
-    Game.player = data.player
-    Game.message = data.message
-    -- Game.story = data.story
-    -- Game.stage = data.stage
-    -- Game.system = data.system
+
+    Game.player = GamePlayer.new(data.player)
+    -- Game.story = GameStory.new(data.story)
+    Game.system = GameSystem.new(data.system)
+
+    Game.message = GameMessage.new()
+    -- Game.stage = GameStage.new()
 
     on_after_load()
     return false
@@ -204,16 +203,16 @@ function Game.exists()
     return false
 end
 
-function Game.reload()
-    le.push('reload')
-end
-
 function Game.quit()
     Scene.enter(SceneExit.new())
 end
 
 function Game.exit()
     le.push('exit')
+end
+
+function Game.reload()
+    le.push('reload')
 end
 
 function Game.getVersionString()

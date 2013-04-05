@@ -80,9 +80,9 @@ function SceneStage.enter(instance)
 
     instance.player = Game.player
     instance.player.z = 30
-    instance.player.visible = true
     instance.player.dispose = NEXUS_EMPTY_FUNCTION
-    instance.player.disposed = NEXUS_EMPTY_FUNCTION
+    instance.player.isDisposed = NEXUS_EMPTY_FUNCTION
+    instance.player.isVisible = function() return true end
     instance.player.viewport = instance.viewports[2]
     Graphics.addDrawable(instance.player)
 
@@ -93,9 +93,9 @@ function SceneStage.enter(instance)
         local object = {}
         object = data
         object.z = 10
-        object.visible = true
         object.dispose = NEXUS_EMPTY_FUNCTION
-        object.disposed = NEXUS_EMPTY_FUNCTION
+        object.isDisposed = NEXUS_EMPTY_FUNCTION
+        object.isVisible = function() return true end
         object.update = data.update or NEXUS_EMPTY_FUNCTION
         object.render = data.render or NEXUS_EMPTY_FUNCTION
         object.viewport = instance.viewports[2]

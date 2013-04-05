@@ -50,7 +50,7 @@ local SpriteBase            = {
     ox                      = 0,
     oy                      = 0,
     sx                      = 0,
-    sy                      = 0, 
+    sy                      = 0,
     x                       = 0,
     y                       = 0,
     z                       = 0,
@@ -84,8 +84,12 @@ function SpriteBase.dispose(instance)
     Graphics.removeDrawable(instance)
 end
 
-function SpriteBase.disposed(instance)
+function SpriteBase.isDisposed(instance)
     return instance.render == nil
+end
+
+function SpriteBase.isVisible(instance)
+    return instance.visible
 end
 
 function SpriteBase.setImage(instance, image)
@@ -103,7 +107,7 @@ function SpriteBase.getHeight(instance)
 end
 
 function SpriteBase.render(instance)
-    if not instance.disposed(instance) and instance.image then
+    if instance.image then
         local src = instance.image
         local rect = instance.rectangle
         local quad = love.graphics.newQuad(rect.x, rect.y, rect.width, rect.height, src.getWidth(src), src.getHeight(src))

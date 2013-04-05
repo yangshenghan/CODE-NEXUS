@@ -66,8 +66,12 @@ function WindowBase.dispose(instance)
     Graphics.removeDrawable(instance)
 end
 
-function WindowBase.disposed(instance)
+function WindowBase.isDisposed(instance)
     return instance.render == nil
+end
+
+function WindowBase.isVisible(instance)
+    return instance.visible
 end
 
 -- function WindowBase.update(instance, dt, ...)

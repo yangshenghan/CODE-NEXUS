@@ -185,20 +185,13 @@ function Graphics.update(dt)
         local viewport = drawable.viewport
         if not viewport then viewport = t_toppest_viewport end
         if viewport.visible then
-            local u, v, w, h = Rectangle.get(viewport.rectangle)
-
             if not t_torenders[viewport] then
                 table.insert(t_viewports, viewport)
                 t_torenders[viewport] = {}
             end
 
-            if drawable.visible then
-                local dx = drawable.x - u
-                local dy = drawable.y - v
-
-                if dx >= 0 and dx <= w and dy >= 0 and dy <= h then
-                    table.insert(t_torenders[viewport], drawable)
-                end
+            if not drawable.isDisposed(drawable) and drawable.isVisible(drawable) then
+                table.insert(t_torenders[viewport], drawable)
             end
         end
     end

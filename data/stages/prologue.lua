@@ -23,60 +23,64 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local nexus                 = nexus
 
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
-
+local Core                  = Nexus.core
 local Constants             = Nexus.constants
+local Game                  = Core.import 'nexus.core.game'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
+local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 return {
-    width       = 1280,
-    height      = 720,
+    width       = 100,
+    height      = 50,
     objects     = {
         ground      = {
-            x           = REFERENCE_WIDTH / 2,
-            y           = REFERENCE_HEIGHT - 50 / 2,
+            x           = 0,
+            y           = REFERENCE_HEIGHT - 50,
             width       = REFERENCE_WIDTH,
             height      = 50,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         sky         = {
-            x           = REFERENCE_WIDTH / 2,
-            y           = 50 / 2,
+            x           = 0,
+            y           = 0,
             width       = REFERENCE_WIDTH,
             height      = 50,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         leftwall    = {
-            x           = 50 / 2,
-            y           = REFERENCE_HEIGHT / 2,
+            x           = 0,
+            y           = 0,
             width       = 50,
             height      = REFERENCE_HEIGHT,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         rightwall   = {
-            x           = REFERENCE_WIDTH - 50 / 2,
-            y           = REFERENCE_HEIGHT / 2,
+            x           = REFERENCE_WIDTH - 50,
+            y           = 0,
             width       = 50,
             height      = REFERENCE_HEIGHT,
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         block1      = {
@@ -88,7 +92,7 @@ return {
             bodyType    = 'dynamic',
             render      = function(instance)
                 love.graphics.setColor(50, 50, 50)
-                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         block2      = {
@@ -100,7 +104,7 @@ return {
             bodyType    = 'dynamic',
             render      = function(instance)
                 love.graphics.setColor(50, 50, 50)
-                love.graphics.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         }
     }

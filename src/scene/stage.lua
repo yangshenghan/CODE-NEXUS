@@ -65,7 +65,7 @@ end
 function SceneStage.enter(instance)
     -- Load stage data
     instance.map = Data.loadMapData(instance.name)
-    instance.stage = Data.loadStageData(instance.name)
+    instance.stage = Game.stage.load(instance.name)
     instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
@@ -147,11 +147,6 @@ function SceneStage.update(instance, dt)
     for _, object in pairs(instance.objects) do
         object.update(object, dt)
     end
-end
-
-function SceneStage.getCurrentStage()
-    local scene = Scene.getCurrentScene()
-    return scene.stage
 end
 
 function SceneStage.__debug(instance)

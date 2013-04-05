@@ -30,6 +30,7 @@
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
+local Game                  = Core.import 'nexus.core.game'
 local SceneStage            = Core.import 'nexus.scene.stage'
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
@@ -72,9 +73,8 @@ function GameObject.isMoving(instance)
 end
 
 function GameObject.isPassable(instance, x, y)
-    local stage = SceneStage.getCurrentStage()
     if x < 0 or y < 0 then return false end
-    if x > stage.width / LOGICAL_GRID_SIZE or y > stage.height / LOGICAL_GRID_SIZE then return false end
+    if x > Game.stage.width or y > Game.stage.height then return false end
     return true
 end
 

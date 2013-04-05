@@ -32,14 +32,51 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local Data                  = Core.import 'nexus.core.data'
+local Game                  = Core.import 'nexus.core.game'
 local GameObject            = Core.import 'nexus.game.object'
+local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GamePlayer            = {}
+local GamePlayer            = {
+    last_logical_x          = 0,
+    last_logical_y          = 0
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function get_center_x()
+    return (REFERENCE_WIDTH / LOGICAL_GRID_SIZE - 1) * 0.5
+end
+
+local function get_center_y()
+    return (REFERENCE_HEIGHT / LOGICAL_GRID_SIZE - 1) * 0.5
+end
+
+-- local function center(x, y)
+    -- Game.stage.setDisplayPosition(x - get_center_x(), y - get_center_y())
+-- end
+
+local function update_screen_scroll(instance)
+    local cx = get_center_x()
+    local cy = get_center_y()
+    local x1 = Game.stage.adjustX(instance.last_logical_x)
+    local y1 = Game.stage.adjustY(instance.last_logical_y)
+    local x2 = Game.stage.adjustX(instance.object.x)
+    local y2 = Game.stage.adjustY(instance.object.y)
+
+    if y2 > y1 and y2 > cy then Game.stage.scrollUp(y2 - y1) end
+    if x2 > x1 and x2 > cx then Game.stage.scrollRight(x2 - x1) end
+    if y2 < y1 and y2 < cy then Game.stage.scrollDown(y1 - y2) end
+    if x2 < x1 and x2 < cx then Game.stage.scrollLeft(x1 - x2) end
+
+    instance.last_logical_x = instance.object.x
+    instance.last_logical_y = instance.object.y
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -63,11 +100,13 @@ function GamePlayer.update(instance, dt)
     if instance.object.attacking then
         coroutine.resume(instance.object.attacking, dt)
     end
+
+    update_screen_scroll(instance)
 end
 
 function GamePlayer.render(instance)
     love.graphics.setColor(193, 47, 14)
-    love.graphics.circle('fill', instance.object.rx, REFERENCE_HEIGHT - instance.object.ry, LOGICAL_GRID_SIZE / 2)
+    love.graphics.circle('fill', instance.object.rx - Game.stage.displayx * LOGICAL_GRID_SIZE, REFERENCE_HEIGHT - instance.object.ry + Game.stage.displayy * LOGICAL_GRID_SIZE, LOGICAL_GRID_SIZE / 2)
 end
 
 function GamePlayer.rush(instance)

@@ -23,20 +23,19 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
+
 return {
-    code        = 'zh_TW',
-    language    = '繁體中文',
-    fonts       = {
-        name    = {'message', 'console', 'debug'},
-        file    = {'inconsolata.otf', 'inconsolata.otf', 'inconsolata.otf'},
-        size    = {32, 16, 16}
+    fonts                   = {
+        name                = {'message', 'console', 'debug'},
+        file                = {'inconsolata.otf', 'inconsolata.otf', 'inconsolata.otf'},
+        size                = {32, 16, 16}
     },
-    texts       = {
+    texts                   = {
         ['New Game']        = '開新遊戲',
         ['Continue']        = '繼續遊戲',
         ['Extra']           = '遊戲畫廊',
         ['Option']          = '遊戲設定',
         ['Exit']            = '退出遊戲'
     },
-    formats     = {}
+    formats                 = {}
 }

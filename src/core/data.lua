@@ -51,6 +51,8 @@ local t_colors              = {}
 
 local t_formats             = {}
 
+local t_languages           = {}
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
@@ -69,6 +71,7 @@ end
 -- \ ---------------------------------------------------------------------- / --
 function Data.initialize()
     t_colors = Data.loadDatabaseData('colors')
+    t_languages = Data.loadDatabaseData('languages')
 end
 
 function Data.finalize()
@@ -130,6 +133,7 @@ function Data.getFormat(format)
 end
 
 function Data.getTranslationList()
+    return t_languages
 end
 
 function Data.getColor(index)

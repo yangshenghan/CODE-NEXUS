@@ -25,17 +25,6 @@
 --[[ ********************************************************************** ]]--
 
 return {
-    fonts                   = {
-        name                = {'message', 'console', 'debug'},
-        file                = {'inconsolata.otf', 'inconsolata.otf', 'inconsolata.otf'},
-        size                = {32, 16, 16}
-    },
-    texts                   = {
-        ['New Game']        = 'New Game',
-        ['Continue']        = 'Continue',
-        ['Extra']           = 'Extra',
-        ['Option']          = 'Option',
-        ['Exit']            = 'Exit'
-    },
-    formats                 = {}
+    ['en_US']               = 'English (US)',
+    ['zh_TW']               = '繁體中文'
 }

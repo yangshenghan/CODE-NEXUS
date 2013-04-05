@@ -23,16 +23,22 @@
 --[[ 3. This notice may not be removed or altered from any source           ]]--
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
-local Color                 = require 'src.base.color'
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Color                 = Core.import 'nexus.base.color'
 
 return {
-    base    = Color.new(255, 255, 255, 255),
-    black   = Color.new(0, 0, 0, 255),
-    blue    = Color.new(0, 0, 255, 255),
-    green   = Color.new(0, 255, 0, 255),
-    cyan    = Color.new(0, 255, 255, 255),
-    red     = Color.new(255, 0, 0, 255),
-    puple   = Color.new(255, 0, 255, 255),
-    yellow  = Color.new(255, 255, 0, 255),
-    white   = Color.new(255, 255, 255, 255)
+    base                    = Color.new(255, 255, 255, 255),
+    black                   = Color.new(0, 0, 0, 255),
+    blue                    = Color.new(0, 0, 255, 255),
+    green                   = Color.new(0, 255, 0, 255),
+    cyan                    = Color.new(0, 255, 255, 255),
+    red                     = Color.new(255, 0, 0, 255),
+    puple                   = Color.new(255, 0, 255, 255),
+    yellow                  = Color.new(255, 255, 0, 255),
+    white                   = Color.new(255, 255, 255, 255)
 }

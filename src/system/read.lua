@@ -29,10 +29,7 @@
 -- \ ---------------------------------------------------------------------- / --
 local lf                    = love.filesystem
 local require               = require
-
-local save                  = require 'src.system.save'
 local version               = require 'src.system.version'
-local upgrade               = require 'src.system.upgrade'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
@@ -89,11 +86,8 @@ end
 
 return function(filename)
     local chunk = deserialize(decompress(lf.read(filename)))
-    if chunk.version < version() then
-        local data = upgrade(chunk.identifier, chunk) 
-        save(filename, data, chunk.identifier)
-    elseif chunk.version > version() then
-        error('Your game version is older than saving data!')
+    if chunk.header ~= 'CODENEXUS' or chunk.version ~= version() then
+        error('The "' .. filename .. '" file is not compatible with your game!')
     end
     return chunk.data
 end

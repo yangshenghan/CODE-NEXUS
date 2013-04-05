@@ -241,9 +241,9 @@ local function serialize(data, cfunctions)
     return table.concat(buffer)
 end
 
-return function(filename, data, identifier)
+return function(filename, data)
     local chunk = {
-        identifier  = identifier,
+        header      = 'CODENEXUS',
         version     = version(),
         data        = data
     }

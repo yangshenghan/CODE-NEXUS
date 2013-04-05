@@ -43,6 +43,7 @@ local Scene                 = Core.import 'nexus.core.scene'
 local GameConsole           = Core.import 'nexus.game.console'
 local GamePlayer            = Core.import 'nexus.game.player'
 local GameMessage           = Core.import 'nexus.game.message'
+local GameStage             = Core.import 'nexus.game.stage'
 local GameSystem            = Core.import 'nexus.game.system'
 local SceneTitle            = Core.import 'nexus.scene.title'
 local SceneExit             = Core.import 'nexus.scene.exit'
@@ -61,7 +62,7 @@ local Game                  = {
     player                  = nil,
     message                 = nil,
     -- story                   = nil,
-    -- stage                   = nil,
+    stage                   = nil,
     system                  = nil
 }
 
@@ -125,7 +126,7 @@ function Game.finalize()
     -- Game.story = nil
     Game.player = nil
 
-    -- Game.stage = nil
+    Game.stage = nil
     Game.message = nil
 end
 
@@ -167,7 +168,7 @@ function Game.setup()
     Game.system = GameSystem.new()
 
     Game.message = GameMessage.new()
-    -- Game.stage = GameStage.new()
+    Game.stage = GameStage.new()
 
     on_start_game()
 end
@@ -180,7 +181,7 @@ function Game.load(index)
     Game.system = GameSystem.new(data.system)
 
     Game.message = GameMessage.new()
-    -- Game.stage = GameStage.new()
+    Game.stage = GameStage.new()
 
     on_after_load()
     return false

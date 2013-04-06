@@ -95,9 +95,7 @@ end
 
 function WindowProgressBar.setProgressValue(instance, value)
     if not value then value = 0 end
-    if value < 0 then value = 0 end
-    if value > 1 then value = 1 end
-    instance.progress = value
+    instance.progress = math.clamp(0, value, 1)
 end
 
 return WindowProgressBar

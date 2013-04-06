@@ -28,6 +28,7 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local type                  = type
+local math                  = math
 local pairs                 = pairs
 local error                 = error
 local table                 = table
@@ -51,6 +52,10 @@ local f_coroutine_resume    = coroutine.resume
 -- / ---------------------------------------------------------------------- \ --
 -- | Extend bulit-in lua modules and functions                              | --
 -- \ ---------------------------------------------------------------------- / --
+function math.clamp(low, n, high)
+    return math.min(math.max(n, low), high)
+end
+
 function table.first(t)
     return t[1]
 end

@@ -27,6 +27,7 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local math                  = math
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Graphics              = Core.import 'nexus.core.graphics'
@@ -62,8 +63,7 @@ local SpriteBase            = {
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function transform_opacity_color(color, opacity)
-    if opacity < 0 then opacity = 0 end
-    if opacity > 1 then opacity = 1 end
+    opacity = math.clamp(0, opacity, 1)
     return color.red, color.green, color.blue, color.alpha * opacity
 end
 

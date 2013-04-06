@@ -31,6 +31,7 @@ local l                     = love
 local le                    = l.event
 local lt                    = l.timer
 local lg                    = l.graphics
+local math                  = math
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
@@ -42,8 +43,8 @@ local Data                  = Core.import 'nexus.core.data'
 -- local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 
-local Rectangle             = require 'src.base.rectangle'
-local Viewport              = require 'src.base.viewport'
+local Rectangle             = Core.import 'nexus.base.rectangle'
+local Viewport              = Core.import 'nexus.base.viewport'
 
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
@@ -177,9 +178,6 @@ function Graphics.update(dt)
         m_fadeout_duration = m_fadeout_duration - 1
     end
 
-    if m_brightness < 0 then m_brightness = 0 end
-    if m_brightness > 255 then m_brightness = 255 end
-
     table.sort(t_drawables, zsorter)
     for _, drawable in pairs(t_drawables) do
         local viewport = drawable.viewport
@@ -292,7 +290,7 @@ function Graphics.getBrightness()
 end
 
 function Graphics.setBrightness(brightness)
-    m_brightness = brightness
+    m_brightness = math.clamp(0, m_brightness, 255)
 end
 
 function Graphics.screenshot()

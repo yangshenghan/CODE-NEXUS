@@ -27,6 +27,7 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local math                  = math
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Scene                 = Core.import 'nexus.core.scene'
@@ -70,8 +71,6 @@ function SceneLoading.update(instance, dt)
 end
 
 function SceneLoading.setProgress(value)
-    if value < 0 then value = 0 end
-    if value > 1 then value = 1 end
     coroutine.yield(value)
 end
 

@@ -258,6 +258,10 @@ return function(instance, enable)
             return lg.getPixelEffect(...)
         end
 
+        function lg._shaderCodeToGLSL(...)
+            return lg._effectCodeToGLSL(...)
+        end
+
         function lg.getMode()
             local width, height, fullscreen, vsync, fsaa = lggm()
             return width, height, {

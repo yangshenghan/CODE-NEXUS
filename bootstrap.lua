@@ -177,8 +177,8 @@ return function(instance, enable)
             return lg.setDefaultImageFilter(...)
         end
 
-        function lg.newShader(...)
-            return lg.newPixelEffect(...)
+        function lg.newShader(vertexcode, pixelcode)
+            return lg.newPixelEffect(pixelcode)
         end
 
         function lg.setShader(...)

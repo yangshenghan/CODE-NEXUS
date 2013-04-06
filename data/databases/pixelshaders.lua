@@ -25,4 +25,42 @@
 --[[ ********************************************************************** ]]--
 
 return {
+    ['blur_x']              = [[
+extern number width = 0.0;
+extern number intensity = 1.0;
+
+vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
+    vec4 blur = vec4(0.0);
+    number size = intensity / width;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - 4.0 * size)) * 0.05;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - 3.0 * size)) * 0.09;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - 2.0 * size)) * 0.12;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - size)) * 0.15;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y)) * 0.16;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + size)) * 0.15;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + 2.0 * size)) * 0.12;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + 3.0 * size)) * 0.09;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + 4.0 * size)) * 0.05;
+    return color * blur;
+}
+]],
+    ['blur_y']              = [[
+extern number height = 0.0;
+extern number intensity = 1.0;
+
+vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
+    vec4 blur = vec4(0.0);
+    number size = intensity / height;
+    blur += Texel(texture, vec2(tcoordinates.x - 4.0 * size, tcoordinates.y)) * 0.05;
+    blur += Texel(texture, vec2(tcoordinates.x - 3.0 * size, tcoordinates.y)) * 0.09;
+    blur += Texel(texture, vec2(tcoordinates.x - 2.0 * size, tcoordinates.y)) * 0.12;
+    blur += Texel(texture, vec2(tcoordinates.x - size, tcoordinates.y)) * 0.15;
+    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y)) * 0.16;
+    blur += Texel(texture, vec2(tcoordinates.x + size, tcoordinates.y)) * 0.15;
+    blur += Texel(texture, vec2(tcoordinates.x + 2.0 * size, tcoordinates.y)) * 0.12;
+    blur += Texel(texture, vec2(tcoordinates.x + 3.0 * size, tcoordinates.y)) * 0.09;
+    blur += Texel(texture, vec2(tcoordinates.x + 4.0 * size, tcoordinates.y)) * 0.05;
+    return color * blur;
+}
+]]
 }

@@ -55,63 +55,31 @@ local f_coroutine_resume    = coroutine.resume
 local function extend_love_modules()
     local l                 = love
     local lg                = l.graphics
+    local Nexus             = nexus
+    local Core              = Nexus.core
+    local Data              = Core.import 'nexus.core.data'
 
-    local m_blurx_shader    = [[
-        extern number width = 0.0;
-        extern number intensity = 1.0;
-
-        const number offset[3] = number[](0.0, 1.3846153846, 3.2307692308);
-        const number weight[3] = number[](0.2270270270, 0.3162162162, 0.0702702703);
-
-        vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
-            vec4 tc = Texel(texture, tcoordinates);
-            vec3 blur = tc.rgb * weight[0];
-
-            blur += Texel(texture, tcoordinates + intensity * vec2(offset[1], 0.0) / width).rgb * weight[1];
-            blur += Texel(texture, tcoordinates - intensity * vec2(offset[1], 0.0) / width).rgb * weight[1];
-            blur += Texel(texture, tcoordinates + intensity * vec2(offset[2], 0.0) / width).rgb * weight[2];
-            blur += Texel(texture, tcoordinates - intensity * vec2(offset[2], 0.0) / width).rgb * weight[2];
-
-            return color * vec4(blur, tc.a);
-        }
-    ]]
-
-    local m_blury_shader    = [[
-        extern number height = 0.0;
-        extern number intensity = 1.0;
-
-        const number offset[3] = number[](0.0, 1.3846153846, 3.2307692308);
-        const number weight[3] = number[](0.2270270270, 0.3162162162, 0.0702702703);
-
-        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords) {
-            vec4 tc = Texel(texture, texture_coords);
-            vec3 blur = tc.rgb * weight[0];
-
-            blur += Texel(texture, texture_coords + intensity * vec2(0.0, offset[1]) / height).rgb * weight[1];
-            blur += Texel(texture, texture_coords - intensity * vec2(0.0, offset[1]) / height).rgb * weight[1];
-            blur += Texel(texture, texture_coords + intensity * vec2(0.0, offset[2]) / height).rgb * weight[2];
-            blur += Texel(texture, texture_coords - intensity * vec2(0.0, offset[2]) / height).rgb * weight[2];
-
-            return color * vec4(blur, tc.a);
-        }
-    ]]
-
-    function lg.blur(image)
+    function lg.blur(image, intensity)
+        local fx = lg.newShader(Data.getShader('blur_x'))
+        local fy = lg.newShader(Data.getShader('blur_y'))
         local width = image.getWidth(image)
         local height = image.getHeight(image)
-        local shaderx = lg.newShader(nil, m_blurx_shader)
-        local shadery = lg.newShader(nil, m_blury_shader)
         local canvas = lg.newCanvas(width, height)
 
-        shaderx.send(shaderx, 'width', width)
-        shadery.send(shadery, 'height', height)
+        if intensity then
+            fx.send(fx, 'intensity', intensity)
+            fy.send(fy, 'intensity', intensity)
+        end
+
+        fx.send(fx, 'width', width)
+        fy.send(fy, 'height', height)
 
         lg.setCanvas(canvas)
         lg.draw(image)
-        lg.setShader(shaderx)
-        lg.draw(image)
-        lg.setShader(shadery)
-        lg.draw(image)
+        lg.setShader(fx)
+        lg.draw(canvas)
+        lg.setShader(fy)
+        lg.draw(canvas)
         lg.setShader()
         lg.setCanvas()
 

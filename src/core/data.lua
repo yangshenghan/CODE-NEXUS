@@ -53,6 +53,10 @@ local t_formats             = {}
 
 local t_languages           = {}
 
+local t_pixel_shaders       = {}
+
+local t_vertex_shaders      = {}
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
@@ -72,6 +76,8 @@ end
 function Data.initialize()
     t_colors = Data.loadDatabaseData('colors')
     t_languages = Data.loadDatabaseData('languages')
+    t_pixel_shaders = Data.loadDatabaseData('pixelshaders')
+    t_vertex_shaders = Data.loadDatabaseData('vertexshaders')
 end
 
 function Data.finalize()
@@ -79,6 +85,8 @@ function Data.finalize()
 end
 
 function Data.reset()
+    t_vertex_shaders = {}
+    t_pixel_shaders = {}
     t_formats = {}
     t_colors = {}
     t_caches = {}
@@ -140,6 +148,12 @@ function Data.getColor(index)
     local color = t_colors[index]
     if color then return Color.get(color) end
     return 0, 0, 0, 0
+end
+
+function Data.getShader(index)
+    local vertex, pixel = t_vertex_shaders[index], t_pixel_shaders[index]
+    if vertex or pixel then return vertex, pixel end
+    return nil, nil
 end
 
 -- function Data.changeOptionConfigures()

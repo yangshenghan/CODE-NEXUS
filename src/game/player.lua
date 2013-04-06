@@ -82,7 +82,7 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function GamePlayer.new()
-    local instance = GameObject.new(setmetatable(GamePlayer, {}))
+    local instance = GameObject.new(GamePlayer)
     instance.object = Data.loadObjectData('player')
     GameObject.move(instance, 10, 10)
     return instance

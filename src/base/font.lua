@@ -33,6 +33,7 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Resource              = Core.import 'nexus.core.resource'
 local Color                 = Core.import 'nexus.base.color'
+local Rectangle             = Core.import 'nexus.base.rectangle'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -87,6 +88,11 @@ end
 
 function Font.getWrap(instance, text, width)
     return instance.font.getWrap(instance.font, text, width)
+end
+
+function Font.getTextRectangle(instance, text)
+    local width, lines = Font.getWrap(instance, text, Font.getWidth(instance, text))
+    return Rectangle.new(0, 0, width, lines * Font.getHeight(instance))
 end
 
 function Font.text(instance, text, ...)

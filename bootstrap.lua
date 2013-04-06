@@ -184,6 +184,7 @@ return function(instance, enable)
     end
 
     if not enable then
+        lg.isSupported = lgis
         lg.getMode = lggm
         lg.setMode = lgsm
         Scene.change = sc
@@ -198,6 +199,7 @@ return function(instance, enable)
     -- / ------------------------------------------------------------------ \ --
     -- | Game hooks in debug mode                                           | --
     -- \ ------------------------------------------------------------------ / --
+    lgis                    = lg.isSupported
     lggm                    = lg.getMode
     lgsm                    = lg.setMode
     sc                      = Scene.change
@@ -228,6 +230,14 @@ return function(instance, enable)
 
         function lg._shaderCodeToGLSL(...)
             return lg._effectCodeToGLSL(...)
+        end
+
+        function lg.isSupported(...)
+            local args = {...}
+            for index, value in ipairs(args) do
+                if value == 'shader' then args[index] = 'pixeleffect' end
+            end
+            return lgis(unpack(args))
         end
 
         function lg.getMode()

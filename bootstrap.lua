@@ -52,6 +52,73 @@ local f_coroutine_resume    = coroutine.resume
 -- / ---------------------------------------------------------------------- \ --
 -- | Extend bulit-in lua modules and functions                              | --
 -- \ ---------------------------------------------------------------------- / --
+local function extend_love_modules()
+    local l                 = love
+    local lg                = l.graphics
+
+    local m_blurx_shader    = [[
+        extern number width = 0.0;
+        extern number intensity = 1.0;
+
+        const number offset[3] = number[](0.0, 1.3846153846, 3.2307692308);
+        const number weight[3] = number[](0.2270270270, 0.3162162162, 0.0702702703);
+
+        vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
+            vec4 tc = Texel(texture, tcoordinates);
+            vec3 blur = tc.rgb * weight[0];
+
+            blur += Texel(texture, tcoordinates + intensity * vec2(offset[1], 0.0) / width).rgb * weight[1];
+            blur += Texel(texture, tcoordinates - intensity * vec2(offset[1], 0.0) / width).rgb * weight[1];
+            blur += Texel(texture, tcoordinates + intensity * vec2(offset[2], 0.0) / width).rgb * weight[2];
+            blur += Texel(texture, tcoordinates - intensity * vec2(offset[2], 0.0) / width).rgb * weight[2];
+
+            return color * vec4(blur, tc.a);
+        }
+    ]]
+
+    local m_blury_shader    = [[
+        extern number height = 0.0;
+        extern number intensity = 1.0;
+
+        const number offset[3] = number[](0.0, 1.3846153846, 3.2307692308);
+        const number weight[3] = number[](0.2270270270, 0.3162162162, 0.0702702703);
+
+        vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords) {
+            vec4 tc = Texel(texture, texture_coords);
+            vec3 blur = tc.rgb * weight[0];
+
+            blur += Texel(texture, texture_coords + intensity * vec2(0.0, offset[1]) / height).rgb * weight[1];
+            blur += Texel(texture, texture_coords - intensity * vec2(0.0, offset[1]) / height).rgb * weight[1];
+            blur += Texel(texture, texture_coords + intensity * vec2(0.0, offset[2]) / height).rgb * weight[2];
+            blur += Texel(texture, texture_coords - intensity * vec2(0.0, offset[2]) / height).rgb * weight[2];
+
+            return color * vec4(blur, tc.a);
+        }
+    ]]
+
+    function lg.blur(image)
+        local width = image.getWidth(image)
+        local height = image.getHeight(image)
+        local shaderx = lg.newShader(nil, m_blurx_shader)
+        local shadery = lg.newShader(nil, m_blury_shader)
+        local canvas = lg.newCanvas(width, height)
+
+        shaderx.send(shaderx, 'width', width)
+        shadery.send(shadery, 'height', height)
+
+        lg.setCanvas(canvas)
+        lg.draw(image)
+        lg.setShader(shaderx)
+        lg.draw(image)
+        lg.setShader(shadery)
+        lg.draw(image)
+        lg.setShader()
+        lg.setCanvas()
+
+        return lg.newImage(canvas.getImageData(canvas))
+    end
+end
+
 function math.clamp(low, n, high)
     return math.min(math.max(n, low), high)
 end
@@ -114,23 +181,23 @@ return function(instance, enable)
     -- / ------------------------------------------------------------------ \ --
     -- | Import modules                                                     | --
     -- \ ------------------------------------------------------------------ / --
-    local l                     = love
-    local lt                    = l.timer
-    local lg                    = l.graphics
-    Data                        = Core.import 'nexus.core.data'
-    Game                        = Core.import 'nexus.core.game'
-    Graphics                    = Core.import 'nexus.core.graphics'
-    Scene                       = Core.import 'nexus.core.scene'
-    Color                       = Core.import 'nexus.base.color'
-    Font                        = Core.import 'nexus.base.font'
-    GameConsole                 = Core.import 'nexus.game.console'
+    local l                 = love
+    local lt                = l.timer
+    local lg                = l.graphics
+    Data                    = Core.import 'nexus.core.data'
+    Game                    = Core.import 'nexus.core.game'
+    Graphics                = Core.import 'nexus.core.graphics'
+    Scene                   = Core.import 'nexus.core.scene'
+    Color                   = Core.import 'nexus.base.color'
+    Font                    = Core.import 'nexus.base.font'
+    GameConsole             = Core.import 'nexus.game.console'
 
     -- / ------------------------------------------------------------------ \ --
     -- | Declare object                                                     | --
     -- \ ------------------------------------------------------------------ / --
-    local Debug                 = {
-        messages                = nil,
-        scenes                  = {}
+    local Debug             = {
+        messages            = nil,
+        scenes              = {}
     }
 
     -- / ------------------------------------------------------------------ \ --
@@ -171,6 +238,8 @@ return function(instance, enable)
     sl                      = Scene.leave
     update                  = Graphics.update
     render                  = Graphics.render
+
+    extend_love_modules()
 
     if l._version ~= '0.9.0' then
         function lg.setDefaultFilter(...)
@@ -287,7 +356,9 @@ end
 
 end
 
-return function()
+return function(instance, enable)
+    if enable then extend_love_modules() end
+
     return setmetatable({}, {
         __index             = EMPTY_FUNCTION
     })

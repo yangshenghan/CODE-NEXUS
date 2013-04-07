@@ -31,6 +31,7 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
+local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
@@ -39,8 +40,9 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Viewport              = {
-    visible                 = true,
+    color                   = nil,
     rectangle               = nil,
+    visible                 = true,
     ox                      = 0,
     oy                      = 0,
     z                       = 0
@@ -61,6 +63,8 @@ function Viewport.new(...)
         local x, y, width, height = unpack({...})
         instance.rectangle = Rectangle.new(x, y, width, height)
     end
+
+    instance.color = Color.new(255, 255, 255, 255)
     return instance
 end
 

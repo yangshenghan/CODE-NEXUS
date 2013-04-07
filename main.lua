@@ -144,11 +144,11 @@ local function handle()
 end
 
 local function update(dt)
-    Audio.update(dt)
     Game.update(dt)
-    Graphics.update(dt)
     Input.update(dt)
     Scene.update(dt)
+    Audio.update(dt)
+    Graphics.update(dt)
 end
 
 local function render()

@@ -43,6 +43,7 @@ local Data                  = Core.import 'nexus.core.data'
 -- local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 
+local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
 local Viewport              = Core.import 'nexus.base.viewport'
 
@@ -206,6 +207,7 @@ function Graphics.render()
         lg.push()
         lg.translate(viewport.ox, viewport.oy)
         lg.setScissor(x * scale, y * scale, w * scale, h * scale)
+        lg.setColor(Color.get(viewport.color))
         for _, drawable in pairs(t_torenders[viewport]) do drawable.render(drawable) end
         lg.setScissor()
         lg.pop()

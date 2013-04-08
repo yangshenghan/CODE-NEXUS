@@ -85,6 +85,25 @@ local function extend_love_modules()
 
         return lg.newImage(canvas.getImageData(canvas))
     end
+
+    function lg.glow(image, intensity)
+        local f = lg.newShader(Data.getShader('glow'))
+        local width = image.getWidth(image)
+        local height = image.getHeight(image)
+        local canvas = lg.newCanvas(width, height)
+
+        if intensity then
+            f.send(f, 'intensity', intensity)
+        end
+
+        lg.setCanvas(canvas)
+        lg.setShader(f)
+        lg.draw(image)
+        lg.setShader()
+        lg.setCanvas()
+
+        return lg.newImage(canvas.getImageData(canvas))
+    end
 end
 
 function math.clamp(low, n, high)

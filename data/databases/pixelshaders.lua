@@ -62,5 +62,24 @@ vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
     blur += Texel(texture, vec2(tcoordinates.x + 4.0 * size, tcoordinates.y)) * 0.05;
     return color * blur;
 }
-]]
+]],
+    ['glow']                = [[
+extern number intensity = 1.0;
+
+vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
+    vec4 glow = vec4(0.0);
+    vec4 source = Texel(texture, tcoordinates);
+    number size = intensity;
+
+    for ( int x = -4 ; x <= 4 ; ++x ) {
+        glow += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + x * size)) * 0.15;
+    }
+
+    for ( int y = -4 ; y <= 4 ; ++y ) {
+        glow += Texel(texture, vec2(tcoordinates.x - size, tcoordinates.y)) * 0.15;
+    }
+
+    return color * (source + glow - source * glow);
+}
+]],
 }

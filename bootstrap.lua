@@ -52,60 +52,6 @@ local f_coroutine_resume    = coroutine.resume
 -- / ---------------------------------------------------------------------- \ --
 -- | Extend bulit-in lua modules and functions                              | --
 -- \ ---------------------------------------------------------------------- / --
-local function extend_love_modules()
-    local l                 = love
-    local lg                = l.graphics
-    local Nexus             = nexus
-    local Core              = Nexus.core
-    local Data              = Core.import 'nexus.core.data'
-
-    function lg.blur(image, intensity)
-        local fx = lg.newShader(Data.getShader('blur_x'))
-        local fy = lg.newShader(Data.getShader('blur_y'))
-        local width = image.getWidth(image)
-        local height = image.getHeight(image)
-        local canvas = lg.newCanvas(width, height)
-
-        if intensity then
-            fx.send(fx, 'intensity', intensity)
-            fy.send(fy, 'intensity', intensity)
-        end
-
-        fx.send(fx, 'width', width)
-        fy.send(fy, 'height', height)
-
-        lg.setCanvas(canvas)
-        lg.draw(image)
-        lg.setShader(fx)
-        lg.draw(canvas)
-        lg.setShader(fy)
-        lg.draw(canvas)
-        lg.setShader()
-        lg.setCanvas()
-
-        return lg.newImage(canvas.getImageData(canvas))
-    end
-
-    function lg.glow(image, intensity)
-        local f = lg.newShader(Data.getShader('glow'))
-        local width = image.getWidth(image)
-        local height = image.getHeight(image)
-        local canvas = lg.newCanvas(width, height)
-
-        if intensity then
-            f.send(f, 'intensity', intensity)
-        end
-
-        lg.setCanvas(canvas)
-        lg.setShader(f)
-        lg.draw(image)
-        lg.setShader()
-        lg.setCanvas()
-
-        return lg.newImage(canvas.getImageData(canvas))
-    end
-end
-
 function math.clamp(low, n, high)
     return math.min(math.max(n, low), high)
 end
@@ -227,8 +173,6 @@ return function(instance, enable)
     sl                      = Scene.leave
     update                  = Graphics.update
     render                  = Graphics.render
-
-    extend_love_modules()
 
     if l._version ~= '0.9.0' then
         function lg.setDefaultFilter(...)
@@ -358,8 +302,6 @@ end
 end
 
 return function(instance, enable)
-    if enable then extend_love_modules() end
-
     return setmetatable({}, {
         __index             = EMPTY_FUNCTION
     })

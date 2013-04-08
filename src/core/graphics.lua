@@ -299,6 +299,52 @@ function Graphics.screenshot()
     return lg.newScreenshot()
 end
 
+function Graphics.blur(image, intensity)
+    local fx = lg.newShader(Data.getShader('blur_x'))
+    local fy = lg.newShader(Data.getShader('blur_y'))
+    local width = image.getWidth(image)
+    local height = image.getHeight(image)
+    local canvas = lg.newCanvas(width, height)
+
+    if intensity then
+        fx.send(fx, 'intensity', intensity)
+        fy.send(fy, 'intensity', intensity)
+    end
+
+    fx.send(fx, 'width', width)
+    fy.send(fy, 'height', height)
+
+    lg.setCanvas(canvas)
+    lg.draw(image)
+    lg.setShader(fx)
+    lg.draw(canvas)
+    lg.setShader(fy)
+    lg.draw(canvas)
+    lg.setShader()
+    lg.setCanvas()
+
+    return lg.newImage(canvas.getImageData(canvas))
+end
+
+function Graphics.glow(image, intensity)
+    local f = lg.newShader(Data.getShader('glow'))
+    local width = image.getWidth(image)
+    local height = image.getHeight(image)
+    local canvas = lg.newCanvas(width, height)
+
+    if intensity then
+        f.send(f, 'intensity', intensity)
+    end
+
+    lg.setCanvas(canvas)
+    lg.setShader(f)
+    lg.draw(image)
+    lg.setShader()
+    lg.setCanvas()
+
+    return lg.newImage(canvas.getImageData(canvas))
+end
+
 function Graphics.toggleFullscreen()
     local width = GraphicsConfigures.width
     local height = GraphicsConfigures.height

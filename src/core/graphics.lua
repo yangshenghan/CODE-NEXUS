@@ -300,26 +300,26 @@ function Graphics.screenshot()
 end
 
 function Graphics.blur(image, intensity)
-    local fx = lg.newShader(Data.getShader('blur_x'))
-    local fy = lg.newShader(Data.getShader('blur_y'))
+    local fx = lg.newShader(Data.getShader('horizontal_blur'))
+    local fy = lg.newShader(Data.getShader('vertical_blur'))
     local width = image.getWidth(image)
     local height = image.getHeight(image)
     local canvas = lg.newCanvas(width, height)
 
-    if intensity then
-        fx.send(fx, 'intensity', intensity)
-        fy.send(fy, 'intensity', intensity)
-    end
+    fx.send(fx, 'unit', 1 / width)
+    fy.send(fy, 'unit', 1 / height)
 
-    fx.send(fx, 'width', width)
-    fy.send(fy, 'height', height)
+    if not intensity or intensity <= 0 then intensity = 1 end
 
     lg.setCanvas(canvas)
     lg.draw(image)
-    lg.setShader(fx)
-    lg.draw(canvas)
-    lg.setShader(fy)
-    lg.draw(canvas)
+    while intensity > 0 do
+        lg.setShader(fx)
+        lg.draw(canvas)
+        lg.setShader(fy)
+        lg.draw(canvas)
+        intensity = intensity - 1
+    end
     lg.setShader()
     lg.setCanvas()
 

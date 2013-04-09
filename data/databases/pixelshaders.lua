@@ -25,58 +25,48 @@
 --[[ ********************************************************************** ]]--
 
 return {
-    ['blur_x']              = [[
-extern number width = 0.0;
-extern number intensity = 1.0;
+    ['horizontal_blur']     = [[
+extern number unit = 0.0;
 
-vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
-    vec4 blur = vec4(0.0);
-    number size = intensity / width;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - 4.0 * size)) * 0.05;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - 3.0 * size)) * 0.09;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - 2.0 * size)) * 0.12;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y - size)) * 0.15;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y)) * 0.16;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + size)) * 0.15;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + 2.0 * size)) * 0.12;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + 3.0 * size)) * 0.09;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + 4.0 * size)) * 0.05;
+const number kernels[5] = number[](0.2270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162);
+
+vec4 effect(vec4 color, Image texture, vec2 coordinate, vec2 position) {
+    vec4 blur = Texel(texture, coordinate) * kernels[0];
+    for ( int index = 1 ; index < 5 ; ++index ) {
+        blur += Texel(texture, vec2(coordinate.x - index * unit, coordinate.y)) * kernels[index];
+        blur += Texel(texture, vec2(coordinate.x + index * unit, coordinate.y)) * kernels[index];
+    }
     return color * blur;
 }
 ]],
-    ['blur_y']              = [[
-extern number height = 0.0;
-extern number intensity = 1.0;
+    ['vertical_blur']       = [[
+extern number unit = 0.0;
 
-vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
-    vec4 blur = vec4(0.0);
-    number size = intensity / height;
-    blur += Texel(texture, vec2(tcoordinates.x - 4.0 * size, tcoordinates.y)) * 0.05;
-    blur += Texel(texture, vec2(tcoordinates.x - 3.0 * size, tcoordinates.y)) * 0.09;
-    blur += Texel(texture, vec2(tcoordinates.x - 2.0 * size, tcoordinates.y)) * 0.12;
-    blur += Texel(texture, vec2(tcoordinates.x - size, tcoordinates.y)) * 0.15;
-    blur += Texel(texture, vec2(tcoordinates.x, tcoordinates.y)) * 0.16;
-    blur += Texel(texture, vec2(tcoordinates.x + size, tcoordinates.y)) * 0.15;
-    blur += Texel(texture, vec2(tcoordinates.x + 2.0 * size, tcoordinates.y)) * 0.12;
-    blur += Texel(texture, vec2(tcoordinates.x + 3.0 * size, tcoordinates.y)) * 0.09;
-    blur += Texel(texture, vec2(tcoordinates.x + 4.0 * size, tcoordinates.y)) * 0.05;
+const number kernels[5] = number[](0.2270270270, 0.1945945946, 0.1216216216, 0.0540540541, 0.0162162162);
+
+vec4 effect(vec4 color, Image texture, vec2 coordinate, vec2 position) {
+    vec4 blur = Texel(texture, coordinate) * kernels[0];
+    for ( int index = 1 ; index < 5 ; ++index ) {
+        blur += Texel(texture, vec2(coordinate.x, coordinate.y - index * unit)) * kernels[index];
+        blur += Texel(texture, vec2(coordinate.x, coordinate.y + index * unit)) * kernels[index];
+    }
     return color * blur;
 }
 ]],
     ['glow']                = [[
 extern number intensity = 1.0;
 
-vec4 effect(vec4 color, Image texture, vec2 tcoordinates, vec2 pcoordinates) {
+vec4 effect(vec4 color, Image texture, vec2 coordinate, vec2 position) {
     vec4 glow = vec4(0.0);
-    vec4 source = Texel(texture, tcoordinates);
+    vec4 source = Texel(texture, coordinate);
     number size = intensity;
 
     for ( int x = -4 ; x <= 4 ; ++x ) {
-        glow += Texel(texture, vec2(tcoordinates.x, tcoordinates.y + x * size)) * 0.15;
+        glow += Texel(texture, vec2(coordinate.x, coordinate.y + x * size)) * 0.15;
     }
 
     for ( int y = -4 ; y <= 4 ; ++y ) {
-        glow += Texel(texture, vec2(tcoordinates.x - size, tcoordinates.y)) * 0.15;
+        glow += Texel(texture, vec2(coordinate.x - size, coordinate.y)) * 0.15;
     }
 
     return color * (source + glow - source * glow);

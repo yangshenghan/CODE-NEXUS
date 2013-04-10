@@ -29,56 +29,19 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Constants             = Nexus.constants
-local Game                  = Core.import 'nexus.core.game'
-local SceneStage            = Core.import 'nexus.scene.stage'
-local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local GameObject            = Core.import 'nexus.game.object'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GameObject            = {
-    update                  = NEXUS_EMPTY_FUNCTION,
-    -- the render method may be removed
-    render                  = NEXUS_EMPTY_FUNCTION,
-    image                   = nil,
-    direction               = 0, -- face direction angle in degree
-    x                       = 0, -- logical x position in logical unit
-    y                       = 0, -- logical y position in logical unit
-    rx                      = 0, -- real x position (logical x * LOGICAL_GRID_SIZE)
-    ry                      = 0  -- real y potition (logical y * LOGICAL_GRID_SIZE)
-}
+local GameCharacter         = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function GameObject.new(derive)
-    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject }) })
+function GameCharacter.new(derive)
+    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject.new(GameCharacter) }) })
     return instance
 end
 
-function GameObject.move(instance, x, y)
-    if x then
-        instance.object.x = x
-        instance.object.rx = x * LOGICAL_GRID_SIZE
-    end
-    if y then
-        instance.object.y = y
-        instance.object.ry = y * LOGICAL_GRID_SIZE
-    end
-end
-
-function GameObject.isMoving(instance)
-    if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
-    if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
-    return false
-end
-
-function GameObject.isPassable(instance, x, y)
-    if x < 0 or y < 0 then return false end
-    if x > Game.stage.width or y > Game.stage.height then return false end
-    return true
-end
-
-return GameObject
+return GameCharacter

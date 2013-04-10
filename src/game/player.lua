@@ -34,6 +34,7 @@ local Configures            = Nexus.configures
 local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
 local GameObject            = Core.import 'nexus.game.object'
+local GameCharacter         = Core.import 'nexus.game.character'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
@@ -82,7 +83,7 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function GamePlayer.new()
-    local instance = GameObject.new(GamePlayer)
+    local instance = GameCharacter.new(GamePlayer)
     instance.object = Data.loadObjectData('player')
     GameObject.move(instance, 10, 10)
     return instance

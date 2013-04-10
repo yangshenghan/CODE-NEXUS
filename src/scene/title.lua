@@ -74,7 +74,7 @@ local function title_update_coroutine(instance, dt, timer)
         local splash = SpriteBase.new({})
         splash.x = REFERENCE_WIDTH / 2
         splash.y = REFERENCE_HEIGHT / 2
-        splash.setImage(splash, Graphics.blur(Resource.loadSystemImage('splash1.png')))
+        splash.setImage(splash, Resource.loadSystemImage('splash1.png'))
         splash.opacity = 0
         wait(1000, function(dt)
             splash.opacity = splash.opacity + dt

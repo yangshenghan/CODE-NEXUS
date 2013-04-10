@@ -41,6 +41,7 @@ local Viewport              = Core.import 'nexus.base.viewport'
 local GameObject            = Core.import 'nexus.game.object'
 local SceneBase             = Core.import 'nexus.scene.base'
 local SceneLoading          = Core.import 'nexus.scene.loading'
+local SpriteCharacter       = Core.import 'nexus.sprite.character'
 local NEXUS_KEY             = Constants.KEYS
 local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
@@ -50,7 +51,9 @@ local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 local SceneStage            = {
     map                     = nil,
     stage                   = nil,
-    script                  = nil
+    script                  = nil,
+    sprites                 = nil,
+    viewports               = nil
 }
 
 -- / ---------------------------------------------------------------------- \ --
@@ -59,6 +62,8 @@ local SceneStage            = {
 function SceneStage.new(name)
     local instance = SceneBase.new(SceneStage)
     instance.name = name
+    instance.sprites = {}
+    instance.viewports = {}
     return SceneLoading.new(instance)
 end
 
@@ -69,26 +74,18 @@ function SceneStage.enter(instance)
     instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
-    instance.viewports = {
-        Viewport.new(),
-        Viewport.new(),
-        Viewport.new()
-    }
+    table.insert(instance.viewports, Viewport.new())
+    table.insert(instance.viewports, Viewport.new())
+    table.insert(instance.viewports, Viewport.new())
+
     instance.viewports[1].z = 10
     instance.viewports[2].z = 20
     instance.viewports[3].z = 30
 
-    instance.player = Game.player
-    instance.player.z = 30
-    instance.player.dispose = NEXUS_EMPTY_FUNCTION
-    instance.player.isDisposed = NEXUS_EMPTY_FUNCTION
-    instance.player.isVisible = function() return true end
-    instance.player.viewport = instance.viewports[2]
-    Graphics.addDrawable(instance.player)
-
-    instance.objects = { instance.player }
+    table.insert(instance.sprites, SpriteCharacter.new(instance.viewports[2], Game.player))
 
     -- Create objects
+    instance.objects = {}
     for _, data in pairs(instance.stage.objects) do
         local object = {}
         object = data
@@ -105,9 +102,10 @@ function SceneStage.enter(instance)
 end
 
 function SceneStage.leave(instance)
-    instance.viewports = {}
+    instance.viewports = nil
+    instance.sprites = nil
     instance.objects = nil
-    instance.player = nil
+    Game.player = nil
     instance.script = nil
     instance.stage = nil
     instance.map = nil
@@ -117,42 +115,48 @@ function SceneStage.update(instance, dt)
     if instance.idle then return end
 
     if Input.isKeyDown(NEXUS_KEY.Z) then
-        instance.player.rush(instance.player)
+        Game.player.rush(Game.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.X) then
-        instance.player.jump(instance.player)
+        Game.player.jump(Game.player)
     end
 
     if Input.isKeyDown(NEXUS_KEY.C) then
-        instance.player.attack(instance.player)
+        Game.player.attack(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.LEFT) and GameObject.isPassable(instance.player, instance.player.object.x - 1, instance.player.object.y) then
-        instance.player.left(instance.player)
+    if Input.isKeyDown(NEXUS_KEY.LEFT) and GameObject.isPassable(Game.player, Game.player.x - 1, Game.player.y) then
+        Game.player.left(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.RIGHT) and GameObject.isPassable(instance.player, instance.player.object.x + 1, instance.player.object.y) then
-        instance.player.right(instance.player)
+    if Input.isKeyDown(NEXUS_KEY.RIGHT) and GameObject.isPassable(Game.player, Game.player.x + 1, Game.player.y) then
+        Game.player.right(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.UP) and GameObject.isPassable(instance.player, instance.player.object.x, instance.player.object.y + 1) then
-        instance.player.up(instance.player)
+    if Input.isKeyDown(NEXUS_KEY.UP) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y + 1) then
+        Game.player.up(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.DOWN) and GameObject.isPassable(instance.player, instance.player.object.x, instance.player.object.y - 1) then
-        instance.player.down(instance.player)
+    if Input.isKeyDown(NEXUS_KEY.DOWN) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y - 1) then
+        Game.player.down(Game.player)
     end
+
+    Game.player.update(Game.player, dt)
 
     for _, object in pairs(instance.objects) do
         object.update(object, dt)
+    end
+
+    for _, sprite in ipairs(instance.sprites) do
+        sprite.update(sprite)
     end
 end
 
 function SceneStage.__debug(instance)
     local messages = { 'SceneStage' }
-    if instance.player then
-        table.insert(messages, string.format('Player location: <%d, %d> (%d, %d)', instance.player.object.x, instance.player.object.y, instance.player.object.rx, instance.player.object.ry))
+    if Game.player then
+        table.insert(messages, string.format('Player location: <%d, %d> (%d, %d)', Game.player.x, Game.player.y, Game.player.rx, Game.player.ry))
     end
     return messages
 end

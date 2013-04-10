@@ -30,15 +30,18 @@
 local math                  = math
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
 local Viewport              = Core.import 'nexus.base.viewport'
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SpriteBase            = {
+    update                  = EMPTY_FUNCTION,
     color                   = nil,
     rectangle               = nil,
     viewport                = nil,

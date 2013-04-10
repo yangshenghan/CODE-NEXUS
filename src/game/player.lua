@@ -33,6 +33,7 @@ local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
+local Input                 = Core.import 'nexus.core.input'
 local GameObject            = Core.import 'nexus.game.object'
 local GameCharacter         = Core.import 'nexus.game.character'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
@@ -67,16 +68,16 @@ local function update_screen_scroll(instance)
     local cy = get_center_y()
     local x1 = Game.stage.adjustX(instance.last_logical_x)
     local y1 = Game.stage.adjustY(instance.last_logical_y)
-    local x2 = Game.stage.adjustX(instance.object.x)
-    local y2 = Game.stage.adjustY(instance.object.y)
+    local x2 = Game.stage.adjustX(instance.x)
+    local y2 = Game.stage.adjustY(instance.y)
 
     if y2 > y1 and y2 > cy then Game.stage.scrollUp(y2 - y1) end
     if x2 > x1 and x2 > cx then Game.stage.scrollRight(x2 - x1) end
     if y2 < y1 and y2 < cy then Game.stage.scrollDown(y1 - y2) end
     if x2 < x1 and x2 < cx then Game.stage.scrollLeft(x1 - x2) end
 
-    instance.last_logical_x = instance.object.x
-    instance.last_logical_y = instance.object.y
+    instance.last_logical_x = instance.x
+    instance.last_logical_y = instance.y
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -90,72 +91,67 @@ function GamePlayer.new()
 end
 
 function GamePlayer.update(instance, dt)
-    if instance.object.rushing then
-        coroutine.resume(instance.object.rushing, dt)
+    if instance.rushing then
+        coroutine.resume(instance.rushing, dt)
     end
 
-    if instance.object.jumping then
-        coroutine.resume(instance.object.jumping, dt)
+    if instance.jumping then
+        coroutine.resume(instance.jumping, dt)
     end
 
-    if instance.object.attacking then
-        coroutine.resume(instance.object.attacking, dt)
+    if instance.attacking then
+        coroutine.resume(instance.attacking, dt)
     end
 
     update_screen_scroll(instance)
 end
 
-function GamePlayer.render(instance)
-    love.graphics.setColor(193, 47, 14)
-    love.graphics.circle('fill', instance.object.rx - Game.stage.displayx * LOGICAL_GRID_SIZE, REFERENCE_HEIGHT - instance.object.ry + Game.stage.displayy * LOGICAL_GRID_SIZE, LOGICAL_GRID_SIZE / 2)
-end
-
 function GamePlayer.rush(instance)
-    if not instance.object.rushing then
-        instance.object.rushing = coroutine.create(function(dt)
-            instance.object.rushing = nil
+    if not instance.rushing then
+        instance.rushing = coroutine.create(function(dt)
+            instance.rushing = nil
         end)
     end
 end
 
 function GamePlayer.jump(instance)
-    if not instance.object.jumping then
-        instance.object.jumping = coroutine.create(function(dt)
-            while instance.object.ry < (instance.object.y + 4) * LOGICAL_GRID_SIZE do
-                instance.object.ry = instance.object.ry + 4 * LOGICAL_GRID_SIZE * dt * 8
+    if not instance.jumping then
+        instance.jumping = coroutine.create(function(dt)
+            while instance.ry < (instance.y + 4) * LOGICAL_GRID_SIZE do
+                instance.ry = instance.ry + 4 * LOGICAL_GRID_SIZE * dt * 8
                 coroutine.yield()
             end
-            while instance.object.ry > instance.object.y * LOGICAL_GRID_SIZE do
-                instance.object.ry = instance.object.ry - 4 * LOGICAL_GRID_SIZE * dt * 8
+            while instance.ry > instance.y * LOGICAL_GRID_SIZE do
+                instance.ry = instance.ry - 4 * LOGICAL_GRID_SIZE * dt * 8
                 coroutine.yield()
             end
-            instance.object.jumping = nil
+            instance.jumping = nil
         end)
     end
 end
 
 function GamePlayer.attack(instance)
-    if not instance.object.attacking then
-        instance.object.attacking = coroutine.create(function(dt)
-            instance.object.attacking = nil
+    if not instance.attacking then
+        instance.attacking = coroutine.create(function(dt)
+            instance.attacking = nil
         end)
     end
 end
 
 function GamePlayer.up(instance)
-    GameObject.move(instance, false, instance.object.y + 1)
+    GameObject.move(instance, false, instance.y + 1)
 end
 
 function GamePlayer.right(instance)
-    GameObject.move(instance, instance.object.x + 1, false)
+    GameObject.move(instance, instance.x + 1, false)
 end
 
 function GamePlayer.down(instance)
-    GameObject.move(instance, false, instance.object.y - 1)
+    GameObject.move(instance, false, instance.y - 1)
 end
 
 function GamePlayer.left(instance)
-    GameObject.move(instance, instance.object.x - 1, false)
+    GameObject.move(instance, instance.x - 1, false)
 end
 
 return GamePlayer

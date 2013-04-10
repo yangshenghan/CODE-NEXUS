@@ -27,56 +27,42 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Game                  = Core.import 'nexus.core.game'
-local SceneStage            = Core.import 'nexus.scene.stage'
+local SpriteBase            = Core.import 'nexus.sprite.base'
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
-local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GameObject            = {
-    update                  = EMPTY_FUNCTION,
-    image                   = nil,
-    direction               = 0, -- face direction angle in degree
-    x                       = 0, -- logical x position in logical unit
-    y                       = 0, -- logical y position in logical unit
-    rx                      = 0, -- real x position (logical x * LOGICAL_GRID_SIZE)
-    ry                      = 0  -- real y potition (logical y * LOGICAL_GRID_SIZE)
+local SpriteCharacter       = {
+    character               = nil
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function GameObject.new(derive)
-    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject }) })
+function SpriteCharacter.new(viewport, character)
+    local instance = SpriteBase.new(SpriteCharacter, viewport)
+    instance.character = character
     return instance
 end
 
-function GameObject.move(instance, x, y)
-    if x then
-        instance.x = x
-        instance.rx = x * LOGICAL_GRID_SIZE
-    end
-    if y then
-        instance.y = y
-        instance.ry = y * LOGICAL_GRID_SIZE
-    end
+function SpriteCharacter.update(instance, dt)
+    SpriteBase.update(instance, dt)
+    instance.x = instance.character.rx
+    instance.y = instance.character.ry
 end
 
-function GameObject.isMoving(instance)
-    if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
-    if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
-    return false
+function SpriteCharacter.render(instance)
+    -- SpriteBase.render(instance)
+    lg.setColor(193, 47, 14, 255)
+    lg.circle('fill', instance.character.rx - Game.stage.displayx * LOGICAL_GRID_SIZE, REFERENCE_HEIGHT - instance.character.ry + Game.stage.displayy * LOGICAL_GRID_SIZE, LOGICAL_GRID_SIZE * 0.5)
 end
 
-function GameObject.isPassable(instance, x, y)
-    if x < 0 or y < 0 then return false end
-    if x > Game.stage.width or y > Game.stage.height then return false end
-    return true
-end
-
-return GameObject
+return SpriteCharacter

@@ -183,7 +183,7 @@ function Graphics.update(dt)
     for _, drawable in pairs(t_drawables) do
         local viewport = drawable.viewport
         if not viewport then viewport = t_toppest_viewport end
-        if viewport.visible then
+        if not viewport.isDisposed(viewport) and viewport.isVisible(viewport) then
             if not t_torenders[viewport] then
                 table.insert(t_viewports, viewport)
                 t_torenders[viewport] = {}

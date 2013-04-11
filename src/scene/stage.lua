@@ -57,13 +57,68 @@ local SceneStage            = {
 }
 
 -- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                     | --
+-- \ ---------------------------------------------------------------------- / --
+local function create_stage_viewports(instance)
+    table.insert(instance.viewports, Viewport.new(10))
+    table.insert(instance.viewports, Viewport.new(20))
+    table.insert(instance.viewports, Viewport.new(30))
+end
+
+local function create_character_sprites(instance)
+    instance.sprites.characters = {}
+
+    table.insert(instance.sprites.characters, SpriteCharacter.new(instance.viewports[2], Game.player))
+end
+
+local function create_stage_spriteset(instance)
+    instance.sprites = {}
+    instance.viewports = {}
+
+    create_stage_viewports(instance)
+    create_character_sprites(instance)
+end
+
+local function update_character_sprites(instance)
+    for _, sprite in ipairs(instance.sprites.characters) do
+        sprite.update(sprite)
+    end
+end
+
+local function update_stage_viewports(instance)
+end
+
+local function update_stage_spriteset(instance)
+    update_character_sprites(instance)
+    update_stage_viewports(instance)
+end
+
+local function dispose_character_sprites(instance)
+    for _, sprite in ipairs(instance.sprites.characters) do
+        sprite.dispose(sprite)
+    end
+end
+
+local function dispose_stage_viewports(instance)
+    for _, viewport in ipairs(instance.viewports) do
+        viewport.dispose(viewport)
+    end
+end
+
+local function dispose_stage_spriteset(instance)
+    dispose_character_sprites(instance)
+    dispose_stage_viewports(instance)
+
+    instance.viewports = nil
+    instance.sprites = nil
+end
+
+-- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function SceneStage.new(name)
     local instance = SceneBase.new(SceneStage)
     instance.name = name
-    instance.sprites = {}
-    instance.viewports = {}
     return SceneLoading.new(instance)
 end
 
@@ -74,15 +129,7 @@ function SceneStage.enter(instance)
     instance.script = Data.loadScriptData(instance.name)
 
     -- Initialize stage
-    table.insert(instance.viewports, Viewport.new())
-    table.insert(instance.viewports, Viewport.new())
-    table.insert(instance.viewports, Viewport.new())
-
-    instance.viewports[1].z = 10
-    instance.viewports[2].z = 20
-    instance.viewports[3].z = 30
-
-    table.insert(instance.sprites, SpriteCharacter.new(instance.viewports[2], Game.player))
+    create_stage_spriteset(instance)
 
     -- Create objects
     instance.objects = {}
@@ -102,10 +149,9 @@ function SceneStage.enter(instance)
 end
 
 function SceneStage.leave(instance)
-    instance.viewports = nil
-    instance.sprites = nil
+    dispose_stage_spriteset(instance)
+
     instance.objects = nil
-    Game.player = nil
     instance.script = nil
     instance.stage = nil
     instance.map = nil
@@ -148,9 +194,7 @@ function SceneStage.update(instance, dt)
         object.update(object, dt)
     end
 
-    for _, sprite in ipairs(instance.sprites) do
-        sprite.update(sprite)
-    end
+    update_stage_spriteset(instance)
 end
 
 function SceneStage.__debug(instance)

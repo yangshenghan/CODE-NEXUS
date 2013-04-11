@@ -51,7 +51,7 @@ local Viewport              = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function Viewport.new(...)
+function Viewport.new(z, ...)
     local instance = setmetatable({}, { __index = Viewport })
     
     if ... == nil then
@@ -65,7 +65,20 @@ function Viewport.new(...)
     end
 
     instance.color = Color.new(255, 255, 255, 255)
+    instance.z = z
     return instance
+end
+
+function Viewport.dispose(instance)
+    instance.rectangle = nil
+end
+
+function Viewport.isDisposed(instance)
+    return instance.rectangle == nil
+end
+
+function Viewport.isVisible(instance)
+    return instance.visible
 end
 
 function Viewport.flash(instance, color, duration)

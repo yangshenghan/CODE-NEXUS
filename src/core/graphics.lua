@@ -129,7 +129,7 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Graphics.initialize()
-    -- local icon = Resource.loadImage('icon.png')
+    -- local icon = Resource.loadImage('icon')
 
     Graphics.setFramerate(60)
     Graphics.setFramecount(0)
@@ -156,6 +156,7 @@ function Graphics.reset()
     t_viewports = nil
     t_torenders = nil
     t_drawables = {}
+    collectgarbage()
 end
 
 function Graphics.update(dt)

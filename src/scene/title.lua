@@ -74,7 +74,7 @@ local function title_update_coroutine(instance, dt, timer)
         local splash = SpriteBase.new({})
         splash.x = REFERENCE_WIDTH / 2
         splash.y = REFERENCE_HEIGHT / 2
-        splash.setImage(splash, Resource.loadSystemImage('splash1.png'))
+        splash.setImage(splash, Resource.loadSystemImage('splash1'))
         splash.opacity = 0
         wait(1000, function(dt)
             splash.opacity = splash.opacity + dt
@@ -93,7 +93,7 @@ local function title_update_coroutine(instance, dt, timer)
     local waiting = SpriteBase.new({})
     waiting.x = REFERENCE_WIDTH / 2
     waiting.y = REFERENCE_HEIGHT / 2
-    waiting.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue.png'))
+    waiting.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue'))
     while true do
         local cycle, phase = math.modf((timer - 0.5) / 0.75)
         if Input.isKeyTrigger(KEYS.C) then break end

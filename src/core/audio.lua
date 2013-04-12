@@ -47,6 +47,11 @@ end
 
 function Audio.finalize()
     la.stop()
+    Audio.reset()
+end
+
+function Audio.reset()
+    collectgarbage()
 end
 
 function Audio.update(dt)

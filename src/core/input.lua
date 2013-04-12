@@ -102,6 +102,7 @@ function Input.reset()
     t_released = {}
     t_pressed = {}
     t_events = {}
+    collectgarbage()
 end
 
 function Input.update(dt)

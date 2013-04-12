@@ -92,6 +92,7 @@ function Data.reset()
     t_caches = {}
     t_texts = {}
     t_fonts = {}
+    collectgarbage()
 end
 
 function Data.loadDatabaseData(filename)

@@ -27,59 +27,109 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local string                = string
 local l                     = love
 local la                    = l.audio
 local lg                    = l.graphics
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Configures            = Nexus.configures
+local OptionConfigures      = Configures.options
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local Resource              = {}
+local Resource              = {
+    SOURCE_TYPE_STATIC      = 'static',
+    SOURCE_TYPE_STREAM      = 'stream'
+}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local t_fonts               = {}
 
+local t_glyphs              = {}
+
 local t_images              = {}
 
+local t_videos              = {}
+
 local t_sources             = {}
+
+local FONT_EXTENSIONS       = { 'ttf', 'ttc', 'otf', 'otc', 'pfa', 'pfb', 'cid', 'cff', 'bdf', 'pfr' }
+
+local GLYPH_EXTENSIONS      = { 'png', 'jpg', 'bmp' }
+
+local IMAGE_EXTENSIONS      = { 'png', 'mng', 'jpg', 'bmp', 'tiff', 'tga', 'ico', 'cur', 'psd', 'raw' }
+
+local VIDEO_EXTENSIONS      = { 'cvd' }
+
+local SOURCE_EXTENSIONS     = { 'ogg', 'mp3', 'wav' }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
+local function get_localization_filename(folder, filename, extensions)
+    local path = nil
+    if string.find(filename, '.+%..+') then
+        path = string.format('%s/%s/%s', folder, OptionConfigures.language, filename)
+        if Core.exists(path) then return path end
+
+        path = string.format('%s/%s', folder, filename)
+        if Core.exists(path) then return path end
+    else
+        for _, extension in ipairs(extensions) do
+            path = string.format('%s/%s/%s.%s', folder, OptionConfigures.language, filename, extension)
+            if Core.exists(path) then return path end
+
+            path = string.format('%s/%s.%s', folder, filename, extension)
+            if Core.exists(path) then return path end
+        end
+    end
+    return nil
+end
+
 local function load_font_resource(folder, filename, size)
-    local path = folder .. filename
+    local path = get_localization_filename(folder, filename, FONT_EXTENSIONS)
 
-    if not t_fonts[path] then
-        t_fonts[path] = {}
-    end
+    if not t_fonts[path] then t_fonts[path] = {} end
 
-    if not t_fonts[path][size] then
-        t_fonts[path][size] = lg.newFont(path, size)
-    end
+    if not t_fonts[path][size] then t_fonts[path][size] = lg.newFont(path, size) end
 
     return t_fonts[path][size]
 end
 
-local function load_image_resource(folder, filename)
-    local path = folder .. filename
+local function load_glyph_resource(folder, filename, glyphs)
+    local path = get_localization_filename(folder, filename, GLYPH_EXTENSIONS)
 
-    if not t_images[path] then
-        t_images[path] = lg.newImage(path)
-    end
+    if not t_glyphs[path] then t_glyphs[path] = lg.newImageFont(path, glyphs) end
+
+    return t_glyphs[path]
+end
+
+local function load_image_resource(folder, filename)
+    local path = get_localization_filename(folder, filename, IMAGE_EXTENSIONS)
+
+    if not t_images[path] then t_images[path] = lg.newImage(path) end
 
     return t_images[path]
 end
 
-local function load_source_resource(folder, filename)
-    local path = folder .. filename
+local function load_source_resource(folder, filename, type)
+    local path = get_localization_filename(folder, filename, SOURCE_EXTENSIONS)
 
-    if not t_sources[path] then
-        t_sources[path] = la.newSource(path)
-    end
+    if not t_sources[path] then t_sources[path] = la.newSource(path, type) end
 
     return t_sources[path]
+end
+
+local function load_video_resource(folder, filename)
+    local path = get_localization_filename(folder, filename, VIDEO_EXTENSIONS)
+
+    if not t_videos[path] then t_videos[path] = nil end
+
+    return t_videos[path]
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -94,53 +144,63 @@ end
 
 function Resource.reset()
     t_fonts = {}
+    t_glyphs = {}
     t_images = {}
+    t_videos = {}
     t_sources = {}
     collectgarbage()
 end
 
-function Resource.loadEffectSource(filename)
-    return load_source_resource('res/audios/effects/', filename)
+function Resource.loadEffectSource(filename, type)
+    return load_source_resource('res/audios/effects', filename, type or Resource.SOURCE_TYPE_STATIC)
 end
 
-function Resource.loadMusicSource(filename)
-    return load_source_resource('res/audios/musics/', filename)
+function Resource.loadMusicSource(filename, type)
+    return load_source_resource('res/audios/musics', filename, type or Resource.SOURCE_TYPE_STREAM)
 end
 
-function Resource.loadSoundSource(filename)
-    return load_source_resource('res/audios/sounds/', filename)
+function Resource.loadSoundSource(filename, type)
+    return load_source_resource('res/audios/sounds', filename, type or Resource.SOURCE_TYPE_STATIC)
 end
 
 function Resource.loadAnimationIamge(filename)
-    return load_image_resource('res/graphics/animations/', filename)
+    return load_image_resource('res/graphics/animations', filename)
 end
 
 function Resource.loadCharacterImage(filename)
-    return load_image_resource('res/graphics/characters/', filename)
+    return load_image_resource('res/graphics/characters', filename)
 end
 
 function Resource.loadIconImage(filename)
-    return load_image_resource('res/graphics/icons/', filename)
+    return load_image_resource('res/graphics/icons', filename)
 end
 
 function Resource.loadMapImage(filename)
-    return load_image_resource('res/graphics/maps/', filename)
+    return load_image_resource('res/graphics/maps', filename)
 end
 
 function Resource.loadObjectImage(filename)
-    return load_image_resource('res/graphics/objects/', filename)
+    return load_image_resource('res/graphics/objects', filename)
 end
 
 function Resource.loadPictureImage(filename)
-    return load_image_resource('res/graphics/pictures/', filename)
+    return load_image_resource('res/graphics/pictures', filename)
 end
 
 function Resource.loadSystemImage(filename)
-    return load_image_resource('res/graphics/systems/', filename)
+    return load_image_resource('res/graphics/systems', filename)
 end
 
 function Resource.loadFontData(filename, size)
-    return load_font_resource('res/fonts/', filename, size)
+    return load_font_resource('res/fonts', filename, size)
+end
+
+function Resource.loadGlyphData(filename, glyphs)
+    return load_glyph_resource('res/glyphs', filename, glyphs)
+end
+
+function Resource.loadVideoData(filename)
+    return load_video_resource('res/videos', filename)
 end
 
 return Resource

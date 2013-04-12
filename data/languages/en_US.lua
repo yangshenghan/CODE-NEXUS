@@ -27,7 +27,7 @@
 return {
     fonts                   = {
         name                = {'message', 'console', 'debug'},
-        file                = {'inconsolata.otf', 'inconsolata.otf', 'inconsolata.otf'},
+        file                = {'inconsolata', 'inconsolata', 'inconsolata'},
         size                = {32, 16, 16}
     },
     texts                   = {

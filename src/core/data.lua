@@ -118,14 +118,18 @@ function Data.loadStageData(filename)
     return load_data_resource('data/stages/', filename)
 end
 
-function Data.loadTextData(filename)
-    local texts = load_data_resource('data/texts/', filename)
+function Data.loadLanguageData(filename)
+    local texts = load_data_resource('data/languages/', filename)
     for index, font in ipairs(texts.fonts.name) do
         t_fonts[font] = Font.new(texts.fonts.file[index], texts.fonts.size[index])
     end
     t_texts = texts.texts
     t_formats = texts.formats
     return texts
+end
+
+function Data.getLanguageList()
+    return t_languages
 end
 
 function Data.getFont(font)
@@ -138,10 +142,6 @@ end
 
 function Data.getFormat(format)
     return t_formats[format] or format
-end
-
-function Data.getTranslationList()
-    return t_languages
 end
 
 function Data.getColor(index)

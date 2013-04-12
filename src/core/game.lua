@@ -148,7 +148,7 @@ function Game.resume()
 end
 
 function Game.start()
-    Data.loadTextData(OptionConfigures.language)
+    Data.loadLanguageData(OptionConfigures.language)
 
     Input.bindKeyEvent('graphics.togglefps', Input.TRIGGER, KEYS.F1, Graphics.toggleFPS)
     Input.bindKeyEvent('gameconsole.toggle', Input.TRIGGER, KEYS.F9, GameConsole.toggle)

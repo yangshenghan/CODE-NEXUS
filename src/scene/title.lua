@@ -61,10 +61,6 @@ local SceneTitle            = {
     skip                    = false
 }
 
-local SPLASHS               = {
-    'love'
-}
-
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
@@ -85,7 +81,7 @@ end
 
 local function display_waiting_message()
     local delta = 0
-    local waiting = SpritePicture.new(nil, 'press_any_key_to_continue')
+    local waiting = SpritePicture.new(nil, Data.getSystem('waiting_any_key'))
     waiting.update(waiting)
 
     while true do
@@ -119,9 +115,13 @@ local function display_title_menu(command)
 end
 
 local function title_update_coroutine(instance, dt)
+    local splashs = {
+        Data.getSystem('splash1')
+    }
+
     -- Show splash screens
     if not instance.skip then
-        for _, splash in ipairs(SPLASHS) do display_splash_screen(splash) end
+        for _, splash in ipairs(splashs) do display_splash_screen(splash) end
     end
     SceneTitle.skip = true
 

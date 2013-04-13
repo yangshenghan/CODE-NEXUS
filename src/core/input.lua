@@ -144,10 +144,6 @@ end
 function Input.reload()
 end
 
--- function Input.changeInputConfigures()
-    -- Game.saveGameConfigure()
--- end
-
 function Input.bindKeyEvent(name, ...)
     local args = {...}
 

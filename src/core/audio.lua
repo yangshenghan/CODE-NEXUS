@@ -65,10 +65,6 @@ function Audio.resume()
     la.resume()
 end
 
--- function Audio.changeAudioConfigures()
-    -- Game.saveGameConfigure()
--- end
-
 function Audio.playCancel()
     local source = Resource.loadSoundSource('cancel')
     source.play(source)

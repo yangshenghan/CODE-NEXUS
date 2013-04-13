@@ -165,8 +165,4 @@ function Data.getShader(index)
     return nil, nil
 end
 
--- function Data.changeOptionConfigures()
-    -- Game.saveGameConfigure()
--- end
-
 return Data

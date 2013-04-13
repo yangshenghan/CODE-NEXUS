@@ -95,7 +95,7 @@ function WindowCommand.update(instance, dt)
         move_cursor_down(instance, Input.isKeyTrigger(NEXUS_KEY.DOWN))
     end
 
-    if Input.isKeyDown(NEXUS_KEY.C) then
+    if Input.isKeyTrigger(NEXUS_KEY.C) then
         local command = instance.commands[instance.cursor]
         if command.enabled then command.handler() end
         return instance.cursor 

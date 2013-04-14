@@ -41,12 +41,11 @@ local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SpriteBase            = {
-    update                  = EMPTY_FUNCTION,
     color                   = nil,
     rectangle               = nil,
     viewport                = nil,
     image                   = nil,
-    visible                 = true,
+    visible                 = false,
     mx                      = false,
     my                      = false,
     angle                   = 0,
@@ -61,14 +60,6 @@ local SpriteBase            = {
     zx                      = 1,
     zy                      = 1
 }
-
--- / ---------------------------------------------------------------------- \ --
--- | Private functions                                                      | --
--- \ ---------------------------------------------------------------------- / --
-local function transform_opacity_color(color, opacity)
-    opacity = math.clamp(0, opacity, 1)
-    return color.red, color.green, color.blue, color.alpha * opacity
-end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -95,12 +86,6 @@ function SpriteBase.isVisible(instance)
     return instance.visible
 end
 
-function SpriteBase.setImage(instance, image)
-    instance.image = image
-    instance.rectangle.width = image.getWidth(image)
-    instance.rectangle.height = image.getHeight(image)
-end
-
 function SpriteBase.getWidth(instance)
     return instacne.rectangle.width
 end
@@ -109,14 +94,16 @@ function SpriteBase.getHeight(instance)
     return instance.rectangle.height
 end
 
-function SpriteBase.render(instance)
-    if instance.image then
-        local src = instance.image
-        local rect = instance.rectangle
-        local quad = love.graphics.newQuad(rect.x, rect.y, rect.width, rect.height, src.getWidth(src), src.getHeight(src))
-        love.graphics.setColor(transform_opacity_color(instance.color, instance.opacity))
-        love.graphics.drawq(instance.image, quad, instance.x - rect.width / 2, instance.y - rect.height / 2, instance.angle, instance.zx, instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
-    end
+function SpriteBase.getColor(color, opacity)
+    local red, green, blue, alpha = Color.get(color)
+    if opacity then alpha = alpha * math.clamp(0, opacity, 1) end
+    return red, green, blue, alpha
+end
+
+function SpriteBase.flash(instance, color, duration)
+end
+
+function SpriteBase.update(instance)
 end
 
 return SpriteBase

@@ -52,16 +52,16 @@ function Rectangle.set(instance, ...)
         instance.empty(instance)
     elseif type(...) == 'table' then
         local xywh = ...
-        instance.x = xywh.x or xywh[1] or 0
-        instance.y = xywh.y or xywh[2] or 0
-        instance.width = xywh.width or xywh[3] or 0
-        instance.height = xywh.height or xywh[4] or 0
+        instance.x = xywh.x or xywh[1] or instance.x
+        instance.y = xywh.y or xywh[2] or instance.y
+        instance.width = xywh.width or xywh[3] or instance.width
+        instance.height = xywh.height or xywh[4] or instance.height
     else
-        local x, y, width, height = unpack({...})
-        instance.x = x
-        instance.y = y
-        instance.width = width
-        instance.height = height
+        local x, y, width, height = ...
+        instance.x = x or instance.x
+        instance.y = y or instance.y
+        instance.width = width or instance.width
+        instance.height = height or instance.height
     end
     return instance
 end

@@ -44,43 +44,25 @@ local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local SpritePicture         = {
-    name                    = nil,
-    picture                 = nil
-}
-
--- / ---------------------------------------------------------------------- \ --
--- | Private functions                                                      | --
--- \ ---------------------------------------------------------------------- / --
-local function transform_opacity_color(color, opacity)
-    opacity = math.clamp(0, opacity, 1)
-    return color.red, color.green, color.blue, color.alpha * opacity
-end
+local SpritePicture         = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function SpritePicture.new(viewport, name)
     local instance = SpriteBase.new(SpritePicture, viewport)
-    instance.name = name
+    instance.image = Resource.loadPictureImage(name)
+    instance.rectangle.width = instance.image.getWidth(instance.image)
+    instance.rectangle.height = instance.image.getHeight(instance.image)
+    instance.ox = instance.rectangle.width * 0.5
+    instance.oy = instance.rectangle.height * 0.5
+    instance.visible = true
     return instance
 end
 
-function SpritePicture.update(instance, dt)
-    if not instance.picture then
-        instance.picture = Resource.loadPictureImage(instance.name)
-        instance.ox = instance.picture.getWidth(instance.picture) * 0.5
-        instance.oy = instance.picture.getHeight(instance.picture) * 0.5
-    end
-end
-
 function SpritePicture.render(instance)
-    SpriteBase.render(instance)
-
-    if instance.picture then
-        lg.setColor(transform_opacity_color(instance.color, instance.opacity))
-        lg.draw(instance.picture, instance.x - instance.ox + GraphicsConfigures.width * 0.5, instance.y - instance.oy + GraphicsConfigures.height * 0.5)
-    end
+    lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
+    lg.draw(instance.image, instance.x - instance.ox + GraphicsConfigures.width * 0.5, instance.y - instance.oy + GraphicsConfigures.height * 0.5)
 end
 
 return SpritePicture

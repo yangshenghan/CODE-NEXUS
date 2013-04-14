@@ -34,7 +34,20 @@ local GameObject            = Core.import 'nexus.game.object'
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GameCharacter         = {}
+local GameCharacter         = {
+    name                    = nil,
+    transparent             = false,
+    idle                    = false,
+    index                   = 0,
+    pattern                 = 0,
+    speed                   = 4,
+    opacity                 = 1,
+    animationcounter        = 0
+}
+
+local FRAME_PER_ACTION      = 4
+
+local ANIMATION_WAIT_COUNT  = 60 / FRAME_PER_ACTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -42,6 +55,18 @@ local GameCharacter         = {}
 function GameCharacter.new(derive)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject.new(GameCharacter) }) })
     return instance
+end
+
+function GameCharacter.update(instance, dt)
+    local animation_wait_count = instance.idle and ANIMATION_WAIT_COUNT or ANIMATION_WAIT_COUNT - instance.speed * 2
+
+    GameObject.update(instance, dt)
+
+    instance.animationcounter = instance.animationcounter + 1
+    if instance.animationcounter > animation_wait_count then
+        instance.pattern = (instance.pattern + 1) % FRAME_PER_ACTION
+        instance.animationcounter = 0
+    end
 end
 
 return GameCharacter

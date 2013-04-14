@@ -3,16 +3,93 @@ CODE NEXUS 0.3
 
 Additions
 ---------
- * Added debug information.
+ * Added Font.
+ * Added GameStage.
+ * Added GameSystem.
+ * Added GameMessage.
+ * Added GameCharacter.
+ * Added SpritePicture.
+ * Added SpriteCharacter.
+ * Added WindowMessage.
+ * Added some new keyboard definitions.
+ * Added REFERENCE_WIDTH and REFERENCE_HEIGHT constants.
+ * Added debug information. Every scene can define __debug() to show the debug
+   information.
+ * Added Input.bindKeyEvent(), Input.bindKeyEvents(), Input.unbindKeyEvent(),
+   and Input.unbindKeyEvents() which would listening the key events and invoke
+   the callbacks if the corresponding events occur.
+ * Added Data.getSystem().
+ * Added flash(), update(), getColor() to SpriteBase.
+ * Added loadGlyphData() and loadVideoData() to Resource.
+ * Added transition(), fadeIn(), fadeOut(), blur(), and glow() to Graphics.
+ * Added a new configure framerate to graphics.
+ * Added resizable, borderless, and centered flags to graphics configures.
+ * Added math.clamp().
+ * Added shaders, systems to database.
+ * Impletmented Data.getTranslationList().
+
+Changes
+-------
+ * Moved loading detection to SceneTitle.
+ * Moved some resources in systems to pictures.
+ * Moved the checking of idle state to each scene.
+ * Moved the position initialization from GamePlayer.new() to GameStage.load().
+ * Changed the format of saving data.
+ * Changed the behavior of WindowCommand. Now it uses Input.isKeyTrigger() to
+   determine whether the C button is pressed.
+ * Removed game state table, and now use Game itself directly.
+ * Renamed Data.loadTextData() to Data.loadLanguageData().
+ * Renamed Data.getTranslationList() to Data.getLanguageList().
+ * Renamed constants prefixed with NEXUS_ to non-prefixed names.
+ * Redesigned the render process.
 
 Improvements
 ------------
  * Used string.format() to format caption.
  * Simplified Input.update().
+ * Now Viewport can construct with z parameter.
+ * Now the game will automaticly fix the aspect ratio.
+ * Now all the reset() in cores would call collectgarbage().
+ * Now the Rectangle.set() will remain the original value when any parameter is
+   omitted.
+ * Improved drawing when scaling.
+ * Improved the capability of translation.
+ * Improved GameConsole. Now console messages can used in any mode.
+ * Improved Resource. Now it supports localization for loading resources and
+   could load with file extension.
 
 Bugfixes
 --------
+ * Fixed the storing of fullscreen state.
  * Fixed the title of the game in release mode.
+ * Fixed the wrong state of trigger in Input.
+ * Fixed the missing invoking of Scene.idleIn() and Scene.idleOut(). Currently,
+   Scene.pause() and Scene.resume() will invoke them.
+
+Removals
+--------
+ * Removed table.clone().
+ * Removed table.merge().
+ * Removed Game.render().
+ * Removed Scene.render().
+ * Removed Graphics.addViewport().
+ * Removed Graphics.removeViewport().
+ * Removed Graphics.getScreenWidth().
+ * Removed Graphics.getScreenHeight().
+ * Removed Graphics.getBackgroundViewport().
+ * Removed Graphics.getWindowViewport().
+ * Removed Viewport.addDrawable().
+ * Removed Viewport.removeDrawable().
+ * Removed Viewport.render().
+ * Removed SpriteBase.render().
+ * Removed SpriteBase.setImage().
+ * Removed SceneStage.getCurrentStage().
+ * Removed render() from scenes.
+ * Removed resize event handler.
+ * Removed grid background.
+ * Removed automatic version upgrading.
+ * Removed identifier parameter in Core.save().
+ * Removed data/scripts/setup.lua.
 
 CODE NEXUS 0.2
 ==============

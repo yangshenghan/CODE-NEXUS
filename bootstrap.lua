@@ -46,6 +46,7 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
+local KEYS                  = Constants.KEYS
 local VERSION               = Constants.VERSION
 local DEBUG_MODE            = Constants.DEBUG_MODE
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
@@ -134,14 +135,6 @@ end
 -- \ ---------------------------------------------------------------------- / --
 if DEBUG_MODE then
 
-local Data                  = nil
-local Game                  = nil
-local Graphics              = nil
-local Scene                 = nil
-local Color                 = nil
-local Font                  = nil
-local GameConsole           = nil
-
 local lggm                  = nil
 local lgsm                  = nil
 local sc                    = nil
@@ -158,13 +151,14 @@ return function(instance, enable)
     local l                 = love
     local lt                = l.timer
     local lg                = l.graphics
-    Data                    = Core.import 'nexus.core.data'
-    Game                    = Core.import 'nexus.core.game'
-    Graphics                = Core.import 'nexus.core.graphics'
-    Scene                   = Core.import 'nexus.core.scene'
-    Color                   = Core.import 'nexus.base.color'
-    Font                    = Core.import 'nexus.base.font'
-    GameConsole             = Core.import 'nexus.game.console'
+    local Data              = Core.import 'nexus.core.data'
+    local Game              = Core.import 'nexus.core.game'
+    local Graphics          = Core.import 'nexus.core.graphics'
+    local Input             = Core.import 'nexus.core.input'
+    local Scene             = Core.import 'nexus.core.scene'
+    local Color             = Core.import 'nexus.base.color'
+    local Font              = Core.import 'nexus.base.font'
+    local GameConsole       = Core.import 'nexus.game.console'
 
     -- / ------------------------------------------------------------------ \ --
     -- | Declare object                                                     | --
@@ -338,6 +332,11 @@ return function(instance, enable)
             end
         end
     end
+
+    Input.bindKeyEvent('debug.quickstart', Input.TRIGGER, KEYS.F5, function()
+        local SceneNewGame = Core.import 'nexus.scene.newgame'
+        Scene.goto(SceneNewGame.new())
+    end)
 
     return Debug
 end

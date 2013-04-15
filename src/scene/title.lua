@@ -61,6 +61,11 @@ local SceneTitle            = {
 }
 
 -- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local m_splash              = nil
+
+-- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function wait(microsecond, callback)
@@ -69,13 +74,13 @@ local function wait(microsecond, callback)
 end
 
 local function display_splash_screen(filename)
-    local splash = SpritePicture.new(nil, filename)
-    splash.opacity = 0
-    splash.update(splash)
-    wait(1000, function(dt) splash.opacity = splash.opacity + dt splash.update(splash) end)
-    wait(1000, function(dt) splash.update(splash) end)
-    wait(1000, function(dt) splash.opacity = splash.opacity - dt splash.update(splash) end)
-    splash.dispose(splash)
+    m_splash = SpritePicture.new(nil, filename)
+    m_splash.opacity = 0
+    m_splash.update(m_splash)
+    wait(1000, function(dt) m_splash.opacity = m_splash.opacity + dt m_splash.update(m_splash) end)
+    wait(1000, function(dt) m_splash.update(m_splash) end)
+    wait(1000, function(dt) m_splash.opacity = m_splash.opacity - dt m_splash.update(m_splash) end)
+    m_splash.dispose(m_splash)
 end
 
 local function display_waiting_message()
@@ -178,6 +183,8 @@ function SceneTitle.enter(instance)
 end
 
 function SceneTitle.leave(instance)
+    if not m_splash.isDisposed(m_splash) then m_splash.dispose(m_splash) end
+
     instance.windows.command.dispose(instance.windows.command)
 
     instance.windows.command = nil

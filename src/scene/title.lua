@@ -40,8 +40,7 @@ local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 local SpritePicture         = Core.import 'nexus.sprite.picture'
 local SceneBase             = Core.import 'nexus.scene.base'
-local SceneStage            = Core.import 'nexus.scene.stage'
--- local SceneNewGame          = Core.import 'nexus.scene.newgame'
+local SceneNewGame          = Core.import 'nexus.scene.newgame'
 local SceneContinue         = Core.import 'nexus.scene.continue'
 local SceneExtra            = Core.import 'nexus.scene.extra'
 local SceneOption           = Core.import 'nexus.scene.option'
@@ -151,9 +150,7 @@ function SceneTitle.enter(instance)
         {
             text    = Data.getText('New Game'),
             handler = function(...)
-                Game.setup()
-                Scene.goto(SceneStage.new('prologue'))
-                -- Scene.goto(SceneNewGame.new())
+                Scene.goto(SceneNewGame.new())
             end
         }, {
             text    = Data.getText('Continue'),

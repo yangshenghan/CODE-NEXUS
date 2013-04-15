@@ -25,6 +25,16 @@
 --[[ ********************************************************************** ]]--
 
 -- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Game                  = Core.import 'nexus.core.game'
+local Scene                 = Core.import 'nexus.core.scene'
+local SceneBase             = Core.import 'nexus.scene.base'
+local SceneStage            = Core.import 'nexus.scene.stage'
+
+-- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SceneNewGame          = {}
@@ -38,6 +48,8 @@ function SceneNewGame.new()
 end
 
 function SceneNewGame.enter(instance)
+    Game.setup()
+    Scene.goto(SceneStage.new('prologue'))
 end
 
 function SceneNewGame.leave(instance)

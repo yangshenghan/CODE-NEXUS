@@ -26,9 +26,9 @@
 
 return {
     fonts                   = {
-        name                = {'window', 'message', 'console', 'debug'},
-        file                = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
-        size                = {32, 32, 16, 16}
+        ['name']            = {'window', 'message', 'console', 'debug'},
+        ['file']            = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
+        ['size']            = {32, 32, 16, 16}
     },
     texts                   = {
         ['New Game']        = '開新遊戲',
@@ -37,5 +37,9 @@ return {
         ['Option']          = '遊戲設定',
         ['Exit']            = '退出遊戲'
     },
-    formats                 = {}
+    formats                 = {
+        ['date']            = '西元%Y年%m月%d日',
+        ['time']            = '%H:%M:%S',
+        ['datetime']        = '西元%Y年%m月%d日 (%A) %H:%M:%S'
+    }
 }

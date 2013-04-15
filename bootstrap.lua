@@ -27,16 +27,21 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local os                    = os
 local type                  = type
 local math                  = math
 local pairs                 = pairs
 local pcall                 = pcall
 local error                 = error
 local table                 = table
+local ipairs                = ipairs
+local string                = string
+local unpack                = unpack
 local tostring              = tostring
 local coroutine             = coroutine
 local setmetatable          = setmetatable
 local getmetatable          = getmetatable
+local collectgarbage        = collectgarbage
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
@@ -311,7 +316,7 @@ return function(instance, enable)
             Font.text(font, string.format('FPS: %d', lt.getFPS()), m_x_offset, m_y_offset, width, m_line_height)
             Font.text(font, string.format('Lua Memory Usage: %d KB', collectgarbage('count')), m_x_offset, m_y_offset + m_line_height, width, m_line_height)
             Font.text(font, string.format('Screen: %d x %d (%s, vsync %s, fsaa %d)', width, height, flags.fullscreen and 'fullscreen' or 'windowed', flags.vsync and 'enabled' or 'disabled', flags.fsaa), m_x_offset, m_y_offset + 2 * m_line_height, width, m_line_height)
-            Font.text(font, string.format('Date: %s', os.date()), m_x_offset, m_y_offset + 3 * m_line_height, width, m_line_height)
+            Font.text(font, string.format('Date: %s', os.date(Data.getFormat('datetime'))), m_x_offset, m_y_offset + 3 * m_line_height, width, m_line_height)
 
             font.size = 48
             font.bold = true

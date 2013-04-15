@@ -26,9 +26,9 @@
 
 return {
     fonts                   = {
-        name                = {'window', 'message', 'console', 'debug'},
-        file                = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
-        size                = {32, 32, 16, 16}
+        ['name']            = {'window', 'message', 'console', 'debug'},
+        ['file']            = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
+        ['size']            = {32, 32, 16, 16}
     },
     texts                   = {
         ['New Game']        = 'New Game',
@@ -37,5 +37,9 @@ return {
         ['Option']          = 'Option',
         ['Exit']            = 'Exit'
     },
-    formats                 = {}
+    formats                 = {
+        ['date']            = '%m/%d/%Y',
+        ['time']            = '%I:%M:%S %p',
+        ['datetime']        = '%a %d %b %Y %I:%M:%S %p'
+    }
 }

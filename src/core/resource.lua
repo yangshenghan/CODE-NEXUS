@@ -28,6 +28,7 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local string                = string
+local collectgarbage        = collectgarbage
 local l                     = love
 local la                    = l.audio
 local lg                    = l.graphics

@@ -27,11 +27,12 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local error                 = error
+local string                = string
 local l                     = love
 local le                    = l.event
 local lg                    = l.graphics
 local lf                    = l.filesystem
-
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Configures            = Nexus.configures

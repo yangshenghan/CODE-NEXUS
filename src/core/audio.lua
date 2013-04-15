@@ -27,9 +27,9 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local collectgarbage        = collectgarbage
 local l                     = love
 local la                    = l.audio
-
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Resource              = Core.import 'nexus.core.resource'

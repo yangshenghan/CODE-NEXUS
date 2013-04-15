@@ -27,26 +27,26 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local math                  = math
+local pairs                 = pairs
+local table                 = table
+local string                = string
+local collectgarbage        = collectgarbage
 local l                     = love
 local le                    = l.event
 local lt                    = l.timer
 local lg                    = l.graphics
-local math                  = math
-
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
-
 local Data                  = Core.import 'nexus.core.data'
 -- local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
-
 local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
 local Viewport              = Core.import 'nexus.base.viewport'
-
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 

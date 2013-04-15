@@ -27,6 +27,10 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local pairs                 = pairs
+local ipairs                = ipairs
+local string                = string
+local collectgarbage        = collectgarbage
 local l                     = love
 local lf                    = l.filesystem
 local Nexus                 = nexus
@@ -143,8 +147,19 @@ function Data.getText(text)
     return t_texts[text] or text
 end
 
-function Data.getFormat(format)
-    return t_formats[format] or format
+function Data.getFormat(format, ...)
+    local format = t_formats[format] or format
+    if ... then
+        local replacements = ...
+        if type(...) ~= 'table' then replacements = {...} end
+        for key, value in pairs(replacements) do
+            format = string.gsub(format, string.format('%%%%%s%%%%', key), value)
+        end
+        for _, value in ipairs(replacements) do
+            format = string.gsub(format, '%%.+%%', value)
+        end
+    end
+    return format
 end
 
 function Data.getColor(index)

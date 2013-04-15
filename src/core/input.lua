@@ -27,10 +27,12 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local pairs                 = pairs
+local unpack                = unpack
+local collectgarbage        = collectgarbage
 local l                     = love
 local lm                    = l.mouse
 local lk                    = l.keyboard
-
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants

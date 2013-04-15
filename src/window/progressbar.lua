@@ -33,7 +33,6 @@ local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Graphics              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local WindowBase            = Core.import 'nexus.window.base'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
@@ -43,10 +42,10 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowProgressBar     = {
-    x                       = 0,
-    y                       = 0,
-    width                   = 0,
-    height                  = 0,
+    x                       = REFERENCE_WIDTH * 0.15,
+    y                       = REFERENCE_HEIGHT * 0.8 - 60,
+    width                   = REFERENCE_WIDTH * 0.7,
+    height                  = 60,
     progress                = 0,
     image                   = nil
 }
@@ -55,12 +54,7 @@ local WindowProgressBar     = {
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function WindowProgressBar.new(x, y, width, height)
-    local instance = WindowBase.new(WindowProgressBar)
-    instance.x = x or REFERENCE_WIDTH * 0.15
-    instance.y = y or REFERENCE_HEIGHT * 0.8 - 60
-    instance.width = width or REFERENCE_WIDTH * 0.7
-    instance.height = height or 60
-    instance.visible = true
+    local instance = WindowBase.new(WindowProgressBar, x, y, width, height)
 
     do
         local image = li.newImageData(instance.width, instance.height)
@@ -78,6 +72,8 @@ function WindowProgressBar.new(x, y, width, height)
         instance.image = lg.newImage(image)
         instance.image.setFilter(instance.image, 'linear', 'linear')
     end
+
+    instance.visible = true
 
     return instance
 end

@@ -37,8 +37,8 @@ local Input                 = Core.import 'nexus.core.input'
 local Color                 = Core.import 'nexus.base.color'
 local Font                  = Core.import 'nexus.base.font'
 local WindowBase            = Core.import 'nexus.window.base'
-local NEXUS_KEY             = Constants.KEYS
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local KEYS                  = Constants.KEYS
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -87,18 +87,18 @@ function WindowCommand.new(x, y, commands)
 end
 
 function WindowCommand.update(instance, dt)
-    if Input.isKeyRepeat(NEXUS_KEY.UP) then
-        move_cursor_up(instance, Input.isKeyTrigger(NEXUS_KEY.UP))
+    if Input.isKeyRepeat(KEYS.UP) then
+        move_cursor_up(instance, Input.isKeyTrigger(KEYS.UP))
     end
 
-    if Input.isKeyRepeat(NEXUS_KEY.DOWN) then
-        move_cursor_down(instance, Input.isKeyTrigger(NEXUS_KEY.DOWN))
+    if Input.isKeyRepeat(KEYS.DOWN) then
+        move_cursor_down(instance, Input.isKeyTrigger(KEYS.DOWN))
     end
 
-    if Input.isKeyDown(NEXUS_KEY.C) then
+    if Input.isKeyDown(KEYS.C) then
         local command = instance.commands[instance.cursor]
         if command.enabled then command.handler() end
-        return instance.cursor 
+        return instance.cursor
     end
 end
 
@@ -133,7 +133,7 @@ function WindowCommand.addCommand(instance, text, enabled, handler)
     instance.commands[instance.size] = {
         text    = text,
         enabled = enabled == nil or true and false,
-        handler = handler or NEXUS_EMPTY_FUNCTION
+        handler = handler or EMPTY_FUNCTION
     }
 end
 

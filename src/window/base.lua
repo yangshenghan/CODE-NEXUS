@@ -32,15 +32,15 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
 local Viewport              = Core.import 'nexus.base.viewport'
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowBase            = {
     viewport                = nil,
-    render                  = NEXUS_EMPTY_FUNCTION,
-    update                  = NEXUS_EMPTY_FUNCTION,
+    render                  = EMPTY_FUNCTION,
+    update                  = EMPTY_FUNCTION,
     active                  = false,
     visible                 = false,
     openness                = 0,
@@ -55,8 +55,12 @@ local WindowBase            = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function WindowBase.new(derive)
+function WindowBase.new(derive, x, y, width, height)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = WindowBase }) })
+    instance.x = x or instance.x
+    instance.y = y or instance.y
+    instance.width = width or instance.width
+    instance.height = height or instance.height
     Graphics.addDrawable(instance)
     return instance
 end
@@ -73,19 +77,6 @@ end
 function WindowBase.isVisible(instance)
     return instance.visible
 end
-
--- function WindowBase.update(instance, dt, ...)
-    -- if instance.active then
-        -- return instance.update(instance, dt, ...)
-    -- end
-    -- return true
--- end
-
--- function WindowBase.render(instance, ...)
-    -- if instance.visible then
-        -- instance.render(instance, ...)
-    -- end
--- end
 
 function WindowBase.open(instance)
     instance.active = true

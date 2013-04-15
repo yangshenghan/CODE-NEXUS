@@ -33,7 +33,7 @@ local Constants             = Nexus.constants
 local Input                 = Core.import 'nexus.core.input'
 local Scene                 = Core.import 'nexus.core.scene'
 local SceneBase             = Core.import 'nexus.scene.base'
-local NEXUS_KEY             = Constants.KEYS
+local KEYS                  = Constants.KEYS
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -49,7 +49,7 @@ function SceneContinue.new()
 end
 
 function SceneContinue.enter(instance)
-    if Input.isKeyDown(NEXUS_KEY.CONFIRM) or Input.isKeyDown(NEXUS_KEY.CANCEL) then
+    if Input.isKeyDown(KEYS.CONFIRM) or Input.isKeyDown(KEYS.CANCEL) then
         Scene.leave()
     end
 end

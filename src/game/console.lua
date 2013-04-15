@@ -49,8 +49,8 @@ local Scene                 = Core.import 'nexus.core.scene'
 local Font                  = Core.import 'nexus.base.font'
 local GameConsole           = Core.import 'nexus.game.console'
 local SceneBase             = Core.import 'nexus.scene.base'
-local NEXUS_DEBUG_MODE      = Constants.DEBUG_MODE
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local DEBUG_MODE            = Constants.DEBUG_MODE
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -106,7 +106,7 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function GameConsoleInput.initialize(executer)
-    f_executer = executer or NEXUS_EMPTY_FUNCTION
+    f_executer = executer or EMPTY_FUNCTION
 
     t_hooks['return'] = function()
         local command = table.concat(m_commandline)
@@ -396,7 +396,7 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
-local m_level               = NEXUS_DEBUG_MODE and 5 or 0
+local m_level               = DEBUG_MODE and 5 or 0
 local m_chunk               = nil
 local m_console             = false
 local m_prompt              = '> '

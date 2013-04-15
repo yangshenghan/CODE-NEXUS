@@ -29,17 +29,17 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Constants             = Nexus.constants
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SceneBase             = {
-    enter                   = NEXUS_EMPTY_FUNCTION,
-    leave                   = NEXUS_EMPTY_FUNCTION,
-    update                  = NEXUS_EMPTY_FUNCTION,
-    idleIn                  = NEXUS_EMPTY_FUNCTION,
-    idleOut                 = NEXUS_EMPTY_FUNCTION,
+    enter                   = EMPTY_FUNCTION,
+    leave                   = EMPTY_FUNCTION,
+    update                  = EMPTY_FUNCTION,
+    idleIn                  = EMPTY_FUNCTION,
+    idleOut                 = EMPTY_FUNCTION,
     idle                    = false
 }
 

@@ -42,8 +42,8 @@ local GameObject            = Core.import 'nexus.game.object'
 local SceneBase             = Core.import 'nexus.scene.base'
 local SceneLoading          = Core.import 'nexus.scene.loading'
 local SpriteCharacter       = Core.import 'nexus.sprite.character'
-local NEXUS_KEY             = Constants.KEYS
-local NEXUS_EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
+local KEYS                  = Constants.KEYS
+local EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -137,11 +137,11 @@ function SceneStage.enter(instance)
         local object = {}
         object = data
         object.z = 10
-        object.dispose = NEXUS_EMPTY_FUNCTION
-        object.isDisposed = NEXUS_EMPTY_FUNCTION
+        object.dispose = EMPTY_FUNCTION
+        object.isDisposed = EMPTY_FUNCTION
         object.isVisible = function() return true end
-        object.update = data.update or NEXUS_EMPTY_FUNCTION
-        object.render = data.render or NEXUS_EMPTY_FUNCTION
+        object.update = data.update or EMPTY_FUNCTION
+        object.render = data.render or EMPTY_FUNCTION
         object.viewport = instance.viewports[2]
         Graphics.addDrawable(object)
         table.insert(instance.objects, object)
@@ -160,31 +160,31 @@ end
 function SceneStage.update(instance, dt)
     if instance.idle then return end
 
-    if Input.isKeyDown(NEXUS_KEY.Z) then
+    if Input.isKeyDown(KEYS.Z) then
         Game.player.rush(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.X) then
+    if Input.isKeyDown(KEYS.X) then
         Game.player.jump(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.C) then
+    if Input.isKeyDown(KEYS.C) then
         Game.player.attack(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.LEFT) and GameObject.isPassable(Game.player, Game.player.x - 1, Game.player.y) then
+    if Input.isKeyDown(KEYS.LEFT) and GameObject.isPassable(Game.player, Game.player.x - 1, Game.player.y) then
         Game.player.left(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.RIGHT) and GameObject.isPassable(Game.player, Game.player.x + 1, Game.player.y) then
+    if Input.isKeyDown(KEYS.RIGHT) and GameObject.isPassable(Game.player, Game.player.x + 1, Game.player.y) then
         Game.player.right(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.UP) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y + 1) then
+    if Input.isKeyDown(KEYS.UP) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y + 1) then
         Game.player.up(Game.player)
     end
 
-    if Input.isKeyDown(NEXUS_KEY.DOWN) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y - 1) then
+    if Input.isKeyDown(KEYS.DOWN) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y - 1) then
         Game.player.down(Game.player)
     end
 

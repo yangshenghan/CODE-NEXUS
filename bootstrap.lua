@@ -98,6 +98,10 @@ function extend_love_functions()
 
         local lfload            = lf.load
 
+        function lf.loadChunk(path)
+            return lfload(path)
+        end
+
         function lf.load(path, failed)
             local ok
             local chunk

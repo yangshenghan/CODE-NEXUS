@@ -86,11 +86,12 @@ end
 function GamePlayer.new()
     local instance = GameCharacter.new(GamePlayer)
     instance.object = Data.loadObjectData('player')
-    GameObject.move(instance, 10, 10)
     return instance
 end
 
 function GamePlayer.update(instance, dt)
+    GameCharacter.update(instance, dt)
+
     if instance.rushing then
         coroutine.resume(instance.rushing, dt)
     end

@@ -24,50 +24,7 @@
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
 
--- / ---------------------------------------------------------------------- \ --
--- | Import modules                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local l                     = love
-local la                    = l.audio
-
-local Nexus                 = nexus
-local Core                  = Nexus.core
-local Resource              = Core.import 'nexus.core.resource'
-
--- / ---------------------------------------------------------------------- \ --
--- | Declare object                                                         | --
--- \ ---------------------------------------------------------------------- / --
-local Audio                 = {}
-
--- / ---------------------------------------------------------------------- \ --
--- | Member functions                                                       | --
--- \ ---------------------------------------------------------------------- / --
-function Audio.initialize()
-end
-
-function Audio.finalize()
-    la.stop()
-    Audio.reset()
-end
-
-function Audio.reset()
-    collectgarbage()
-end
-
-function Audio.update(dt)
-end
-
-function Audio.pause()
-    la.pause()
-end
-
-function Audio.resume()
-    la.resume()
-end
-
-function Audio.playCancel()
-    local source = Resource.loadSoundSource('cancel')
-    source.play(source)
-end
-
-return Audio
+return {
+    splash1                 = 'love',
+    waiting_any_key         = 'press_any_key_to_continue'
+}

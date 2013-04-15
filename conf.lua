@@ -147,7 +147,8 @@ nexus = {
             fsaa            = 0,
             resizable       = false,
             borderless      = false,
-            centered        = true
+            centered        = true,
+            framerate       = 60
         },
         options             = {
             language        = 'en_US'

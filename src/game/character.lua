@@ -29,12 +29,41 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
 local GameObject            = Core.import 'nexus.game.object'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GameCharacter         = {}
+local GameCharacter         = {
+    name                    = nil,
+    transparent             = false,
+    idle                    = false,
+    index                   = 0,
+    pattern                 = 0,
+    speed                   = 4,
+    opacity                 = 1,
+    animationcounter        = 0
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local m_framecount          = GraphicsConfigures.framerate
+
+local FRAME_PER_ACTION      = 4
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function calculate_wait_count(instance)
+    local animation_wait_count = 0
+    if m_framecount ~= GraphicsConfigures.framerate then m_framecount = GraphicsConfigures.framerate end
+    animation_wait_count = m_framecount / FRAME_PER_ACTION
+    if instance.idle then animation_wait_count = animation_wait_count - instance.speed * 2 end
+    return animation_wait_count
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -42,6 +71,16 @@ local GameCharacter         = {}
 function GameCharacter.new(derive)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject.new(GameCharacter) }) })
     return instance
+end
+
+function GameCharacter.update(instance, dt)
+    GameObject.update(instance, dt)
+
+    instance.animationcounter = instance.animationcounter + 1
+    if instance.animationcounter > calculate_wait_count(instance) then
+        instance.pattern = (instance.pattern + 1) % FRAME_PER_ACTION
+        instance.animationcounter = 0
+    end
 end
 
 return GameCharacter

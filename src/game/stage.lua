@@ -32,6 +32,7 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
+local GamePlayer            = Core.import 'nexus.game.player'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
@@ -69,6 +70,7 @@ function GameStage.load(stage)
     local data = Data.loadStageData(stage)
     Game.stage.width = data.width
     Game.stage.height = data.height
+    GamePlayer.move(Game.player, 10, 10)
     return data
 end
 

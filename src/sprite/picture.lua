@@ -27,83 +27,42 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local math                  = math
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Graphics              = Core.import 'nexus.core.graphics'
+local Configures            = Nexus.configures
+local GraphicsConfigures    = Configures.graphics
+local Game                  = Core.import 'nexus.core.game'
+local Resource              = Core.import 'nexus.core.resource'
 local Color                 = Core.import 'nexus.base.color'
-local Rectangle             = Core.import 'nexus.base.rectangle'
-local Viewport              = Core.import 'nexus.base.viewport'
-local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
+local SpriteBase            = Core.import 'nexus.sprite.base'
+local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
+local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local SpriteBase            = {
-    color                   = nil,
-    rectangle               = nil,
-    viewport                = nil,
-    image                   = nil,
-    visible                 = false,
-    mx                      = false,
-    my                      = false,
-    angle                   = 0,
-    opacity                 = 1,
-    ox                      = 0,
-    oy                      = 0,
-    sx                      = 0,
-    sy                      = 0,
-    x                       = 0,
-    y                       = 0,
-    z                       = 0,
-    zx                      = 1,
-    zy                      = 1
-}
+local SpritePicture         = {}
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function SpriteBase.new(derive, viewport)
-    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = SpriteBase }) })
-    instance.color = Color.new(255, 255, 255, 255)
-    instance.viewport = viewport
-    instance.rectangle = Rectangle.new()
-    Graphics.addDrawable(instance)
+function SpritePicture.new(viewport, name)
+    local instance = SpriteBase.new(SpritePicture, viewport)
+    instance.image = Resource.loadPictureImage(name)
+    instance.rectangle.width = instance.image.getWidth(instance.image)
+    instance.rectangle.height = instance.image.getHeight(instance.image)
+    instance.ox = instance.rectangle.width * 0.5
+    instance.oy = instance.rectangle.height * 0.5
+    instance.visible = true
     return instance
 end
 
-function SpriteBase.dispose(instance)
-    instance.render = nil
-    Graphics.removeDrawable(instance)
+function SpritePicture.render(instance)
+    lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
+    lg.draw(instance.image, instance.x - instance.ox + GraphicsConfigures.width * 0.5, instance.y - instance.oy + GraphicsConfigures.height * 0.5)
 end
 
-function SpriteBase.isDisposed(instance)
-    return instance.render == nil
-end
-
-function SpriteBase.isVisible(instance)
-    return instance.visible
-end
-
-function SpriteBase.getWidth(instance)
-    return instacne.rectangle.width
-end
-
-function SpriteBase.getHeight(instance)
-    return instance.rectangle.height
-end
-
-function SpriteBase.getColor(color, opacity)
-    local red, green, blue, alpha = Color.get(color)
-    if opacity then alpha = alpha * math.clamp(0, opacity, 1) end
-    return red, green, blue, alpha
-end
-
-function SpriteBase.flash(instance, color, duration)
-end
-
-function SpriteBase.update(instance)
-end
-
-return SpriteBase
+return SpritePicture

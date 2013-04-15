@@ -49,6 +49,8 @@ local t_caches              = {}
 
 local t_colors              = {}
 
+local t_systems             = {}
+
 local t_formats             = {}
 
 local t_languages           = {}
@@ -75,6 +77,7 @@ end
 -- \ ---------------------------------------------------------------------- / --
 function Data.initialize()
     t_colors = Data.loadDatabaseData('colors')
+    t_systems = Data.loadDatabaseData('systems')
     t_languages = Data.loadDatabaseData('languages')
     t_pixel_shaders = Data.loadDatabaseData('pixelshaders')
     t_vertex_shaders = Data.loadDatabaseData('vertexshaders')
@@ -88,6 +91,7 @@ function Data.reset()
     t_vertex_shaders = {}
     t_pixel_shaders = {}
     t_formats = {}
+    t_systems = {}
     t_colors = {}
     t_caches = {}
     t_texts = {}
@@ -151,14 +155,14 @@ function Data.getColor(index)
     return 0, 0, 0, 0
 end
 
+function Data.getSystem(key)
+    return t_systems[key]
+end
+
 function Data.getShader(index)
     local vertex, pixel = t_vertex_shaders[index], t_pixel_shaders[index]
     if vertex or pixel then return vertex, pixel end
     return nil, nil
 end
-
--- function Data.changeOptionConfigures()
-    -- Game.saveGameConfigure()
--- end
 
 return Data

@@ -60,8 +60,6 @@ local Graphics              = {}
 -- \ ---------------------------------------------------------------------- / --
 local m_showfps             = true
 
-local m_framerate           = 60
-
 local m_framecount          = 0
 
 local m_brightness          = 255
@@ -271,11 +269,11 @@ function Graphics.getBestScreenMode()
 end
 
 function Graphics.getFramerate()
-    return m_framerate
+    return GraphicsConfigures.framerate
 end
 
 function Graphics.setFramerate(framerate)
-    m_framerate = framerate
+    GraphicsConfigures.framerate = framerate
 
     le.push('framerate', framerate)
 end

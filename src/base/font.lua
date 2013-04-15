@@ -66,7 +66,6 @@ function Font.new(name, size)
     instance.name = name
     instance.size = size
     instance.font = Resource.loadFontData(name, size)
-    Font.setLineHeight(instance, size)
     return instance
 end
 

@@ -33,6 +33,8 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Game                  = Core.import 'nexus.core.game'
+local Resource              = Core.import 'nexus.core.resource'
+local Rectangle             = Core.import 'nexus.base.rectangle'
 local SpriteBase            = Core.import 'nexus.sprite.base'
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
@@ -41,8 +43,21 @@ local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SpriteCharacter       = {
+    name                    = nil,
+    index                   = nil,
     character               = nil
 }
+
+local CLIPS_PER_ROW         = 16
+
+local CLIPS_PER_COLUMN      = 16
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function is_sprite_changed(instance)
+    return instance.name ~= instance.character.name or instance.index ~= instance.character.index
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -50,19 +65,43 @@ local SpriteCharacter       = {
 function SpriteCharacter.new(viewport, character)
     local instance = SpriteBase.new(SpriteCharacter, viewport)
     instance.character = character
+    instance.rectangle = Rectangle.set(instance.rectangle, 0, 0, CLIP_WIDTH, CLIP_HEIGHT)
     return instance
 end
 
 function SpriteCharacter.update(instance, dt)
     SpriteBase.update(instance, dt)
-    instance.x = instance.character.rx
-    instance.y = instance.character.ry
+
+    if instance.character.name and is_sprite_changed(instance) then
+        instance.name = instance.character.name
+        instance.index = instance.character.index
+
+        instance.image = Resource.loadCharacterImage(instance.name)
+    end
+
+    if instance.image then
+        local width = instance.image.getWidth(instance.image)
+        local height = instance.image.getHeight(instance.image)
+
+        instance.rectangle = Rectangle.set(instance.rectangle, (instance.index + instance.character.pattern) * width / CLIPS_PER_ROW, 0 * height / CLIPS_PER_COLUMN, width / CLIPS_PER_ROW, height / CLIPS_PER_COLUMN)
+        instance.quad = lg.newQuad(instance.rectangle.x, instance.rectangle.y, instance.rectangle.width, instance.rectangle.height, width, height)
+    end
+
+    instance.x = instance.character.rx - instance.rectangle.width * 0.5 - Game.stage.displayx * LOGICAL_GRID_SIZE
+    instance.y = REFERENCE_HEIGHT - instance.character.ry - instance.rectangle.height * 0.5 + Game.stage.displayy * LOGICAL_GRID_SIZE
+
+    instance.opacity = instance.character.opacity
+    instance.visible = not instance.character.transparent
 end
 
 function SpriteCharacter.render(instance)
-    -- SpriteBase.render(instance)
-    lg.setColor(193, 47, 14, 255)
-    lg.circle('fill', instance.character.rx - Game.stage.displayx * LOGICAL_GRID_SIZE, REFERENCE_HEIGHT - instance.character.ry + Game.stage.displayy * LOGICAL_GRID_SIZE, LOGICAL_GRID_SIZE * 0.5)
+    if instance.image then
+        lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
+        lg.drawq(instance.image, instance.quad, instance.x, instance.y, instance.angle, instance.zx, instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
+    else
+        lg.setColor(193, 47, 14, 255)
+        lg.circle('fill', instance.x, instance.y, LOGICAL_GRID_SIZE * 0.5)
+    end
 end
 
 return SpriteCharacter

@@ -289,7 +289,7 @@ return function(instance, enable)
                 Font.text(font, name, 24, 120 + position * m_line_height, width, m_line_height)
 
                 font.color = t_default_color
-                Font.text(font, messages, 32, 120 + (position + 1) * m_line_height, width, m_line_height)
+                Font.text(font, messages, 32, 120 + (position + 1) * m_line_height, width, m_line_height * lines)
 
                 position = position + lines + 1
             end

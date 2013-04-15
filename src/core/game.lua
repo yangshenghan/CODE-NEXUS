@@ -162,14 +162,6 @@ end
 function Game.terminate()
 end
 
--- function Game.changeGameplayConfigures()
-    -- Game.saveGameConfigure()
--- end
-
--- function Game.saveGameConfigure()
-    -- Core.save(Systems.paths.configure, Configures, Constants.CONFIGURE_IDENTIFIER)
--- end
-
 function Game.setup()
     Game.player = GamePlayer.new()
     -- Game.story = GameStory.new()
@@ -222,6 +214,10 @@ end
 
 function Game.reload()
     le.push('reload')
+end
+
+function Game.saveGameConfigure()
+    -- Core.save(Systems.paths.configure, Configures, Constants.CONFIGURE_IDENTIFIER)
 end
 
 function Game.getVersionString()

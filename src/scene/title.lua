@@ -38,7 +38,7 @@ local Graphics              = Core.import 'nexus.core.graphics'
 local Input                 = Core.import 'nexus.core.input'
 local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
-local SpriteBase            = Core.import 'nexus.sprite.base'
+local SpritePicture         = Core.import 'nexus.sprite.picture'
 local SceneBase             = Core.import 'nexus.scene.base'
 local SceneStage            = Core.import 'nexus.scene.stage'
 -- local SceneNewGame          = Core.import 'nexus.scene.newgame'
@@ -48,6 +48,7 @@ local SceneOption           = Core.import 'nexus.scene.option'
 local SceneExit             = Core.import 'nexus.scene.exit'
 local WindowCommand         = Core.import 'nexus.window.command'
 local KEYS                  = Constants.KEYS
+local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
@@ -63,61 +64,72 @@ local SceneTitle            = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-local function title_update_coroutine(instance, dt, timer)
-    local wait = function(microsecond, callback)
-        local wakeup = lt.getMicroTime() + microsecond / 1000
-        repeat callback(dt) until select(3, coroutine.yield()) > wakeup
-    end
+local function wait(microsecond, callback)
+    local wakeup = lt.getMicroTime() + microsecond / 1000
+    repeat callback(select(2, coroutine.yield())) until lt.getMicroTime() > wakeup
+end
 
-    -- Show splash screens
-    if not instance.skip then
-        local splash = SpriteBase.new({})
-        splash.x = REFERENCE_WIDTH / 2
-        splash.y = REFERENCE_HEIGHT / 2
-        splash.setImage(splash, Resource.loadSystemImage('splash1'))
-        splash.opacity = 0
-        wait(1000, function(dt)
-            splash.opacity = splash.opacity + dt
-        end)
+local function display_splash_screen(filename)
+    local splash = SpritePicture.new(nil, filename)
+    splash.opacity = 0
+    splash.update(splash)
+    wait(1000, function(dt) splash.opacity = splash.opacity + dt splash.update(splash) end)
+    wait(1000, function(dt) splash.update(splash) end)
+    wait(1000, function(dt) splash.opacity = splash.opacity - dt splash.update(splash) end)
+    splash.dispose(splash)
+end
 
-        wait(1000, function() end)
+local function display_waiting_message()
+    local delta = 0
+    local waiting = SpritePicture.new(nil, Data.getSystem('waiting_any_key'))
+    waiting.update(waiting)
 
-        wait(1000, function(dt)
-            splash.opacity = splash.opacity - dt
-        end)
-        splash.dispose(splash)
-    end
-    SceneTitle.skip = true
-
-    -- Start animation of PRESS TO START message
-    local waiting = SpriteBase.new({})
-    waiting.x = REFERENCE_WIDTH / 2
-    waiting.y = REFERENCE_HEIGHT / 2
-    waiting.setImage(waiting, Resource.loadSystemImage('press_any_key_to_continue'))
     while true do
-        local cycle, phase = math.modf((timer - 0.5) / 0.75)
+        local cycle, phase = math.modf((lt.getMicroTime() - 0.5) / 0.75)
         if Input.isKeyTrigger(KEYS.C) then break end
         if cycle % 2 == 0 then
             waiting.opacity = 1 - phase
         else
             waiting.opacity = phase
         end
-        timer = select(3, coroutine.yield())
+        waiting.update(waiting)
+        coroutine.yield()
+    end
+
+    delta = (1 - waiting.opacity) * 300
+    while waiting.opacity < 1 do
+        waiting.opacity = waiting.opacity + delta
+        waiting.update(waiting)
+        coroutine.yield()
     end
     waiting.dispose(waiting)
+end
 
-    while waiting.opacity < 1 do
-        waiting.opacity = waiting.opacity + dt
+local function display_title_menu(command)
+    command.open(command)
+
+    while true do
+        command.update(command, dt)
         coroutine.yield()
     end
-    wait(100, function() end)
+end
+
+local function title_update_coroutine(instance, dt)
+    local splashs = {
+        Data.getSystem('splash1')
+    }
+
+    -- Show splash screens
+    if not instance.skip then
+        for _, splash in ipairs(splashs) do display_splash_screen(splash) end
+    end
+    SceneTitle.skip = true
+
+    -- Start animation of PRESS TO START message
+    display_waiting_message()
 
     -- Show main menu
-    instance.windows.command.open(instance.windows.command)
-    while true do
-        instance.windows.command.update(instance.windows.command, dt)
-        coroutine.yield()
-    end
+    display_title_menu(instance.windows.command, dt)
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -176,7 +188,7 @@ end
 function SceneTitle.update(instance, dt)
     if instance.idle then return end
 
-    coroutine.resume(instance.coroutines.update, instance, dt, lt.getMicroTime())
+    coroutine.resume(instance.coroutines.update, instance, dt)
 end
 
 function SceneTitle.__debug(instance)

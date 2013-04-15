@@ -31,6 +31,7 @@ local string                = string
 local l                     = love
 local la                    = l.audio
 local lg                    = l.graphics
+local lf                    = l.filesystem
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Configures            = Nexus.configures
@@ -74,17 +75,17 @@ local function get_localization_filename(folder, filename, extensions)
     local path = nil
     if string.find(filename, '.+%..+') then
         path = string.format('%s/%s/%s', folder, OptionConfigures.language, filename)
-        if Core.exists(path) then return path end
+        if lf.exists(path) then return path end
 
         path = string.format('%s/%s', folder, filename)
-        if Core.exists(path) then return path end
+        if lf.exists(path) then return path end
     else
         for _, extension in ipairs(extensions) do
             path = string.format('%s/%s/%s.%s', folder, OptionConfigures.language, filename, extension)
-            if Core.exists(path) then return path end
+            if lf.exists(path) then return path end
 
             path = string.format('%s/%s.%s', folder, filename, extension)
-            if Core.exists(path) then return path end
+            if lf.exists(path) then return path end
         end
     end
     return nil

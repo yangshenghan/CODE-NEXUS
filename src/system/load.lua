@@ -27,25 +27,68 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local lf                    = love.filesystem
-local pcall                 = pcall
-local error                 = error
-local tostring              = tostring
+local l                     = love
+local lf                    = l.filesystem
+local require               = require
+local version               = require 'src.system.version'
 
-return function(path)
-    local ok
-    local chunk
-    local result
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local f_table_concat        = table.concat
+local f_string_sub          = string.sub
+local f_string_byte         = string.byte
+local f_string_char         = string.char
 
-    ok, chunk = pcall(lf.load, path)
-    if not ok then
-        error(tostring(chunk))
-    else
-        ok, result = pcall(chunk)
-        if not ok then
-            error(tostring(result))
-        end
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function bytes_to_number(bytes)
+    local power = 1
+    local number = 0
+    for index = 1, #bytes do
+        number = number + f_string_byte(bytes, index, index) * power
+        power = power * 256
+    end
+    return number
+end
+
+local function decompress(data)
+    local a = nil
+    local index = 3
+    local output = nil
+    local output_size = 2
+    local dictionary = {}
+    local dictionary_size = 256
+
+    for index = 0, 255 do
+        dictionary[index] = f_string_char(index)
+    end
+    a = dictionary[bytes_to_number(f_string_sub(data, 2, 2))]
+    output = {a}
+
+    while index < #data do
+        local n = f_string_byte(f_string_sub(data, index, index))
+        local v = dictionary[bytes_to_number(f_string_sub(data, index + 1, index + n))] or (a .. f_string_sub(a, 1, 1))
+        output[output_size] = v
+        output_size = output_size + 1
+        dictionary[dictionary_size] = a .. f_string_sub(v, 1, 1)
+        dictionary_size = dictionary_size + 1
+        a = v
+        index = index + n + 1
     end
 
-    return result
+    return f_table_concat(output)
+end
+
+local function deserialize(data)
+    return loadstring(data)()
+end
+
+return function(filename)
+    local chunk = deserialize(decompress(lf.read(filename)))
+    if chunk.header ~= 'CODENEXUS' or chunk.version ~= version() then
+        error('The "' .. filename .. '" file is not compatible with your game!')
+    end
+    return chunk.data
 end

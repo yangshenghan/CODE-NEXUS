@@ -28,19 +28,22 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local require               = require
+local load                  = require 'src.system.load'
+local save                  = require 'src.system.save'
+local import                = require 'src.system.import'
+local upgrade               = require 'src.system.upgrade'
+local version               = require 'src.system.version'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Construction of the nexus table                                        | --
 -- \ ---------------------------------------------------------------------- / --
 nexus = {
     core                    = {
-        read                = require 'src.system.read',
-        save                = require 'src.system.save',
-        load                = require 'src.system.load',
-        exists              = require 'src.system.exists',
-        import              = require 'src.system.import',
-        upgrade             = require 'src.system.upgrade',
-        version             = require 'src.system.version'
+        load                = load,
+        save                = save,
+        import              = import,
+        upgrade             = upgrade,
+        version             = version
     },
     constants               = {
         KEYS                = {
@@ -169,11 +172,11 @@ function love.conf(game)
     setmetatable(nexus, { __call = require 'bootstrap' })
 
     love.filesystem.setIdentity('code-nexus')
-    if not nexus.core.exists(filename) then
-        nexus.core.save(filename, nexus.configures, identifier)
+    if not love.filesystem.exists(filename) then
+        save(filename, nexus.configures, identifier)
         nexus.constants.FIRST_RUN = true
     end
-    nexus.configures = nexus.core.read(filename)
+    nexus.configures = load(filename)
 
     game.title = 'CODE NEXUS'
     if debugmode then

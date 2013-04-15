@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lf                    = l.filesystem
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Resource              = Core.import 'nexus.core.resource'
@@ -63,12 +65,8 @@ local t_vertex_shaders      = {}
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function load_data_resource(folder, filename)
-    local path = folder .. filename .. '.lua'
-
-    if not t_caches[path] then
-        t_caches[path] = Core.load(path)
-    end
-
+    local path = string.format('%s/%s.lua', folder, filename)
+    if not t_caches[path] then t_caches[path] = lf.load(path) end
     return t_caches[path]
 end
 
@@ -100,23 +98,23 @@ function Data.reset()
 end
 
 function Data.loadDatabaseData(filename)
-    return load_data_resource('data/databases/', filename)
+    return load_data_resource('data/databases', filename)
 end
 
 function Data.loadExtraData(filename)
-    return load_data_resource('data/extras/', filename)
+    return load_data_resource('data/extras', filename)
 end
 
 function Data.loadMapData(filename)
-    return load_data_resource('data/maps/', filename)
+    return load_data_resource('data/maps', filename)
 end
 
 function Data.loadObjectData(filename)
-    return load_data_resource('data/objects/', filename)
+    return load_data_resource('data/objects', filename)
 end
 
 function Data.loadScriptData(filename)
-    return load_data_resource('data/scripts/', filename)
+    return load_data_resource('data/scripts', filename)
 end
 
 function Data.loadStageData(filename)
@@ -124,7 +122,7 @@ function Data.loadStageData(filename)
 end
 
 function Data.loadLanguageData(filename)
-    local texts = load_data_resource('data/languages/', filename)
+    local texts = load_data_resource('data/languages', filename)
     for index, font in ipairs(texts.fonts.name) do
         t_fonts[font] = Font.new(texts.fonts.file[index], texts.fonts.size[index])
     end

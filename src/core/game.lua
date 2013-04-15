@@ -30,6 +30,7 @@
 local l                     = love
 local le                    = l.event
 local lg                    = l.graphics
+local lf                    = l.filesystem
 
 local Nexus                 = nexus
 local Core                  = Nexus.core
@@ -199,7 +200,7 @@ end
 function Game.exists()
     for index = 1, SAVING_SLOT_SIZE do
         local filename = string.format(SAVING_FILENAME, index)
-        if Core.exists(filename) then return true end
+        if lf.exists(filename) then return true end
     end
     return false
 end

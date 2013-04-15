@@ -30,6 +30,7 @@
 local type                  = type
 local math                  = math
 local pairs                 = pairs
+local pcall                 = pcall
 local error                 = error
 local table                 = table
 local tostring              = tostring
@@ -47,10 +48,12 @@ local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
+local m_love_extended       = false
+
 local f_coroutine_resume    = coroutine.resume
 
 -- / ---------------------------------------------------------------------- \ --
--- | Extend bulit-in lua modules and functions                              | --
+-- | Extend bulit-in modules and functions of lua and LÖVE                  | --
 -- \ ---------------------------------------------------------------------- / --
 function math.clamp(low, n, high)
     return math.min(math.max(n, low), high)
@@ -86,6 +89,35 @@ function coroutine.resume(...)
     local success, result = f_coroutine_resume(...)
     if not success then error(tostring(result), 2) end
     return success, result
+end
+
+function extend_love_functions()
+    if not m_love_extended then
+        local l                 = love
+        local lf                = l.filesystem
+
+        local lfload            = lf.load
+
+        function lf.load(path)
+            local ok
+            local chunk
+            local result
+
+            ok, chunk = pcall(lfload, path)
+            if not ok then
+                error(tostring(chunk))
+            else
+                ok, result = pcall(chunk)
+                if not ok then
+                    error(tostring(result))
+                end
+            end
+
+            return result
+        end
+
+        m_love_extended = true
+    end
 end
 
 -- / ---------------------------------------------------------------------- \ --
@@ -160,6 +192,8 @@ return function(instance, enable)
         Graphics.render = render
         return EMPTY_FUNCTION
     end
+
+    extend_love_functions()
 
     -- / ------------------------------------------------------------------ \ --
     -- | Game hooks in debug mode                                           | --
@@ -302,6 +336,8 @@ end
 end
 
 return function(instance, enable)
+    extend_love_functions()
+
     return setmetatable({}, {
         __index             = EMPTY_FUNCTION
     })

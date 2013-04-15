@@ -26,9 +26,9 @@
 
 return {
     fonts                   = {
-        name                = {'message', 'console', 'debug'},
-        file                = {'inconsolata', 'inconsolata', 'inconsolata'},
-        size                = {32, 16, 16}
+        name                = {'window', 'message', 'console', 'debug'},
+        file                = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
+        size                = {32, 32, 16, 16}
     },
     texts                   = {
         ['New Game']        = '開新遊戲',

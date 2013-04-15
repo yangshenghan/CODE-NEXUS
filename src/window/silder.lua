@@ -27,68 +27,91 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local math                  = math
+local l                     = love
+local li                    = l.image
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Data                  = Core.import 'nexus.core.data'
 local Graphics              = Core.import 'nexus.core.graphics'
-local Viewport              = Core.import 'nexus.base.viewport'
+local Input                 = Core.import 'nexus.core.input'
+local Color                 = Core.import 'nexus.base.color'
+local WindowBase            = Core.import 'nexus.window.base'
+local KEYS                  = Constants.KEYS
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local WindowBase            = {
-    font                    = nil,
-    viewport                = nil,
-    render                  = EMPTY_FUNCTION,
-    update                  = EMPTY_FUNCTION,
-    active                  = false,
-    visible                 = false,
-    openness                = 0,
-    padding                 = 12,
-    height                  = 0,
-    width                   = 0,
+local WindowSilder          = {
     x                       = 0,
     y                       = 0,
-    z                       = 0
+    width                   = 0,
+    height                  = 0,
+    step                    = 10,
+    value                   = 0,
+    minimun                 = 0,
+    maximun                 = 100,
+    callback                = EMPTY_FUNCTION
 }
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function increase_silder_value(instance)
+    instance.value = math.min(instance.value + instance.step, instance.maximun)
+    instance.callback(instance.value)
+end
+
+local function decrease_silder_value(instance)
+    instance.value = math.max(instance.value - instance.step, instance.minimun)
+    instance.callback(instance.value)
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function WindowBase.new(derive, x, y, width, height, font)
-    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = WindowBase }) })
-    instance.x = x or instance.x
-    instance.y = y or instance.y
-    instance.width = width or instance.width
-    instance.height = height or instance.height
-    instance.font = font or Data.getFont('window')
-    Graphics.addDrawable(instance)
+function WindowSilder.new(x, y, width, height)
+    local instance = WindowBase.new(WindowSilder, x, y, width, height)
+
     return instance
 end
 
-function WindowBase.dispose(instance)
-    instance.render = nil
-    Graphics.removeDrawable(instance)
+function WindowSilder.update(instance, dt)
+    if Input.isKeyRepeat(KEYS.RIGHT) then increase_silder_value(instance) end
+    if Input.isKeyRepeat(KEYS.LEFT) then decrease_silder_value(instance) end
 end
 
-function WindowBase.isDisposed(instance)
-    return instance.render == nil
+function WindowSilder.render(instance)
+    lg.setColor(64, 64, 64, 255)
+    lg.rectangle('fill', instance.x, instance.y + 2, instance.width, instance.height - 4)
+    lg.setColor(128, 128, 128, 255)
+    lg.rectangle('fill', instance.x + instance.width * instance.value / (instance.maximun - instance.minimun) - 2, instance.y, 4, instance.height)
 end
 
-function WindowBase.isVisible(instance)
-    return instance.visible
+function WindowSilder.setStepValue(instance, step)
+    instance.step = step
 end
 
-function WindowBase.open(instance)
-    instance.active = true
-    instance.visible = true
+function WindowSilder.setMinimunValue(instance, minimun)
+    instance.minimun = minimun
 end
 
-function WindowBase.close(instance)
-    instance.active = false
-    instance.visible = false
+function WindowSilder.setMaximunValue(instance, maximun)
+    instance.maximun = maximun
 end
 
-return WindowBase
+function WindowSilder.setValue(instance, value)
+    instance.value = math.clamp(instance.minimun, value, instance.maximun)
+end
+
+function WindowSilder.getValue(instance)
+    return instance.value
+end
+
+function WindowSilder.bindCallback(instance, callback)
+    instance.callback = callback
+end
+
+return WindowSilder

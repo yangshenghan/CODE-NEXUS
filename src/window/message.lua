@@ -46,7 +46,6 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local WindowMessage         = {
-    font                    = nil,
     texts                   = nil,
     coroutine               = nil
 }
@@ -147,13 +146,8 @@ end
 function WindowMessage.new()
     local padding = 12
     local lineheight = 32
-    local instance = WindowBase.new(WindowMessage)
-    instance.x = 16
-    instance.y = 0
-    instance.width = REFERENCE_WIDTH
-    instance.height = 4 * lineheight + 2 * padding
+    local instance = WindowBase.new(WindowMessage, 16, 0, REFERENCE_WIDTH, 4 * lineheight + 2 * padding, Data.getFont('message'))
     instance.texts = {}
-    instance.font = Data.getFont('message')
     return instance
 end
 

@@ -116,7 +116,9 @@ end
 
 local function title_update_coroutine(instance, dt)
     local splashs = {
-        Data.getSystem('splash1')
+        Data.getSystem('splash1'),
+        Data.getSystem('splash2'),
+        Data.getSystem('splash3')
     }
 
     -- Show splash screens

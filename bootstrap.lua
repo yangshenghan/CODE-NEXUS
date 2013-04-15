@@ -98,19 +98,19 @@ function extend_love_functions()
 
         local lfload            = lf.load
 
-        function lf.load(path)
+        function lf.load(path, failed)
             local ok
             local chunk
             local result
 
+            if not failed then failed = error end
+
             ok, chunk = pcall(lfload, path)
             if not ok then
-                error(tostring(chunk))
+                failed(tostring(chunk))
             else
                 ok, result = pcall(chunk)
-                if not ok then
-                    error(tostring(result))
-                end
+                if not ok then failed(tostring(result)) end
             end
 
             return result

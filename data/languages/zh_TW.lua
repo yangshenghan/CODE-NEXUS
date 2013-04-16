@@ -30,6 +30,8 @@ return {
         ['file']            = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
         ['size']            = {32, 32, 16, 16}
     },
+    terms                   = {
+    },
     texts                   = {
         ['New Game']        = '開新遊戲',
         ['Continue']        = '繼續遊戲',
@@ -40,6 +42,9 @@ return {
     formats                 = {
         ['date']            = '西元%Y年%m月%d日',
         ['time']            = '%H:%M:%S',
-        ['datetime']        = '西元%Y年%m月%d日 (%A) %H:%M:%S'
+        ['datetime']        = '西元%Y年%m月%d日 (%A) %H:%M:%S',
+        ['currency']        = '%d 金屬'
+    },
+    localizations           = {
     }
 }

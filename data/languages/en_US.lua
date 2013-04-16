@@ -30,6 +30,8 @@ return {
         ['file']            = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
         ['size']            = {32, 32, 16, 16}
     },
+    terms                   = {
+    },
     texts                   = {
         ['New Game']        = 'New Game',
         ['Continue']        = 'Continue',
@@ -40,6 +42,9 @@ return {
     formats                 = {
         ['date']            = '%m/%d/%Y',
         ['time']            = '%I:%M:%S %p',
-        ['datetime']        = '%a %d %b %Y %I:%M:%S %p'
+        ['datetime']        = '%a %d %b %Y %I:%M:%S %p',
+        ['currency']        = '%d Metal'
+    },
+    localizations           = {
     }
 }

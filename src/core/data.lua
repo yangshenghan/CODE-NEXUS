@@ -49,6 +49,8 @@ local Data                  = {}
 -- \ ---------------------------------------------------------------------- / --
 local t_fonts               = {}
 
+local t_terms               = {}
+
 local t_texts               = {}
 
 local t_caches              = {}
@@ -58,6 +60,8 @@ local t_colors              = {}
 local t_systems             = {}
 
 local t_formats             = {}
+
+local t_localizations       = {}
 
 local t_languages           = {}
 
@@ -92,11 +96,13 @@ end
 function Data.reset()
     t_vertex_shaders = {}
     t_pixel_shaders = {}
+    t_localizations = {}
     t_formats = {}
     t_systems = {}
     t_colors = {}
     t_caches = {}
     t_texts = {}
+    t_terms = {}
     t_fonts = {}
     collectgarbage()
 end
@@ -126,13 +132,15 @@ function Data.loadStageData(filename)
 end
 
 function Data.loadLanguageData(filename)
-    local texts = load_data_resource('data/languages', filename)
-    for index, font in ipairs(texts.fonts.name) do
-        t_fonts[font] = Font.new(texts.fonts.file[index], texts.fonts.size[index])
+    local language = load_data_resource('data/languages', filename)
+    for index, font in ipairs(language.fonts.name) do
+        t_fonts[font] = Font.new(language.fonts.file[index], language.fonts.size[index])
     end
-    t_texts = texts.texts
-    t_formats = texts.formats
-    return texts
+    t_terms = language.terms
+    t_texts = language.texts
+    t_formats = language.formats
+    t_localizations = language.localizations
+    return language
 end
 
 function Data.getLanguageList()
@@ -141,6 +149,10 @@ end
 
 function Data.getFont(font)
     return t_fonts[font]
+end
+
+function Data.getTerm(term)
+    return t_terms[term]
 end
 
 function Data.getText(text)
@@ -160,6 +172,10 @@ function Data.getFormat(format, ...)
         end
     end
     return format
+end
+
+function Data.getLocalization(key)
+    return t_localizations[key]
 end
 
 function Data.getColor(index)

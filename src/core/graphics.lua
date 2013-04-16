@@ -42,7 +42,7 @@ local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
 local Data                  = Core.import 'nexus.core.data'
--- local Resource              = Core.import 'nexus.core.resource'
+local Resource              = Core.import 'nexus.core.resource'
 local Scene                 = Core.import 'nexus.core.scene'
 local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
@@ -127,14 +127,12 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Graphics.initialize()
-    -- local icon = Resource.loadImage('icon')
-
     Graphics.setFramerate(60)
     Graphics.setFramecount(0)
     Graphics.setBrightness(255)
 
-    -- lg.setIcon(icon)
     lg.reset()
+    lg.setIcon(Resource.loadSystemImage('icon'))
     lg.setDefaultFilter('linear', 'nearest')
 
     m_screen_offsetx, m_screen_offsety = calaulate_screen_offset(fix_aspect_ratio(lg.getWidth(), lg.getHeight()))

@@ -37,9 +37,9 @@ local Rectangle             = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function Rectangle.new(x, y, width, height)
+function Rectangle.new(...)
     local instance = setmetatable({}, { __index = Rectangle })
-    instance.set(instance, x, y, width, height)
+    instance.set(instance, ...)
     return instance
 end
 

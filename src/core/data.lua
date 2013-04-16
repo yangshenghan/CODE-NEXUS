@@ -164,12 +164,8 @@ function Data.getFormat(format, ...)
     if ... then
         local replacements = ...
         if type(...) ~= 'table' then replacements = {...} end
-        for key, value in pairs(replacements) do
-            format = string.gsub(format, string.format('%%%%%s%%%%', key), value)
-        end
-        for _, value in ipairs(replacements) do
-            format = string.gsub(format, '%%.+%%', value)
-        end
+        format = string.gsub(format, '%%(%u-)%%', replacements)
+        for _, value in ipairs(replacements) do format = string.gsub(format, '%%(%u-)%%', value) end
     end
     return format
 end

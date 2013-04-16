@@ -63,7 +63,7 @@ local FONT_EXTENSIONS       = { 'ttf', 'ttc', 'otf', 'otc', 'pfa', 'pfb', 'cid',
 
 local GLYPH_EXTENSIONS      = { 'png', 'jpg', 'bmp' }
 
-local IMAGE_EXTENSIONS      = { 'png', 'mng', 'jpg', 'bmp', 'tiff', 'tga', 'ico', 'cur', 'psd', 'raw' }
+local IMAGE_EXTENSIONS      = { 'png', 'jpg', 'bmp' }
 
 local VIDEO_EXTENSIONS      = { 'cvd' }
 

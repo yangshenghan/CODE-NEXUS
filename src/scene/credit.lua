@@ -24,30 +24,58 @@
 --[[    distribution.                                                       ]]--
 --[[ ********************************************************************** ]]--
 
-return {
-    fonts                   = {
-        ['name']            = {'window', 'message', 'console', 'debug'},
-        ['file']            = {'inconsolata', 'inconsolata', 'inconsolata', 'inconsolata'},
-        ['size']            = {32, 32, 16, 16}
-    },
-    terms                   = {
-        ['credits']         = [[
-[ CODE NEXUS Development Team ]
-]]
-    },
-    texts                   = {
-        ['New Game']        = 'New Game',
-        ['Continue']        = 'Continue',
-        ['Extra']           = 'Extra',
-        ['Option']          = 'Option',
-        ['Exit']            = 'Exit'
-    },
-    formats                 = {
-        ['date']            = '%m/%d/%Y',
-        ['time']            = '%I:%M:%S %p',
-        ['datetime']        = '%a %d %b %Y %I:%M:%S %p',
-        ['currency']        = '%d Metal'
-    },
-    localizations           = {
-    }
+-- / ---------------------------------------------------------------------- \ --
+-- | Import modules                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local ipairs                = ipairs
+local Nexus                 = nexus
+local Core                  = Nexus.core
+local Data                  = Core.import 'nexus.core.data'
+local Resource              = Core.import 'nexus.core.resource'
+local SpriteCredit          = Core.import 'nexus.sprite.credit'
+local SceneBase             = Core.import 'nexus.scene.base'
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Declare object                                                         | --
+-- \ ---------------------------------------------------------------------- / --
+local SceneCredit           = {
+    sprite                  = nil
 }
+
+local CREDIT_PICTURES       = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Member functions                                                       | --
+-- \ ---------------------------------------------------------------------- / --
+function SceneCredit.new()
+    local instance = SceneBase.new(SceneCredit)
+    return instance
+end
+
+function SceneCredit.enter(instance)
+    instance.sprite = SpriteCredit.new(Data.getTerm('credits'))
+
+    for _, picture in ipairs(CREDIT_PICTURES) do
+        local x, y, filename = unpack(picture)
+        instance.sprite.addPicture(instance.sprite, x, y, Resource.loadPictureImage(filename))
+    end
+end
+
+function SceneCredit.leave(instance)
+    instance.sprite.dispose(instance.sprite)
+end
+
+function SceneCredit.update(instance, dt)
+    if instance.idle then return end
+
+    instance.sprite.update(instance.sprite, dt)
+end
+
+function SceneCredit.__debug(instance)
+    return {
+        'SceneCredit',
+        string.format('Credit sprite location: <%d, %d>', instance.sprite.x, instance.sprite.y)
+    }
+end
+
+return SceneCredit

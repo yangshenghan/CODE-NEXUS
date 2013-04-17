@@ -31,6 +31,9 @@ return {
         ['size']            = {32, 32, 16, 16}
     },
     terms                   = {
+        ['credits']         = [[
+[ CODE NEXUS Development Team ]
+]]
     },
     texts                   = {
         ['New Game']        = '開新遊戲',

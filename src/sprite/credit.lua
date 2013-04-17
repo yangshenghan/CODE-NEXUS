@@ -29,14 +29,17 @@
 -- \ ---------------------------------------------------------------------- / --
 local table                 = table
 local string                = string
+local ipairs                = ipairs
 local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Data                  = Core.import 'nexus.core.data'
+local Grapchis              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local Font                  = Core.import 'nexus.base.font'
+local Rectangle             = Core.import 'nexus.base.rectangle'
 local SpriteBase            = Core.import 'nexus.sprite.base'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
@@ -45,8 +48,14 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SpriteCredit          = {
+    lines                   = nil,
     canvas                  = nil,
-    lines                   = nil
+    pictures                = nil,
+    current                 = nil,
+    index                   = 0,
+    limit                   = 0,
+    wait                    = 0,
+    diff                    = 0
 }
 
 -- / ---------------------------------------------------------------------- \ --
@@ -60,7 +69,7 @@ end
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function SpriteCredit.new(contents)
+function SpriteCredit.new(contents, limit)
     local instance = SpriteBase.new(SpriteCredit)
     instance.lines = {}
 
@@ -71,31 +80,85 @@ function SpriteCredit.new(contents)
     do
         local font = Data.getFont('window')
         local lineheight = Font.getHeight(font)
+        local width = REFERENCE_WIDTH
+        local height = #instance.lines * lineheight
 
-        instance.canvas = lg.newCanvas(REFERENCE_WIDTH, #instance.lines * lineheight)
+        instance.canvas = lg.newCanvas(width, height)
+        instance.rectangle = Rectangle.set(instance.rectangle, 0, 0, width, height)
+
+        if limit then
+            instance.limit = limit
+        else
+            instance.limit = (REFERENCE_HEIGHT + lineheight) * 0.5 - height
+        end
 
         lg.setCanvas(instance.canvas)
         for index, line in ipairs(instance.lines) do
             local text, align = process_escaped_character(line)
-            Font.text(font, text, 0, (index - 1) * lineheight, REFERENCE_WIDTH, lineheight, align)
+            Font.text(font, text, 0, (index - 1) * lineheight, width, lineheight, align)
         end
         lg.setCanvas()
     end
 
     instance.y = REFERENCE_HEIGHT
+    instance.pictures = {}
     instance.visible = true
     return instance
 end
 
 function SpriteCredit.update(instance, dt)
+    local picture = instance.pictures[instance.index + 1]
+
     SpriteBase.update(instance, dt)
 
-    instance.y = instance.y - 3
+    if instance.y > instance.limit then
+        instance.y = instance.y - 3
+    else
+        instance.wait = instance.wait - 1
+        if instance.picture then instance.picture[4] = instance.picture[4] - instance.diff end
+        if instance.wait <= 0 then
+            for index = 1, 60 do
+                instance.opacity = instance.opacity - 1 / 60
+                lg.clear()
+                Grapchis.render()
+                lg.present()
+            end
+            instance.update = function() end
+            SpriteCredit.dispose(instance)
+        end
+    end
+
+    if picture and picture[3] ~= instance.picture[3] then
+        if picture[4] ~= 1 then
+            picture[4] = picture[4] + 0.05
+            if instance.picture then instance.picture[4] = instance.picture[4] - 0.05 end
+        else
+            instance.picture = picture
+        end
+    end
 end
 
 function SpriteCredit.render(instance)
+    local picture = instance.picture
+    if picture then
+        lg.setColor(SpriteBase.getColor(instance.color, picture[4]))
+        lg.draw(picture[3], picture[1], picture[2])
+    end
     lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
     lg.draw(instance.canvas, instance.x, instance.y)
+end
+
+function SpriteCredit.setWaitingFrames(instance, frames)
+    instance.wait = frames
+    instance.diff = 1 / frames
+end
+
+function SpriteCredit.addPicture(instance, x, y, picture)
+    table.insert(instance.pictures, {x, y, picture, 0})
+end
+
+function SpriteCredit.showNextPicture(instance)
+    instance.index = (instance.index + 1) % #instance.pictures
 end
 
 return SpriteCredit

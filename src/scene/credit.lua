@@ -62,4 +62,11 @@ function SceneCredit.update(instance, dt)
     instance.sprite.update(instance.sprite, dt)
 end
 
+function SceneCredit.__debug(instance)
+    return {
+        'SceneCredit',
+        string.format('Credit sprite location: <%d, %d>', instance.sprite.x, instance.sprite.y)
+    }
+end
+
 return SceneCredit

@@ -77,7 +77,7 @@ function SpriteCredit.new(contents)
         lg.setCanvas(instance.canvas)
         for index, line in ipairs(instance.lines) do
             local text, align = process_escaped_character(line)
-            Font.text(font, text, 0, index * lineheight, REFERENCE_WIDTH, lineheight, align)
+            Font.text(font, text, 0, (index - 1) * lineheight, REFERENCE_WIDTH, lineheight, align)
         end
         lg.setCanvas()
     end

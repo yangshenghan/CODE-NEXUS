@@ -97,7 +97,7 @@ end
 function SpriteCharacter.render(instance)
     if instance.image then
         lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
-        lg.drawq(instance.image, instance.quad, instance.x, instance.y, instance.angle, instance.zx, instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
+        lg.drawq(instance.image, instance.quad, instance.x, instance.y, instance.angle, instance.mx and -instance.zx or instance.zx, instance.my and -instance.zy or instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
     else
         lg.setColor(193, 47, 14, 255)
         lg.circle('fill', instance.x, instance.y, LOGICAL_GRID_SIZE * 0.5)

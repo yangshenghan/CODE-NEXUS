@@ -62,7 +62,7 @@ end
 
 function SpritePicture.render(instance)
     lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
-    lg.draw(instance.image, instance.x - instance.ox + GraphicsConfigures.width * 0.5, instance.y - instance.oy + GraphicsConfigures.height * 0.5)
+    lg.draw(instance.image, instance.x + GraphicsConfigures.width * 0.5, instance.y + GraphicsConfigures.height * 0.5, instance.angle, instance.mx and -instance.zx or instance.zx, instance.my and -instance.zy or instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
 end
 
 return SpritePicture

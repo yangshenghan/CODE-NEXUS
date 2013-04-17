@@ -206,7 +206,7 @@ function SpriteCredit.render(instance)
         lg.draw(picture[3], picture[1], picture[2])
     end
     lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
-    lg.draw(instance.canvas, instance.x, instance.y)
+    lg.draw(instance.canvas, instance.x, instance.y, instance.angle, instance.mx and -instance.zx or instance.zx, instance.my and -instance.zy or instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
 end
 
 function SpriteCredit.pause(instance)

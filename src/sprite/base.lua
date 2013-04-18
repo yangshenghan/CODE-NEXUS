@@ -28,6 +28,8 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local math                  = math
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
@@ -60,6 +62,8 @@ local SpriteBase            = {
     zx                      = 1,
     zy                      = 1
 }
+
+local RADIUS_PER_ROUND      = 2 * math.pi
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -100,10 +104,51 @@ function SpriteBase.getColor(color, opacity)
     return red, green, blue, alpha
 end
 
+function SpriteBase.getPosition(x, y, rectangle)
+    return x - rectangle.width * 0.5, y - rectangle.height * 0.5
+end
+
 function SpriteBase.flash(instance, color, duration)
 end
 
-function SpriteBase.update(instance)
+function SpriteBase.beforeUpdate(instance, dt)
+end
+
+function SpriteBase.afterUpdate(instance, dt)
+end
+
+function SpriteBase.update(instance, dt)
+    SpriteBase.beforeUpdate(instance, dt)
+    SpriteBase.afterUpdate(instance, dt)
+end
+
+function SpriteBase.beforeRender(instance)
+    local ox = instance.ox
+    local oy = instance.oy
+    local sx = instance.sx
+    local sy = instance.sy
+    local zx = math.max(0, instance.zx)
+    local zy = math.max(0, instance.zy)
+    local angle = instance.angle % RADIUS_PER_ROUND
+
+    if instance.mx then zx = -zx end
+    if instance.my then zy = -zy end
+
+    lg.push()
+    lg.translate(ox - instance.rectangle.width * 0.5, oy - instance.rectangle.height * 0.5)
+    lg.rotate(angle)
+    lg.scale(zx, zy)
+    lg.shear(sx, sy)
+    lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
+end
+
+function SpriteBase.afterRender(instance)
+    lg.pop()
+end
+
+function SpriteBase.render(instance)
+    SpriteBase.beforeRender(instance)
+    SpriteBase.afterRender(instance)
 end
 
 return SpriteBase

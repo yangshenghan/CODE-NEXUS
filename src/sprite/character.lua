@@ -65,12 +65,11 @@ end
 function SpriteCharacter.new(viewport, character)
     local instance = SpriteBase.new(SpriteCharacter, viewport)
     instance.character = character
-    instance.rectangle = Rectangle.set(instance.rectangle, 0, 0, CLIP_WIDTH, CLIP_HEIGHT)
     return instance
 end
 
 function SpriteCharacter.update(instance, dt)
-    SpriteBase.update(instance, dt)
+    SpriteBase.beforeUpdate(instance, dt)
 
     if instance.character.name and is_sprite_changed(instance) then
         instance.name = instance.character.name
@@ -85,23 +84,30 @@ function SpriteCharacter.update(instance, dt)
 
         instance.rectangle = Rectangle.set(instance.rectangle, (instance.index + instance.character.pattern) * width / CLIPS_PER_ROW, 0 * height / CLIPS_PER_COLUMN, width / CLIPS_PER_ROW, height / CLIPS_PER_COLUMN)
         instance.quad = lg.newQuad(instance.rectangle.x, instance.rectangle.y, instance.rectangle.width, instance.rectangle.height, width, height)
+    else
+        instance.rectangle = Rectangle.set(instance.rectangle, 0, 0, LOGICAL_GRID_SIZE, LOGICAL_GRID_SIZE)
     end
 
-    instance.x = instance.character.rx - instance.rectangle.width * 0.5 - Game.stage.displayx * LOGICAL_GRID_SIZE
-    instance.y = REFERENCE_HEIGHT - instance.character.ry - instance.rectangle.height * 0.5 + Game.stage.displayy * LOGICAL_GRID_SIZE
+    instance.x = instance.character.rx - Game.stage.displayx * LOGICAL_GRID_SIZE
+    instance.y = REFERENCE_HEIGHT - instance.character.ry + Game.stage.displayy * LOGICAL_GRID_SIZE
 
     instance.opacity = instance.character.opacity
     instance.visible = not instance.character.transparent
+    SpriteBase.afterUpdate(instance, dt)
 end
 
 function SpriteCharacter.render(instance)
+    SpriteBase.beforeRender(instance)
     if instance.image then
-        lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
-        lg.drawq(instance.image, instance.quad, instance.x, instance.y, instance.angle, instance.mx and -instance.zx or instance.zx, instance.my and -instance.zy or instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
+        lg.drawq(instance.image, instance.quad, instance.x, instance.y)
     else
+        lg.push()
+        lg.translate(instance.rectangle.width * 0.5, instance.rectangle.height * 0.5)
         lg.setColor(193, 47, 14, 255)
         lg.circle('fill', instance.x, instance.y, LOGICAL_GRID_SIZE * 0.5)
+        lg.pop()
     end
+    SpriteBase.afterRender(instance)
 end
 
 return SpriteCharacter

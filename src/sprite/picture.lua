@@ -54,15 +54,21 @@ function SpritePicture.new(viewport, name)
     instance.image = Resource.loadPictureImage(name)
     instance.rectangle.width = instance.image.getWidth(instance.image)
     instance.rectangle.height = instance.image.getHeight(instance.image)
-    instance.ox = instance.rectangle.width * 0.5
-    instance.oy = instance.rectangle.height * 0.5
     instance.visible = true
     return instance
 end
 
+function SpritePicture.update(instance, dt)
+    SpriteBase.beforeUpdate(instance, dt)
+    instance.ox = GraphicsConfigures.width * 0.5
+    instance.oy = GraphicsConfigures.height * 0.5
+    SpriteBase.afterUpdate(instance, dt)
+end
+
 function SpritePicture.render(instance)
-    lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
-    lg.draw(instance.image, instance.x + GraphicsConfigures.width * 0.5, instance.y + GraphicsConfigures.height * 0.5, instance.angle, instance.mx and -instance.zx or instance.zx, instance.my and -instance.zy or instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
+    SpriteBase.beforeRender(instance)
+    lg.draw(instance.image, instance.x, instance.y)
+    SpriteBase.afterRender(instance)
 end
 
 return SpritePicture

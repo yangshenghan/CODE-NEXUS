@@ -193,20 +193,23 @@ end
 function SpriteCredit.update(instance, dt)
     local sprite_update_coroutine = table.first(instance.coroutines)
     local picture_update_coroutine = table.last(instance.coroutines)
-    SpriteBase.update(instance, dt)
 
+    SpriteBase.beforeUpdate(instance, dt)
     if instance.scrolling and sprite_update_coroutine then coroutine.resume(sprite_update_coroutine, instance, dt) end
     if picture_update_coroutine then coroutine.resume(picture_update_coroutine, instance, dt) end
+    SpriteBase.afterUpdate(instance, dt)
 end
 
 function SpriteCredit.render(instance)
     local picture = instance.picture
+
+    SpriteBase.beforeRender(instance)
     if picture then
         lg.setColor(SpriteBase.getColor(instance.color, picture[4]))
         lg.draw(picture[3], picture[1], picture[2])
     end
-    lg.setColor(SpriteBase.getColor(instance.color, instance.opacity))
-    lg.draw(instance.canvas, instance.x, instance.y, instance.angle, instance.mx and -instance.zx or instance.zx, instance.my and -instance.zy or instance.zy, instance.ox, instance.oy, instance.sx, instance.sy)
+    lg.draw(instance.canvas, instance.x, instance.y)
+    SpriteBase.afterRender(instance)
 end
 
 function SpriteCredit.pause(instance)

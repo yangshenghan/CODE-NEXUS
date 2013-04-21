@@ -31,15 +31,10 @@ local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Constants             = Nexus.constants
 local Configures            = Nexus.configures
 local GraphicsConfigures    = Configures.graphics
-local Game                  = Core.import 'nexus.core.game'
 local Resource              = Core.import 'nexus.core.resource'
-local Color                 = Core.import 'nexus.base.color'
 local SpriteBase            = Core.import 'nexus.sprite.base'
-local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
-local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --

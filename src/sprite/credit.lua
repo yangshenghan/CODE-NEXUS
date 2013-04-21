@@ -38,7 +38,6 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Data                  = Core.import 'nexus.core.data'
 local Graphics              = Core.import 'nexus.core.graphics'
-local Color                 = Core.import 'nexus.base.color'
 local Font                  = Core.import 'nexus.base.font'
 local Rectangle             = Core.import 'nexus.base.rectangle'
 local SpriteBase            = Core.import 'nexus.sprite.base'
@@ -52,7 +51,6 @@ local SpriteCredit          = {
     coroutines              = nil,
     lines                   = nil,
     canvas                  = nil,
-    pictures                = nil,
     current                 = nil,
     scrolling               = true,
     index                   = 0,
@@ -60,8 +58,7 @@ local SpriteCredit          = {
     wait                    = 0,
     speed                   = 3,
     fadespeed               = 0,
-    difference              = 0,
-    transition              = 0
+    difference              = 0
 }
 
 -- / ---------------------------------------------------------------------- \ --
@@ -103,49 +100,11 @@ local function update_credit_start(instance, dt)
     table.insert(instance.coroutines, 1, coroutine.create(update_credit_position))
 end
 
-local function update_picture_fadein(instance, dt, picture)
-    while picture[4] < 1 do
-        picture[4] = picture[4] + instance.transition
-        coroutine.yield(true)
-    end
-    return false
-end
-
-local function update_picture_fadeout(instance, dt, picture)
-    while picture[4] > 0 do
-        picture[4] = picture[4] - instance.transition
-        coroutine.yield(true)
-    end
-    return false
-end
-
-local function update_picture_transition(instance, dt)
-    local picture = instance.pictures[instance.index + 1]
-
-    while true do
-        if picture ~= instance.picture then
-            local transition = true
-            local fadein = coroutine.create(update_picture_fadein)
-            local fadeout = coroutine.create(update_picture_fadeout)
-
-            while transition do
-                transition = coroutine.resume(fadein, instance, dt, picture) and coroutine.resume(fadeout, instance, dt, instance.picture)
-                coroutine.yield()
-            end
-
-            picture[4] = 1
-            instance.picture[4] = 0
-            instance.picture = picture
-        end
-        coroutine.yield()
-    end
-end
-
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function SpriteCredit.new(contents, limit)
-    local instance = SpriteBase.new(SpriteCredit)
+function SpriteCredit.new(contents, limit, viewport)
+    local instance = SpriteBase.new(SpriteCredit, viewport)
     local framerate = Graphics.getFramerate()
     instance.lines = {}
 
@@ -179,8 +138,7 @@ function SpriteCredit.new(contents, limit)
 
     instance.pictures = {}
     instance.coroutines = {
-        coroutine.create(update_credit_start),
-        coroutine.create(update_picture_transition)
+        coroutine.create(update_credit_start)
     }
     instance.opacity = 0
     instance.visible = true
@@ -192,11 +150,9 @@ end
 
 function SpriteCredit.update(instance, dt)
     local sprite_update_coroutine = table.first(instance.coroutines)
-    local picture_update_coroutine = table.last(instance.coroutines)
 
     SpriteBase.beforeUpdate(instance, dt)
     if instance.scrolling and sprite_update_coroutine then coroutine.resume(sprite_update_coroutine, instance, dt) end
-    if picture_update_coroutine then coroutine.resume(picture_update_coroutine, instance, dt) end
     SpriteBase.afterUpdate(instance, dt)
 end
 
@@ -227,18 +183,6 @@ end
 
 function SpriteCredit.setFadespeedFrames(instance, frames)
     instance.fadespeed = 1 / frames
-end
-
-function SpriteCredit.setTransitionFrames(instance, frames)
-    instance.transition = frames
-end
-
-function SpriteCredit.addPicture(instance, x, y, picture)
-    table.insert(instance.pictures, {x, y, picture, 0})
-end
-
-function SpriteCredit.showNextPicture(instance)
-    instance.index = (instance.index + 1) % #instance.pictures
 end
 
 return SpriteCredit

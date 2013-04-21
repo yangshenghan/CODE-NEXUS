@@ -27,22 +27,38 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local table                 = table
 local ipairs                = ipairs
+local unpack                = unpack
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Viewport              = Core.import 'nexus.base.data'
 local Data                  = Core.import 'nexus.core.data'
 local Resource              = Core.import 'nexus.core.resource'
 local SpriteCredit          = Core.import 'nexus.sprite.credit'
+local SpritePicture         = Core.import 'nexus.sprite.picture'
 local SceneBase             = Core.import 'nexus.scene.base'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SceneCredit           = {
-    sprite                  = nil
+    sprites                 = nil
 }
 
 local CREDIT_PICTURES       = {}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function create_picture_sprite(x, y, filename)
+    local sprite = SpritePicture.new(viewport_for_pictures, filename)
+    sprite.x = x
+    sprite.y = y
+    sprite.opacity = 0
+    sprite.visible = false
+    sprite.visible = false
+end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
@@ -53,25 +69,29 @@ function SceneCredit.new()
 end
 
 function SceneCredit.enter(instance)
-    instance.sprite = SpriteCredit.new(Data.getTerm('credits'))
+    local viewport_for_pictures = Viewport.new(10)
+    instance.sprites = {
+        SpriteCredit.new(Data.getTerm('credits'), nil, Viewport.new(15))
+    }
 
     for _, picture in ipairs(CREDIT_PICTURES) do
-        local x, y, filename = unpack(picture)
-        instance.sprite.addPicture(instance.sprite, x, y, Resource.loadPictureImage(filename))
+        table.insert(instance.sprites, create_picture_sprite(unpack(picture)))
     end
 end
 
 function SceneCredit.leave(instance)
-    instance.sprite.dispose(instance.sprite)
+    for _, sprite in ipairs(instance.sprites) do sprite.dispose(sprite) end
 end
 
 function SceneCredit.update(instance, dt)
     if instance.idle then return end
 
-    instance.sprite.update(instance.sprite, dt)
+    for _, sprite in ipairs(instance.sprites) do sprite.update(sprite, dt) end
 end
 
 function SceneCredit.__debug(instance)
+    local string = string
+
     return {
         'SceneCredit',
         string.format('Credit sprite location: <%d, %d>', instance.sprite.x, instance.sprite.y)

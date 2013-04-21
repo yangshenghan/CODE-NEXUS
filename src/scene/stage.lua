@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local table                 = table
+local ipairs                = ipairs
 local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus
@@ -198,14 +200,17 @@ function SceneStage.update(instance, dt)
 end
 
 function SceneStage.__debug(instance)
+    local string = string
     local messages = { 'SceneStage' }
     local LOGICAL_GRID_SIZE = Constants.LOGICAL_GRID_SIZE
+
     if Game.player then
         local sprite = table.last(instance.sprites.characters)
         table.insert(messages, string.format('Display area: <%d, %d> (%d, %d)', Game.stage.displayx, Game.stage.displayy, Game.stage.displayx * LOGICAL_GRID_SIZE, Game.stage.displayy * LOGICAL_GRID_SIZE))
         table.insert(messages, string.format('Player location: <%d, %d> (%d, %d)', Game.player.x, Game.player.y, Game.player.rx, Game.player.ry))
         table.insert(messages, string.format('Player location (Sprite): <%s, %d>', sprite.x, sprite.y))
     end
+
     return messages
 end
 

@@ -28,6 +28,7 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local math                  = math
+local setmetatable          = setmetatable
 local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus

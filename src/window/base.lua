@@ -32,6 +32,7 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Data                  = Core.import 'nexus.core.data'
 local Graphics              = Core.import 'nexus.core.graphics'
+local Tone                  = Core.import 'nexus.base.tone'
 local Viewport              = Core.import 'nexus.base.viewport'
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
@@ -40,6 +41,7 @@ local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 -- \ ---------------------------------------------------------------------- / --
 local WindowBase            = {
     font                    = nil,
+    tone                    = nil,
     viewport                = nil,
     render                  = EMPTY_FUNCTION,
     update                  = EMPTY_FUNCTION,
@@ -64,6 +66,7 @@ function WindowBase.new(derive, x, y, width, height, font)
     instance.width = width or instance.width
     instance.height = height or instance.height
     instance.font = font or Data.getFont('window')
+    instance.tone = Tone.new()
     Graphics.addDrawable(instance)
     return instance
 end

@@ -36,6 +36,7 @@ local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
+local Tone                  = Core.import 'nexus.base.tone'
 local Viewport              = Core.import 'nexus.base.viewport'
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
@@ -43,6 +44,7 @@ local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SpriteBase            = {
+    tone                    = nil,
     color                   = nil,
     rectangle               = nil,
     viewport                = nil,
@@ -70,6 +72,7 @@ local RADIUS_PER_ROUND      = 2 * math.pi
 -- \ ---------------------------------------------------------------------- / --
 function SpriteBase.new(derive, viewport)
     local instance = setmetatable({}, { __index = setmetatable(derive, { __index = SpriteBase }) })
+    instance.tone = Tone.new()
     instance.color = Color.new(255, 255, 255, 255)
     instance.viewport = viewport
     instance.rectangle = Rectangle.new()

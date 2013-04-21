@@ -33,6 +33,7 @@ local Constants             = Nexus.constants
 local Graphics              = Core.import 'nexus.core.graphics'
 local Color                 = Core.import 'nexus.base.color'
 local Rectangle             = Core.import 'nexus.base.rectangle'
+local Tone                  = Core.import 'nexus.base.tone'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
@@ -40,6 +41,7 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local Viewport              = {
+    tone                    = nil,
     color                   = nil,
     rectangle               = nil,
     visible                 = true,
@@ -64,8 +66,9 @@ function Viewport.new(z, ...)
         instance.rectangle = Rectangle.new(x, y, width, height)
     end
 
-    instance.color = Color.new(255, 255, 255, 255)
     instance.z = z
+    instance.tone = Tone.new()
+    instance.color = Color.new(255, 255, 255, 255)
     return instance
 end
 

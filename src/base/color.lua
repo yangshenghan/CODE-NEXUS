@@ -60,18 +60,18 @@ function Color.get(instance)
 end
 
 function Color.set(instance, ...)
-    if type(...) == 'table' then
-        local rgba = ...
-        instance.red = set_correct_value(rgba.red or rgba[1])
-        instance.green = set_correct_value(rgba.green or rgba[2])
-        instance.blue = set_correct_value(rgba.blue or rgba[3])
-        instance.alpha = set_correct_value(rgba.alpha or rgba[4])
+    if ... == nil or type(...) ~= 'table' then
+        local red, green, blue, alpha = ...
+        instance.red = set_correct_value(red or instance.red)
+        instance.green = set_correct_value(green or instance.green)
+        instance.blue = set_correct_value(blue or instance.blue)
+        instance.alpha = set_correct_value(alpha or instance.alpha)
     else
-        local red, green, blue, alpha = unpack({...})
-        instance.red = set_correct_value(red)
-        instance.green = set_correct_value(green)
-        instance.blue = set_correct_value(blue)
-        instance.alpha = set_correct_value(alpha)
+        local rgba = ...
+        instance.red = set_correct_value(rgba.red or rgba[1] or instance.red)
+        instance.green = set_correct_value(rgba.green or rgba[2] or instance.green)
+        instance.blue = set_correct_value(rgba.blue or rgba[3] or instance.blue)
+        instance.alpha = set_correct_value(rgba.alpha or rgba[4] or instance.alpha)
     end
     return instance
 end

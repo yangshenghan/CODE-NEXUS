@@ -61,18 +61,18 @@ function Tone.get(instance)
 end
 
 function Tone.set(instance, ...)
-    if type(...) == 'table' then
-        local rgbg = ...
-        instance.red = set_correct_value(rgba.red or rgbg[1])
-        instance.green = set_correct_value(rgba.green or rgbg[2])
-        instance.blue = set_correct_value(rgba.blue or rgbg[3])
-        instance.gray = set_correct_value(rgba.gray or rgbg[4], true)
+    if ... == nil or type(...) ~= 'table' then
+        local red, green, blue, gray = ...
+        instance.red = set_correct_value(red or instance.red)
+        instance.green = set_correct_value(green or instance.green)
+        instance.blue = set_correct_value(blue or instance.blue)
+        instance.gray = set_correct_value(gray or instance.gray, true)
     else
-        local red, green, blue, gray = unpack({...})
-        instance.red = set_correct_value(red)
-        instance.green = set_correct_value(green)
-        instance.blue = set_correct_value(blue)
-        instance.gray = set_correct_value(gray, true)
+        local rgbg = ...
+        instance.red = set_correct_value(rgba.red or rgbg[1] or instance.red)
+        instance.green = set_correct_value(rgba.green or rgbg[2] or instance.green)
+        instance.blue = set_correct_value(rgba.blue or rgbg[3] or instance.blue)
+        instance.gray = set_correct_value(rgba.gray or rgbg[4] or instance.gray, true)
     end
     return instance
 end

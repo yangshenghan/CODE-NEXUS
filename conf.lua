@@ -89,7 +89,7 @@ nexus = {
         PATHS               = {
             CONFIGURE       = 'config.dat',
             SAVING          = 'save-%02d.sav',
-            SAVEINFO        = 'info.sav'
+            SAVEINFO        = 'info.dat'
         },
         DEBUG_MODE          = true,
         FIRST_RUN           = false,

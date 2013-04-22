@@ -88,14 +88,14 @@ nexus = {
         },
         PATHS               = {
             CONFIGURE       = 'config.dat',
-            SAVING          = 'save-%02d.sav'
+            SAVING          = 'save-%02d.sav',
+            SAVEINFO        = 'info.sav'
         },
         DEBUG_MODE          = true,
         FIRST_RUN           = false,
         EMPTY_FUNCTION      = function(...) end,
         SAVING_SLOT_SIZE    = 15,
         LOGICAL_GRID_SIZE   = 16,
-        CONFIGURE_IDENTIFIER= 'configure',
         REFERENCE_WIDTH     = 1280,
         REFERENCE_HEIGHT    = 720,
         FALLBACK_WIDTH      = 640,

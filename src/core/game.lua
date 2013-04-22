@@ -54,6 +54,7 @@ local VERSION               = Constants.VERSION
 local FIRST_RUN             = Constants.FIRST_RUN
 local SAVING_FILENAME       = Constants.PATHS.SAVING
 local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
+local SAVEINFO_FILENAME     = Constants.PATHS.SAVEINFO
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 
@@ -72,6 +73,8 @@ local Game                  = {
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_version             = nil
+
+local m_saveinfo            = nil
 
 local MAJOR                 = VERSION.MAJOR
 local MINOR                 = VERSION.MINOR
@@ -92,6 +95,13 @@ end
 local function on_before_save()
     Game.system.framecount = Graphics.getFramecount()
     Game.system.savingcount = Game.system.savingcount + 1
+end
+
+local function get_updated_saveinfo()
+    return m_saveinfo
+end
+
+local function set_updated_saveinfo(data)
 end
 
 local function adjust_screen_mode()
@@ -129,6 +139,7 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function Game.initialize()
+    m_saveinfo = {}
 end
 
 function Game.finalize()
@@ -138,6 +149,7 @@ function Game.finalize()
 
     Game.stage = nil
     Game.message = nil
+    m_saveinfo = nil
 end
 
 function Game.update(dt)
@@ -176,7 +188,8 @@ function Game.setup()
 end
 
 function Game.load(index)
-    -- local data = Core.load()
+    local data = Core.load(string.format(SAVING_FILENAME, index))
+    set_updated_saveinfo(Core.load(SAVEINFO_FILENAME))
 
     Game.player = GamePlayer.new(data.player)
     -- Game.story = GameStory.new(data.story)
@@ -189,8 +202,11 @@ function Game.load(index)
     return false
 end
 
-function Game.save(index)
+function Game.save(index, data)
     on_before_save()
+
+    Core.save(string.format(SAVING_FILENAME, index), data)
+    Core.save(SAVEINFO_FILENAME, get_updated_saveinfo())
     return false
 end
 
@@ -200,8 +216,7 @@ end
 
 function Game.exists()
     for index = 1, SAVING_SLOT_SIZE do
-        local filename = string.format(SAVING_FILENAME, index)
-        if lf.exists(filename) then return true end
+        if lf.exists(string.format(SAVING_FILENAME, index)) then return true end
     end
     return false
 end

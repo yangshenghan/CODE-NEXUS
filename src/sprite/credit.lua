@@ -119,6 +119,8 @@ function SpriteCredit.new(contents, limit, viewport)
         local height = #instance.lines * lineheight
 
         instance.y = (REFERENCE_HEIGHT + lineheight) * 0.5
+        instance.ox = width * 0.5
+        instance.oy = height * 0.5
         instance.canvas = lg.newCanvas(width, height)
         instance.rectangle = Rectangle.set(instance.rectangle, 0, 0, width, height)
 
@@ -144,7 +146,6 @@ function SpriteCredit.new(contents, limit, viewport)
     instance.visible = true
     SpriteCredit.setWaitingFrames(instance, framerate)
     SpriteCredit.setFadespeedFrames(instance, framerate)
-    SpriteCredit.setTransitionFrames(instance, framerate)
     return instance
 end
 

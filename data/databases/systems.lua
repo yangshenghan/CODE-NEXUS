@@ -28,5 +28,6 @@ return {
     splash1                 = 'love',
     splash2                 = 'love',
     splash3                 = 'team',
-    waiting_any_key         = 'press_any_key_to_continue'
+    waiting_any_key         = 'press_any_key_to_continue',
+    credits                 = {}
 }

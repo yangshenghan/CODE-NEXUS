@@ -96,11 +96,7 @@ nexus = {
         EMPTY_FUNCTION      = function(...) end,
         SAVING_SLOT_SIZE    = 15,
         LOGICAL_GRID_SIZE   = 16,
-<<<<<<< HEAD
-=======
-        CONFIGURE_IDENTIFIER= 'configure',
         MINIMUM_LINE_HEIGHT = 24,
->>>>>>> Added MINIMUN_LINE_HEIGHT constant.
         REFERENCE_WIDTH     = 1280,
         REFERENCE_HEIGHT    = 720,
         FALLBACK_WIDTH      = 640,

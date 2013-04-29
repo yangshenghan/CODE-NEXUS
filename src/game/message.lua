@@ -35,11 +35,15 @@ local Data                  = Core.import 'nexus.core.data'
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local GameMessage           = {
+    face                    = nil,
     texts                   = nil,
     position                = 2,
+    faceposition            = 0,
     POSITION_TOP            = 0,
     POSITION_MIDDLE         = 1,
-    POSITION_BOTTOM         = 2
+    POSITION_BOTTOM         = 2,
+    FACE_POSITION_LEFT      = 0,
+    FACE_POSITION_RIGHT     = 1
 }
 
 -- / ---------------------------------------------------------------------- \ --

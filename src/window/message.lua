@@ -58,6 +58,13 @@ local function update_message_placement(instance)
 end
 
 local function new_line_x(instance)
+    if Game.message.face ~= nil then
+        if Game.message.faceposition == GameMessage.FACE_POSITION_LEFT then
+            return 160
+        else
+            return REFERENCE_WIDTH - 160
+        end
+    end
     return 0
 end
 

@@ -27,6 +27,9 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local math                  = math
+local table                 = table
+local coroutine             = coroutine
 local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus
@@ -41,6 +44,7 @@ local WindowBase            = Core.import 'nexus.window.base'
 local KEYS                  = Constants.KEYS
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
+local MINIMUN_LINE_HEIGHT   = Constants.MINIMUN_LINE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -69,7 +73,7 @@ local function new_line_x(instance)
 end
 
 local function calculate_line_height(instance, texts)
-    return Font.getLineHeight(instance.font)
+    return math.max(MINIMUM_LINE_HEIGHT, Font.getLineHeight(instance.font))
 end
 
 local function pause_input(instance)

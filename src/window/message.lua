@@ -44,7 +44,6 @@ local WindowBase            = Core.import 'nexus.window.base'
 local KEYS                  = Constants.KEYS
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
-local MINIMUN_LINE_HEIGHT   = Constants.MINIMUN_LINE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -72,30 +71,26 @@ local function new_line_x(instance)
     return 0
 end
 
-local function calculate_line_height(instance, texts)
-    return math.max(MINIMUM_LINE_HEIGHT, Font.getLineHeight(instance.font))
-end
-
 local function pause_input(instance)
     while not Input.isKeyTrigger(KEYS.CONFIRM) do coroutine.yield() end
 end
 
 local function need_new_page(instance, texts, pos)
-    return pos[2] + pos[4] > 4 * calculate_line_height(instance, texts) and string.len(texts) > 0
+    return pos[2] + pos[4] > 4 * WindowBase.calculateLineheight(instance, texts) and string.len(texts) > 0
 end
 
 local function new_page(instance, texts, pos)
     pos[1] = new_line_x(instance)
     pos[2] = 0
     pos[3] = new_line_x(instance)
-    pos[4] = calculate_line_height(instance, texts)
+    pos[4] = WindowBase.calculateLineheight(instance, texts)
     instance.texts = {}
 end
 
 local function process_new_line(instance, texts, pos)
     pos[1] = pos[3]
     pos[2] = pos[2] + pos[4]
-    pos[4] = calculate_line_height(instance, texts)
+    pos[4] = WindowBase.calculateLineheight(instance, texts)
     if need_new_page(instance, texts, pos) then
         pause_input(instance)
         new_page(instance, texts, pos)

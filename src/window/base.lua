@@ -35,6 +35,7 @@ local Graphics              = Core.import 'nexus.core.graphics'
 local Tone                  = Core.import 'nexus.base.tone'
 local Viewport              = Core.import 'nexus.base.viewport'
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
+local MINIMUM_LINE_HEIGHT   = Constants.MINIMUM_LINE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -92,6 +93,10 @@ end
 function WindowBase.close(instance)
     instance.active = false
     instance.visible = false
+end
+
+local function calculate_line_height(instance, texts)
+    return math.max(MINIMUM_LINE_HEIGHT, Font.getLineHeight(instance.font))
 end
 
 return WindowBase

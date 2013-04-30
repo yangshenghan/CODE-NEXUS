@@ -36,19 +36,11 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 
 return {
-    events                  = {
-        {
-            conditions      = {},
-            triggers        = {},
-            list            = {
-                code        = nil,
-                indent      = 0,
-                parameters  = {}
-            }
-        }
+    spawns                  = {
+        id                  = {},
+        x                   = {},
+        y                   = {}
     },
-    width       = 100,
-    height      = 50,
     objects     = {
         ground      = {
             x           = 0,

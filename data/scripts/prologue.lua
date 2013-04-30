@@ -25,9 +25,15 @@
 --[[ ********************************************************************** ]]--
 
 return {
-    spawns                  = {
-        id                  = {},
-        x                   = {},
-        y                   = {}
+    events                  = {
+        {
+            conditions      = {},
+            triggers        = {},
+            list            = {
+                code        = nil,
+                indent      = 0,
+                parameters  = {}
+            }
+        }
     }
 }

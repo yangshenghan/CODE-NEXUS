@@ -89,22 +89,22 @@ function GamePlayer.new()
     return instance
 end
 
-function GamePlayer.update(instance, dt)
-    GameCharacter.update(instance, dt)
+function GamePlayer.update(dt)
+    GameCharacter.update(Game.player, dt)
 
-    if instance.rushing then
-        coroutine.resume(instance.rushing, dt)
+    if Game.player.rushing then
+        coroutine.resume(Game.player.rushing, dt)
     end
 
-    if instance.jumping then
-        coroutine.resume(instance.jumping, dt)
+    if Game.player.jumping then
+        coroutine.resume(Game.player.jumping, dt)
     end
 
-    if instance.attacking then
-        coroutine.resume(instance.attacking, dt)
+    if Game.player.attacking then
+        coroutine.resume(Game.player.attacking, dt)
     end
 
-    update_screen_scroll(instance)
+    update_screen_scroll(Game.player)
 end
 
 function GamePlayer.rush(instance)

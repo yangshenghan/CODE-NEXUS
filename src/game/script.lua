@@ -52,4 +52,7 @@ function GameScript.load(name)
     return data
 end
 
+function GameScript.update(dt)
+end
+
 return GameScript

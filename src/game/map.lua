@@ -74,6 +74,9 @@ function GameMap.load(map)
     return data
 end
 
+function GameMap.update(dt)
+end
+
 function GameMap.setDisplayPosition(x, y)
     x = math.max(math.min(x, Game.map.width - get_grid_x()), 0)
     y = math.max(math.min(y, Game.map.height - get_grid_y()), 0)

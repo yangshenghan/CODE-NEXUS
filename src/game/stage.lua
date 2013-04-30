@@ -27,17 +27,84 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local ipairs                = ipairs
 local setmetatable          = setmetatable
 local Nexus                 = nexus
 local Core                  = Nexus.core
+local Constants             = Nexus.constants
 local Data                  = Core.import 'nexus.core.data'
+local Input                 = Core.import 'nexus.core.input'
 local Game                  = Core.import 'nexus.core.game'
-local GamePlayer            = Core.import 'nexus.game.player'
+local KEYS                  = Constants.KEYS
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local GameStage             = {
+    spawns                  = nil
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Local variables                                                        | --
+-- \ ---------------------------------------------------------------------- / --
+local KEY_BINDINGS  = {
+    {
+        'gamestage.z',
+        KEYS.Z,
+        function()
+            Game.player.rush(Game.player)
+        end
+    },
+    {
+        'gamestage.x',
+        KEYS.X,
+        function()
+            Game.player.jump(Game.player)
+        end
+    },
+    {
+        'gamestage.c',
+        KEYS.C,
+        function()
+            Game.player.attack(Game.player)
+        end
+    },
+    {
+        'gamestage.up',
+        KEYS.UP,
+        function()
+            if Game.player.isPassable(Game.player, Game.player.x, Game.player.y + 1) then
+                Game.player.up(Game.player)
+            end
+        end
+    },
+    {
+        'gamestage.right',
+        KEYS.RIGHT,
+        function()
+            if Game.player.isPassable(Game.player, Game.player.x + 1, Game.player.y) then
+                Game.player.right(Game.player)
+            end
+        end
+    },
+    {
+        'gamestage.down',
+        KEYS.DOWN,
+        function()
+            if Game.player.isPassable(Game.player, Game.player.x, Game.player.y - 1) then
+                Game.player.down(Game.player)
+            end
+        end
+    },
+    {
+        'gamestage.left',
+        KEYS.LEFT,
+        function()
+            if Game.player.isPassable(Game.player, Game.player.x - 1, Game.player.y) then
+                Game.player.left(Game.player)
+            end
+        end
+    }
 }
 
 -- / ---------------------------------------------------------------------- \ --
@@ -45,13 +112,34 @@ local GameStage             = {
 -- \ ---------------------------------------------------------------------- / --
 function GameStage.new(data)
     local instance = setmetatable({}, { __index = GameStage })
+    instance.spawns = {}
     return instance
 end
 
 function GameStage.load(stage)
     local data = Data.loadStageData(stage)
-    GamePlayer.move(Game.player, 10, 10)
+    Game.player.move(Game.player, 10, 10)
     return data
+end
+
+function GameStage.unload()
+    Game.stage.spawns = {}
+end
+
+function GameStage.update(dt)
+    for _, object in ipairs(Game.stage.spawns) do object.update(object, dt) end
+end
+
+function GameStage.spawn(object)
+    table.insert(Game.stage.spawns, object)
+end
+
+function GameStage.enableKeyBindings()
+    for _, binding in ipairs(KEY_BINDINGS) do Input.bindKeyEvent(binding[1], Input.PRESS, binding[2], binding[3]) end
+end
+
+function GameStage.disableKeyBindings()
+    for _, binding in ipairs(KEY_BINDINGS) do Input.unbindKeyEvent(binding[1]) end
 end
 
 return GameStage

@@ -33,27 +33,17 @@ local l                     = love
 local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Constants             = Nexus.constants
-local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
-local Graphics              = Core.import 'nexus.core.graphics'
-local Input                 = Core.import 'nexus.core.input'
 local Scene                 = Core.import 'nexus.core.scene'
 local Viewport              = Core.import 'nexus.base.viewport'
-local GameObject            = Core.import 'nexus.game.object'
 local SceneBase             = Core.import 'nexus.scene.base'
 local SceneLoading          = Core.import 'nexus.scene.loading'
 local SpriteCharacter       = Core.import 'nexus.sprite.character'
-local KEYS                  = Constants.KEYS
-local EMPTY_FUNCTION  = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local SceneStage            = {
-    map                     = nil,
-    stage                   = nil,
-    script                  = nil,
     sprites                 = nil,
     viewports               = nil
 }
@@ -125,83 +115,53 @@ function SceneStage.new(name)
 end
 
 function SceneStage.enter(instance)
-    -- Load stage data
-    instance.map = Game.map.load(instance.name)
-    instance.stage = Game.stage.load(instance.name)
-    instance.script = Game.script.load(instance.name)
+    local Constants         = Nexus.constants
+    local Graphics          = Core.import 'nexus.core.graphics'
+    local EMPTY_FUNCTION    = Constants.EMPTY_FUNCTION
 
-    -- Initialize stage
+    local map = Game.map.load(instance.name)
+    local stage = Game.stage.load(instance.name)
+    local script = Game.script.load(instance.name)
+
     create_stage_spriteset(instance)
 
-    -- Create objects
-    instance.objects = {}
-    for _, data in pairs(instance.stage.objects) do
+    Game.stage.enableKeyBindings()
+    -- for _, spawn in pairs(stage.spawns) do
+    for _, spawn in pairs(stage.objects) do
         local object = {}
-        object = data
+        object = spawn
         object.z = 10
         object.dispose = EMPTY_FUNCTION
         object.isDisposed = EMPTY_FUNCTION
         object.isVisible = function() return true end
-        object.update = data.update or EMPTY_FUNCTION
-        object.render = data.render or EMPTY_FUNCTION
-        object.viewport = instance.viewports[2]
+        object.update = spawn.update or EMPTY_FUNCTION
+        object.render = spawn.render or EMPTY_FUNCTION
+        object.viewport = viewport
         Graphics.addDrawable(object)
-        table.insert(instance.objects, object)
+        Game.stage.spawn(object)
     end
 end
 
 function SceneStage.leave(instance)
     dispose_stage_spriteset(instance)
 
-    instance.objects = nil
-    instance.script = nil
-    instance.stage = nil
-    instance.map = nil
+    Game.stage.disableKeyBindings()
+
+    Game.stage.unload()
 end
 
 function SceneStage.update(instance, dt)
     if instance.idle then return end
 
-    if Input.isKeyDown(KEYS.Z) then
-        Game.player.rush(Game.player)
-    end
-
-    if Input.isKeyDown(KEYS.X) then
-        Game.player.jump(Game.player)
-    end
-
-    if Input.isKeyDown(KEYS.C) then
-        Game.player.attack(Game.player)
-    end
-
-    if Input.isKeyDown(KEYS.LEFT) and GameObject.isPassable(Game.player, Game.player.x - 1, Game.player.y) then
-        Game.player.left(Game.player)
-    end
-
-    if Input.isKeyDown(KEYS.RIGHT) and GameObject.isPassable(Game.player, Game.player.x + 1, Game.player.y) then
-        Game.player.right(Game.player)
-    end
-
-    if Input.isKeyDown(KEYS.UP) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y + 1) then
-        Game.player.up(Game.player)
-    end
-
-    if Input.isKeyDown(KEYS.DOWN) and GameObject.isPassable(Game.player, Game.player.x, Game.player.y - 1) then
-        Game.player.down(Game.player)
-    end
-
-    Game.player.update(Game.player, dt)
-
-    for _, object in pairs(instance.objects) do
-        object.update(object, dt)
-    end
-
+    Game.stage.update(dt)
+    Game.player.update(dt)
     update_stage_spriteset(instance)
 end
 
 function SceneStage.__debug(instance)
     local string = string
     local messages = { 'SceneStage' }
+    local Constants = Nexus.constants
     local LOGICAL_GRID_SIZE = Constants.LOGICAL_GRID_SIZE
 
     if Game.player then

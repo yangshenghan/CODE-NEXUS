@@ -128,7 +128,7 @@ function Data.loadScriptData(filename)
 end
 
 function Data.loadStageData(filename)
-    return load_data_resource('data/stages/', filename)
+    return load_data_resource('data/stages', filename)
 end
 
 function Data.loadLanguageData(filename)

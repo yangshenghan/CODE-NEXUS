@@ -27,15 +27,13 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local math                  = math
+local setmetatable          = setmetatable
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
-local Configures            = Nexus.configures
 local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
-local Input                 = Core.import 'nexus.core.input'
-local GameObject            = Core.import 'nexus.game.object'
-local GameCharacter         = Core.import 'nexus.game.character'
 local REFERENCE_WIDTH       = Constants.REFERENCE_WIDTH
 local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
@@ -43,116 +41,68 @@ local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GamePlayer            = {
-    last_logical_x          = 0,
-    last_logical_y          = 0
+local GameMap               = {
+    displayx                = 0,
+    displayy                = 0,
+    width                   = 0,
+    height                  = 0
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
-local function get_center_x()
-    return (REFERENCE_WIDTH / LOGICAL_GRID_SIZE - 1) * 0.5
+local function get_grid_x()
+    return REFERENCE_WIDTH / LOGICAL_GRID_SIZE
 end
 
-local function get_center_y()
-    return (REFERENCE_HEIGHT / LOGICAL_GRID_SIZE - 1) * 0.5
-end
-
--- local function center(x, y)
-    -- Game.map.setDisplayPosition(x - get_center_x(), y - get_center_y())
--- end
-
-local function update_screen_scroll(instance)
-    local cx = get_center_x()
-    local cy = get_center_y()
-    local x1 = Game.map.adjustX(instance.last_logical_x)
-    local y1 = Game.map.adjustY(instance.last_logical_y)
-    local x2 = Game.map.adjustX(instance.x)
-    local y2 = Game.map.adjustY(instance.y)
-
-    if y2 > y1 and y2 > cy then Game.map.scrollUp(y2 - y1) end
-    if x2 > x1 and x2 > cx then Game.map.scrollRight(x2 - x1) end
-    if y2 < y1 and y2 < cy then Game.map.scrollDown(y1 - y2) end
-    if x2 < x1 and x2 < cx then Game.map.scrollLeft(x1 - x2) end
-
-    instance.last_logical_x = instance.x
-    instance.last_logical_y = instance.y
+local function get_grid_y()
+    return REFERENCE_HEIGHT / LOGICAL_GRID_SIZE
 end
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function GamePlayer.new()
-    local instance = GameCharacter.new(GamePlayer)
-    instance.object = Data.loadObjectData('player')
+function GameMap.new(data)
+    local instance = setmetatable({}, { __index = GameMap })
     return instance
 end
 
-function GamePlayer.update(instance, dt)
-    GameCharacter.update(instance, dt)
-
-    if instance.rushing then
-        coroutine.resume(instance.rushing, dt)
-    end
-
-    if instance.jumping then
-        coroutine.resume(instance.jumping, dt)
-    end
-
-    if instance.attacking then
-        coroutine.resume(instance.attacking, dt)
-    end
-
-    update_screen_scroll(instance)
+function GameMap.load(map)
+    local data = Data.loadMapData(map)
+    Game.map.width = data.width
+    Game.map.height = data.height
+    return data
 end
 
-function GamePlayer.rush(instance)
-    if not instance.rushing then
-        instance.rushing = coroutine.create(function(dt)
-            instance.rushing = nil
-        end)
-    end
+function GameMap.setDisplayPosition(x, y)
+    x = math.max(math.min(x, Game.map.width - get_grid_x()), 0)
+    y = math.max(math.min(y, Game.map.height - get_grid_y()), 0)
+    Game.map.displayx = (x + Game.map.width) % Game.map.width
+    Game.map.displayy = (y + Game.map.height) % Game.map.height
 end
 
-function GamePlayer.jump(instance)
-    if not instance.jumping then
-        instance.jumping = coroutine.create(function(dt)
-            while instance.ry < (instance.y + 4) * LOGICAL_GRID_SIZE do
-                instance.ry = instance.ry + 4 * LOGICAL_GRID_SIZE * dt * 8
-                coroutine.yield()
-            end
-            while instance.ry > instance.y * LOGICAL_GRID_SIZE do
-                instance.ry = instance.ry - 4 * LOGICAL_GRID_SIZE * dt * 8
-                coroutine.yield()
-            end
-            instance.jumping = nil
-        end)
-    end
+function GameMap.adjustX(x)
+    return x - Game.map.displayx
 end
 
-function GamePlayer.attack(instance)
-    if not instance.attacking then
-        instance.attacking = coroutine.create(function(dt)
-            instance.attacking = nil
-        end)
-    end
+function GameMap.adjustY(y)
+    return y - Game.map.displayy
 end
 
-function GamePlayer.up(instance)
-    GameObject.move(instance, false, instance.y + 1)
+function GameMap.scrollUp(distance)
+    Game.map.displayy = math.min(Game.map.displayy + distance, Game.map.height - get_grid_y())
 end
 
-function GamePlayer.right(instance)
-    GameObject.move(instance, instance.x + 1, false)
+function GameMap.scrollRight(distance)
+    Game.map.displayx = math.min(Game.map.displayx + distance, Game.map.width - get_grid_x())
 end
 
-function GamePlayer.down(instance)
-    GameObject.move(instance, false, instance.y - 1)
+function GameMap.scrollDown(distance)
+    Game.map.displayy = math.max(Game.map.displayy - distance, 0)
 end
 
-function GamePlayer.left(instance)
-    GameObject.move(instance, instance.x - 1, false)
+function GameMap.scrollLeft(distance)
+    Game.map.displayx = math.max(Game.map.displayx - distance, 0)
 end
 
-return GamePlayer
+return GameMap

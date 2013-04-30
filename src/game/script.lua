@@ -27,56 +27,29 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local setmetatable          = setmetatable
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Constants             = Nexus.constants
+local Data                  = Core.import 'nexus.core.data'
 local Game                  = Core.import 'nexus.core.game'
-local SceneStage            = Core.import 'nexus.scene.stage'
-local LOGICAL_GRID_SIZE     = Constants.LOGICAL_GRID_SIZE
-local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
 -- \ ---------------------------------------------------------------------- / --
-local GameObject            = {
-    update                  = EMPTY_FUNCTION,
-    image                   = nil,
-    direction               = 0, -- face direction angle in degree
-    x                       = 0, -- logical x position in logical unit
-    y                       = 0, -- logical y position in logical unit
-    rx                      = 0, -- real x position (logical x * LOGICAL_GRID_SIZE)
-    ry                      = 0  -- real y potition (logical y * LOGICAL_GRID_SIZE)
+local GameScript            = {
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
-function GameObject.new(derive)
-    local instance = setmetatable({}, { __index = setmetatable(derive, { __index = GameObject }) })
+function GameScript.new(data)
+    local instance = setmetatable({}, { __index = GameScript })
     return instance
 end
 
-function GameObject.move(instance, x, y)
-    if x then
-        instance.x = x
-        instance.rx = x * LOGICAL_GRID_SIZE
-    end
-    if y then
-        instance.y = y
-        instance.ry = y * LOGICAL_GRID_SIZE
-    end
+function GameScript.load(name)
+    local data = Data.loadScriptData(name)
+    return data
 end
 
-function GameObject.isMoving(instance)
-    if instance.object.rx ~= instance.object.x * LOGICAL_GRID_SIZE then return true end
-    if instance.object.ry ~= instance.object.y * LOGICAL_GRID_SIZE then return true end
-    return false
-end
-
-function GameObject.isPassable(instance, x, y)
-    if x < 0 or y < 0 then return false end
-    if x > Game.map.width or y > Game.map.height then return false end
-    return true
-end
-
-return GameObject
+return GameScript

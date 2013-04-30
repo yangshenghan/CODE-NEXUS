@@ -58,7 +58,7 @@ return {
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.map.displayx * LOGICAL_GRID_SIZE, instance.y + Game.map.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         sky         = {
@@ -69,7 +69,7 @@ return {
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.map.displayx * LOGICAL_GRID_SIZE, instance.y + Game.map.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         leftwall    = {
@@ -80,7 +80,7 @@ return {
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.map.displayx * LOGICAL_GRID_SIZE, instance.y + Game.map.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         rightwall   = {
@@ -91,7 +91,7 @@ return {
             bodyType    = 'static',
             render      = function(instance)
                 love.graphics.setColor(72, 160, 14)
-                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.map.displayx * LOGICAL_GRID_SIZE, instance.y + Game.map.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         block1      = {
@@ -103,7 +103,7 @@ return {
             bodyType    = 'dynamic',
             render      = function(instance)
                 love.graphics.setColor(50, 50, 50)
-                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.map.displayx * LOGICAL_GRID_SIZE, instance.y + Game.map.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         },
         block2      = {
@@ -115,7 +115,7 @@ return {
             bodyType    = 'dynamic',
             render      = function(instance)
                 love.graphics.setColor(50, 50, 50)
-                love.graphics.rectangle('fill', instance.x - Game.stage.displayx * LOGICAL_GRID_SIZE, instance.y + Game.stage.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
+                love.graphics.rectangle('fill', instance.x - Game.map.displayx * LOGICAL_GRID_SIZE, instance.y + Game.map.displayy * LOGICAL_GRID_SIZE, instance.width, instance.height)
             end
         }
     }

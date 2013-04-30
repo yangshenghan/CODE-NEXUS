@@ -88,8 +88,8 @@ function SpriteCharacter.update(instance, dt)
         instance.rectangle = Rectangle.set(instance.rectangle, 0, 0, LOGICAL_GRID_SIZE, LOGICAL_GRID_SIZE)
     end
 
-    instance.x = instance.character.rx - Game.stage.displayx * LOGICAL_GRID_SIZE
-    instance.y = REFERENCE_HEIGHT - instance.character.ry + Game.stage.displayy * LOGICAL_GRID_SIZE
+    instance.x = instance.character.rx - Game.map.displayx * LOGICAL_GRID_SIZE
+    instance.y = REFERENCE_HEIGHT - instance.character.ry + Game.map.displayy * LOGICAL_GRID_SIZE
 
     instance.opacity = instance.character.opacity
     instance.visible = not instance.character.transparent

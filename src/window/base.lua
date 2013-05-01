@@ -32,6 +32,7 @@ local Core                  = Nexus.core
 local Constants             = Nexus.constants
 local Data                  = Core.import 'nexus.core.data'
 local Graphics              = Core.import 'nexus.core.graphics'
+local Font                  = Core.import 'nexus.base.font'
 local Tone                  = Core.import 'nexus.base.tone'
 local Viewport              = Core.import 'nexus.base.viewport'
 local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
@@ -95,7 +96,7 @@ function WindowBase.close(instance)
     instance.visible = false
 end
 
-local function calculate_line_height(instance, texts)
+function WindowBase.calculateLineHeight(instance, texts)
     return math.max(MINIMUM_LINE_HEIGHT, Font.getLineHeight(instance.font))
 end
 

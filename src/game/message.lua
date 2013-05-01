@@ -29,7 +29,6 @@
 -- \ ---------------------------------------------------------------------- / --
 local Nexus                 = nexus
 local Core                  = Nexus.core
-local Data                  = Core.import 'nexus.core.data'
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -52,12 +51,6 @@ local GameMessage           = {
 function GameMessage.new()
     local instance = setmetatable({}, { __index = GameMessage })
     GameMessage.clear(instance)
-
-    if data then
-        instance.texts = data.texts
-        instance.position = data.position
-    end
-
     return instance
 end
 

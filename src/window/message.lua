@@ -52,7 +52,8 @@ local WindowMessage         = {
     texts                   = nil,
     coroutine               = nil,
     show_fast               = false,
-    line_show_fast          = false
+    line_show_fast          = false,
+    pause_skip              = false
 }
 
 -- / ---------------------------------------------------------------------- \ --
@@ -65,8 +66,14 @@ local function wait(instance, duration)
             duration = duration - 1
             coroutine.yield()
         end
-        instance.coroutine = 0
+        instance.coroutine = o
     end)
+end
+
+local function clear(instance)
+    instance.show_fast = false
+    instance.line_show_fast = false
+    instance.pause_skip = false
 end
 
 local function update_message_placement(instance)
@@ -89,21 +96,25 @@ local function pause_input(instance)
 end
 
 local function need_new_page(instance, texts, pos)
-    return pos[2] + pos[4] > 4 * WindowBase.calculateLineheight(instance, texts) and string.len(texts) > 0
+    return pos[2] + pos[4] > 4 * WindowBase.calculateLineHeight(instance, texts) and string.len(texts) > 0
 end
 
 local function new_page(instance, texts, pos)
     pos[1] = new_line_x(instance)
     pos[2] = 0
     pos[3] = new_line_x(instance)
-    pos[4] = WindowBase.calculateLineheight(instance, texts)
+    pos[4] = WindowBase.calculateLineHeight(instance, texts)
     instance.texts = {}
+end
+
+local function convert_escape_characters(instance, texts)
+    return texts
 end
 
 local function process_new_line(instance, texts, pos)
     pos[1] = pos[3]
     pos[2] = pos[2] + pos[4]
-    pos[4] = WindowBase.calculateLineheight(instance, texts)
+    pos[4] = WindowBase.calculateLineHeight(instance, texts)
     if need_new_page(instance, texts, pos) then
         pause_input(instance)
         new_page(instance, texts, pos)
@@ -115,6 +126,22 @@ local function process_new_page(instance, texts, pos)
     new_page(instance, texts, pos)
 end
 
+local function process_escape_character(instance, c, texts, pos)
+    if c == '.' then
+        wait(instance, 15)
+    elseif c == '|' then
+        wait(instance, 60)
+    elseif c == '!' then
+        pause_input(instance)
+    elseif c == '>' then
+        instance.line_show_fast = true
+    elseif c == '<' then
+        instance.line_show_fast = false
+    elseif c == '^' then
+        instance.pause_skip = true
+    end
+end
+
 local function process_normal_character(instance, c, pos)
     local width = instance.font.getWidth(instance.font, c)
     table.insert(instance.texts, {c, pos[1], pos[2]})
@@ -123,22 +150,15 @@ local function process_normal_character(instance, c, pos)
 end
 
 local function process_character(instance, c, texts, pos)
-    if c == '.' then
-        wait(15)
-    elseif c == '|' then
-        wait(60)
-    elseif c == '!' then
-        input_pause()
-    elseif c == '>' then
-        instance.line_show_fast = true
-    elseif c == '<' then
-        instance.line_show_fast = false
-    elseif c == '^' then
-        instance.pause_skip = true
-    elseif c == '\n' then
+    if c == '\n' then
         process_new_line(instance, texts, pos)
     elseif c == '\f' then
         process_new_page(instance, texts, pos)
+    elseif c == '\\' then
+        local control, n = texts, 0
+        control, n = string.gsub(texts, '^([%.%^|!<>]).*', '%1')
+        if n == 0 then control = string.gsub(texts, '^[A-Z]+.*', '%1') end
+        process_escape_character(instance, control, texts, pos)
     else
         process_normal_character(instance, c, pos)
     end
@@ -147,13 +167,13 @@ end
 local function process_all_texts(instance)
     local pos = {0, 0, 0, 0} -- x, y, next x, line height
     local index = 0
-    local texts = GameMessage.getAllTexts(Game.message)
+    local texts = convert_escape_characters(instance, GameMessage.getAllTexts(Game.message))
     local length = string.len(texts)
     -- open_and_wait(instance)
     new_page(instance, texts, pos)
     while index < length do
         index = index + 1
-        process_character(instance, string.sub(texts, index, index), string.sub(texts, index + 1, length), pos)
+        process_character(instance, string.sub(texts, index, index), string.sub(texts, index + 1), pos)
     end
 end
 
@@ -162,7 +182,7 @@ local function f_message_coroutine(instance, dt)
     update_message_placement(instance)
     while GameMessage.isBusy(Game.message) do 
         process_all_texts(instance)
-        pause_input(instance)
+        if not instance.pause_skip then pause_input(instance) end
         GameMessage.clear(Game.message)
         coroutine.yield()
     end
@@ -196,7 +216,7 @@ end
 function WindowMessage.render(instance)
     for _, text in ipairs(instance.texts) do
         local c, x, y = unpack(text)
-        Font.text(instance.font, c, instance.x + x, instance.y + y, instance.width - instance.x, Font.getLineHeight(instance.font))
+        Font.text(instance.font, c, instance.x + x, instance.y + y, instance.width - instance.x, Font.getHeight(instance.font))
     end
 end
 

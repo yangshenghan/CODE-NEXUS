@@ -50,12 +50,25 @@ local REFERENCE_HEIGHT      = Constants.REFERENCE_HEIGHT
 -- \ ---------------------------------------------------------------------- / --
 local WindowMessage         = {
     texts                   = nil,
-    coroutine               = nil
+    coroutine               = nil,
+    show_fast               = false,
+    line_show_fast          = false
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
+local function wait(instance, duration)
+    local o = instance.coroutine
+    instance.coroutine = coroutine.create(function(instance, dt)
+        while duration > 0 do
+            duration = duration - 1
+            coroutine.yield()
+        end
+        instance.coroutine = 0
+    end)
+end
+
 local function update_message_placement(instance)
     instance.y = Game.message.position * (REFERENCE_HEIGHT - instance.height) * 0.5
 end
@@ -106,11 +119,23 @@ local function process_normal_character(instance, c, pos)
     local width = instance.font.getWidth(instance.font, c)
     table.insert(instance.texts, {c, pos[1], pos[2]})
     pos[1] = pos[1] + width
-    coroutine.yield()
+    if not instance.line_show_fast and not instance.show_fast then coroutine.yield() end
 end
 
 local function process_character(instance, c, texts, pos)
-    if c == '\n' then
+    if c == '.' then
+        wait(15)
+    elseif c == '|' then
+        wait(60)
+    elseif c == '!' then
+        input_pause()
+    elseif c == '>' then
+        instance.line_show_fast = true
+    elseif c == '<' then
+        instance.line_show_fast = false
+    elseif c == '^' then
+        instance.pause_skip = true
+    elseif c == '\n' then
         process_new_line(instance, texts, pos)
     elseif c == '\f' then
         process_new_page(instance, texts, pos)
@@ -132,7 +157,7 @@ local function process_all_texts(instance)
     end
 end
 
-local function f_message_coroutine(instance)
+local function f_message_coroutine(instance, dt)
     instance.visible = true
     update_message_placement(instance)
     while GameMessage.isBusy(Game.message) do 
@@ -159,10 +184,10 @@ end
 
 function WindowMessage.update(instance, dt)
     if instance.coroutine then
-        coroutine.resume(instance.coroutine, instance)
+        coroutine.resume(instance.coroutine, instance, dt)
     elseif GameMessage.isBusy(Game.message) then
         instance.coroutine = coroutine.create(f_message_coroutine)
-        coroutine.resume(instance.coroutine, instance)
+        coroutine.resume(instance.coroutine, instance, dt)
     else
         instance.visible = false
     end

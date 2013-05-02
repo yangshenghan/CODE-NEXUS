@@ -52,28 +52,22 @@ local WindowMessage         = {
     texts                   = nil,
     coroutine               = nil,
     show_fast               = false,
-    line_show_fast          = false,
-    pause_skip              = false
+    line_show_fast          = false
 }
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
 local function wait(instance, duration)
-    local o = instance.coroutine
-    instance.coroutine = coroutine.create(function(instance, dt)
-        while duration > 0 do
-            duration = duration - 1
-            coroutine.yield()
-        end
-        instance.coroutine = o
-    end)
+    while duration > 0 do
+        duration = duration - 1
+        coroutine.yield()
+    end
 end
 
 local function clear(instance)
     instance.show_fast = false
     instance.line_show_fast = false
-    instance.pause_skip = false
 end
 
 local function update_message_placement(instance)
@@ -105,6 +99,7 @@ local function new_page(instance, texts, pos)
     pos[3] = new_line_x(instance)
     pos[4] = WindowBase.calculateLineHeight(instance, texts)
     instance.texts = {}
+    clear(instance)
 end
 
 local function convert_escape_characters(instance, texts)
@@ -126,54 +121,56 @@ local function process_new_page(instance, texts, pos)
     new_page(instance, texts, pos)
 end
 
-local function process_escape_character(instance, c, texts, pos)
-    if c == '.' then
+local function process_escape_character(instance, control, texts)
+    if control == '.' then
         wait(instance, 15)
-    elseif c == '|' then
+    elseif control == '|' then
         wait(instance, 60)
-    elseif c == '!' then
+    elseif control == '!' then
         pause_input(instance)
-    elseif c == '>' then
+    elseif control == '>' then
         instance.line_show_fast = true
-    elseif c == '<' then
+    elseif control == '<' then
         instance.line_show_fast = false
-    elseif c == '^' then
-        instance.pause_skip = true
     end
 end
 
-local function process_normal_character(instance, c, pos)
-    local width = instance.font.getWidth(instance.font, c)
-    table.insert(instance.texts, {c, pos[1], pos[2]})
-    pos[1] = pos[1] + width
+local function process_normal_character(instance, character, position)
+    local width = instance.font.getWidth(instance.font, character)
+    table.insert(instance.texts, {character, position[1], position[2]})
+    position[1] = position[1] + width
     if not instance.line_show_fast and not instance.show_fast then coroutine.yield() end
 end
 
-local function process_character(instance, c, texts, pos)
-    if c == '\n' then
-        process_new_line(instance, texts, pos)
-    elseif c == '\f' then
-        process_new_page(instance, texts, pos)
-    elseif c == '\\' then
-        local control, n = texts, 0
-        control, n = string.gsub(texts, '^([%.%^|!<>]).*', '%1')
-        if n == 0 then control = string.gsub(texts, '^[A-Z]+.*', '%1') end
-        process_escape_character(instance, control, texts, pos)
+local function process_character(instance, texts, position)
+    local n = 0
+    local character = string.sub(texts, 1, 1)
+    if character == '\n' then
+        process_new_line(instance, texts, position)
+    elseif character == '\f' then
+        process_new_page(instance, texts, position)
+    elseif character == '\\' then
+        local text = string.sub(texts, 2)
+        local control = text
+        control, n = string.gsub(text, '^([%.%^|!<>]).*', '%1')
+        if n == 0 then control, n = string.gsub(text, '^[A-Z]+.*', '%1') end
+        process_escape_character(instance, control, texts)
+        n = string.len(control)
     else
-        process_normal_character(instance, c, pos)
+        process_normal_character(instance, character, position)
     end
+    return n
 end
 
 local function process_all_texts(instance)
-    local pos = {0, 0, 0, 0} -- x, y, next x, line height
-    local index = 0
+    local index = 1
+    local position = {0, 0, 0, 0} -- x, y, next x, line height
     local texts = convert_escape_characters(instance, GameMessage.getAllTexts(Game.message))
     local length = string.len(texts)
     -- open_and_wait(instance)
-    new_page(instance, texts, pos)
-    while index < length do
-        index = index + 1
-        process_character(instance, string.sub(texts, index, index), string.sub(texts, index + 1), pos)
+    new_page(instance, texts, position)
+    while index <= length do
+        index = index + process_character(instance, string.sub(texts, index), position) + 1
     end
 end
 
@@ -182,7 +179,7 @@ local function f_message_coroutine(instance, dt)
     update_message_placement(instance)
     while GameMessage.isBusy(Game.message) do 
         process_all_texts(instance)
-        if not instance.pause_skip then pause_input(instance) end
+        pause_input(instance)
         GameMessage.clear(Game.message)
         coroutine.yield()
     end

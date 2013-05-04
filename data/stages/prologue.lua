@@ -41,6 +41,13 @@ return {
         x                   = {},
         y                   = {}
     },
+    resources               = {
+        audios              = {},
+        streams             = {},
+        graphics            = {}
+    },
+    attributes              = {
+    },
     objects     = {
         ground      = {
             x           = 0,

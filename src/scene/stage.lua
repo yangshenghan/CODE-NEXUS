@@ -123,6 +123,21 @@ function SceneStage.enter(instance)
     local stage = Game.stage.load(instance.name)
     local script = Game.script.load(instance.name)
 
+    local progress = 0
+    local total_resource_size = #stage.resources.audios + #stage.resources.streams + #stage.resources.graphics
+
+    for _, audio in ipairs(stage.resources.audios) do
+        progress = progress + 1
+    end
+
+    for _, stream in ipairs(stage.resources.streams) do
+        progress = progress + 1
+    end
+
+    for _, graphics in ipairs(stage.resources.graphics) do
+        progress = progress + 1
+    end
+
     create_stage_spriteset(instance)
 
     Game.stage.enableKeyBindings()

@@ -65,6 +65,7 @@ local SceneTitle            = {
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
 local m_splash              = nil
+local m_waiting             = nil
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
@@ -86,28 +87,28 @@ end
 
 local function display_waiting_message()
     local delta = 0
-    local waiting = SpritePicture.new(nil, Data.getSystem('waiting_any_key'))
-    waiting.update(waiting)
+    m_waiting = SpritePicture.new(nil, Data.getSystem('waiting_any_key'))
+    m_waiting.update(m_waiting)
 
     while true do
         local cycle, phase = math.modf((lt.getMicroTime() - 0.5) / 0.75)
         if Input.isKeyTrigger(KEYS.C) then break end
         if cycle % 2 == 0 then
-            waiting.opacity = 1 - phase
+            m_waiting.opacity = 1 - phase
         else
-            waiting.opacity = phase
+            m_waiting.opacity = phase
         end
-        waiting.update(waiting)
+        m_waiting.update(m_waiting)
         coroutine.yield()
     end
 
-    delta = (1 - waiting.opacity) * 300
-    while waiting.opacity < 1 do
-        waiting.opacity = waiting.opacity + delta
-        waiting.update(waiting)
+    delta = (1 - m_waiting.opacity) * 300
+    while m_waiting.opacity < 1 do
+        m_waiting.opacity = m_waiting.opacity + delta
+        m_waiting.update(m_waiting)
         coroutine.yield()
     end
-    waiting.dispose(waiting)
+    m_waiting.dispose(m_waiting)
 end
 
 local function display_title_menu(command)
@@ -184,7 +185,8 @@ function SceneTitle.enter(instance)
 end
 
 function SceneTitle.leave(instance)
-    if not m_splash.isDisposed(m_splash) then m_splash.dispose(m_splash) end
+    if m_splash and not m_splash.isDisposed(m_splash) then m_splash.dispose(m_splash) end
+    if m_waiting and not m_waiting.isDisposed(m_waiting) then m_waiting.dispose(m_waiting) end
 
     instance.windows.command.dispose(instance.windows.command)
 

@@ -59,7 +59,8 @@ end
 function SceneLoading.update(instance, dt)
     if instance.idle then return end
 
-    local _, progress = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
+    local _, progress, text = coroutine.resume(instance.scene.coroutine, instance.scene, dt)
+    instance.scene.progress.setProgressText(instance.scene.progress, text)
     instance.scene.progress.setProgressValue(instance.scene.progress, progress)
 
     if coroutine.status(instance.scene.coroutine) == 'dead' then
@@ -70,8 +71,8 @@ function SceneLoading.update(instance, dt)
     end
 end
 
-function SceneLoading.setProgress(value)
-    coroutine.yield(value)
+function SceneLoading.setProgress(value, text)
+    coroutine.yield(value, text)
 end
 
 return SceneLoading

@@ -47,6 +47,7 @@ local WindowProgressBar     = {
     width                   = REFERENCE_WIDTH * 0.7,
     height                  = 60,
     progress                = 0,
+    text                    = nil,
     image                   = nil
 }
 
@@ -68,11 +69,12 @@ function WindowProgressBar.new(x, y, width, height)
             end
         end
 
-        instance.progress = 0
         instance.image = lg.newImage(image)
         instance.image.setFilter(instance.image, 'linear', 'linear')
     end
 
+    instance.text = nil
+    instance.progress = 0
     instance.visible = true
 
     return instance
@@ -83,10 +85,22 @@ function WindowProgressBar.render(instance)
     lg.setColor(128, 128, 128, 255)
     lg.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
     lg.drawq(instance.image, rectangle, instance.x, instance.y)
+    if instance.text then
+        lg.setColor(255, 255, 255, 255)
+        lg.print(instance.text, instance.x, instance.y + instance.height)
+    end
+end
+
+function WindowProgressBar.getProgressText(instance)
+    return instance.text
 end
 
 function WindowProgressBar.getProgressValue(instance)
     return instance.progress
+end
+
+function WindowProgressBar.setProgressText(instance, text)
+    instance.text = text
 end
 
 function WindowProgressBar.setProgressValue(instance, value)

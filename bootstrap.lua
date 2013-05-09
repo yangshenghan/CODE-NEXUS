@@ -92,9 +92,9 @@ function table.removeValue(t, v)
 end
 
 function coroutine.resume(...)
-    local success, result = f_coroutine_resume(...)
-    if not success then error(tostring(result), 2) end
-    return success, result
+    local results = { f_coroutine_resume(...) }
+    if not results[1] then error(tostring(results[2]), 2) end
+    return unpack(results)
 end
 
 function extend_love_functions()

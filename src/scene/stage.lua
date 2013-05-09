@@ -28,6 +28,7 @@
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
 local table                 = table
+local string                = string
 local ipairs                = ipairs
 local l                     = love
 local lg                    = l.graphics
@@ -161,9 +162,9 @@ function SceneStage.enter(instance)
         total_resource_size = total_resource_size + #resources
     end)
 
-    load_stage_resources(stage.resources, function()
+    load_stage_resources(stage.resources, function(name, resource)
         progress = progress + 1
-        SceneLoading.setProgress(progress / total_resource_size)
+        SceneLoading.setProgress(progress / total_resource_size, string.format('Now loading: %s.%s', name, resource))
     end)
 
     create_stage_spriteset(instance)

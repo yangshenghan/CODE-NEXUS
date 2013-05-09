@@ -53,6 +53,7 @@ local SceneStage            = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
+local stage_loading_phases  = 0
 local RESOURCE_LOADERS      = {
     effects                 = Resource.loadEffectSource,
     musics                  = Resource.loadMusicSource,
@@ -72,6 +73,12 @@ local RESOURCE_LOADERS      = {
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
+local function increase_loading_progress(progress, text)
+    progress = progress + 1
+    SceneLoading.setProgress(progress / stage_loading_phases, text)
+    return progress
+end
+
 local function load_stage_resources(resources, callback)
     for name, loader in pairs(RESOURCE_LOADERS) do
         if resources[name] then
@@ -80,6 +87,12 @@ local function load_stage_resources(resources, callback)
                 callback(name, resource)
             end
         end
+    end
+end
+
+local function spawn_stage_objects(spawns, callback)
+    for _, spawn in pairs(spawns) do
+        -- callback(name, spawn)
     end
 end
 
@@ -152,25 +165,28 @@ function SceneStage.enter(instance)
     local EMPTY_FUNCTION    = Constants.EMPTY_FUNCTION
 
     local progress = 0
-    local total_resource_size = 0
 
     local map = Game.map.load(instance.name)
     local stage = Game.stage.load(instance.name)
     local script = Game.script.load(instance.name)
 
+    stage_loading_phases = #stage.spawns
     table.foreach(stage.resources, function(_, resources)
-        total_resource_size = total_resource_size + #resources
+        stage_loading_phases = stage_loading_phases + #resources
     end)
 
     load_stage_resources(stage.resources, function(name, resource)
-        progress = progress + 1
-        SceneLoading.setProgress(progress / total_resource_size, string.format('Now loading: %s.%s', name, resource))
+        progress = increase_loading_progress(progress, string.format('Now loading: %s.%s', name, resource))
     end)
 
     create_stage_spriteset(instance)
 
+    spawn_stage_objects(stage.spawns, function(name, spawn)
+        progress = increase_loading_progress(progress, string.format('Now spawning: %s.%s', name, spawn))
+    end)
+
     Game.stage.enableKeyBindings()
-    -- for _, spawn in pairs(stage.spawns) do
+
     for _, spawn in pairs(stage.objects) do
         local object = {}
         object = spawn

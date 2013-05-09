@@ -35,6 +35,7 @@ local Nexus                 = nexus
 local Core                  = Nexus.core
 local Game                  = Core.import 'nexus.core.game'
 local Scene                 = Core.import 'nexus.core.scene'
+local Resource              = Core.import 'nexus.core.resource'
 local Viewport              = Core.import 'nexus.base.viewport'
 local SceneBase             = Core.import 'nexus.scene.base'
 local SceneLoading          = Core.import 'nexus.scene.loading'
@@ -49,8 +50,38 @@ local SceneStage            = {
 }
 
 -- / ---------------------------------------------------------------------- \ --
--- | Private functions                                                     | --
+-- | Local variables                                                        | --
 -- \ ---------------------------------------------------------------------- / --
+local RESOURCE_LOADERS      = {
+    effects                 = Resource.loadEffectSource,
+    musics                  = Resource.loadMusicSource,
+    sounds                  = Resource.loadSoundSource,
+    animations              = Resource.loadAnimationIamge,
+    characters              = Resource.loadCharacterImage,
+    icons                   = Resource.loadIconImage,
+    maps                    = Resource.loadMapImage,
+    objects                 = Resource.loadObjectImage,
+    pictures                = Resource.loadPictureImage,
+    systems                 = Resource.loadSystemImage,
+    fonts                   = Resource.loadFontData,
+    glyphs                  = Resource.loadGlyphData,
+    videos                  = Resource.loadVideoData
+}
+
+-- / ---------------------------------------------------------------------- \ --
+-- | Private functions                                                      | --
+-- \ ---------------------------------------------------------------------- / --
+local function load_stage_resources(resources, callback)
+    for name, loader in pairs(RESOURCE_LOADERS) do
+        if resources[name] then
+            for _, resource in ipairs(resources[name]) do
+                loader(resource)
+                callback(name, resource)
+            end
+        end
+    end
+end
+
 local function create_stage_viewports(instance)
     table.insert(instance.viewports, Viewport.new(10))
     table.insert(instance.viewports, Viewport.new(20))
@@ -119,24 +150,21 @@ function SceneStage.enter(instance)
     local Graphics          = Core.import 'nexus.core.graphics'
     local EMPTY_FUNCTION    = Constants.EMPTY_FUNCTION
 
+    local progress = 0
+    local total_resource_size = 0
+
     local map = Game.map.load(instance.name)
     local stage = Game.stage.load(instance.name)
     local script = Game.script.load(instance.name)
 
-    local progress = 0
-    local total_resource_size = #stage.resources.audios + #stage.resources.streams + #stage.resources.graphics
+    table.foreach(stage.resources, function(_, resources)
+        total_resource_size = total_resource_size + #resources
+    end)
 
-    for _, audio in ipairs(stage.resources.audios) do
+    load_stage_resources(stage.resources, function()
         progress = progress + 1
-    end
-
-    for _, stream in ipairs(stage.resources.streams) do
-        progress = progress + 1
-    end
-
-    for _, graphics in ipairs(stage.resources.graphics) do
-        progress = progress + 1
-    end
+        SceneLoading.setProgress(progress / total_resource_size)
+    end)
 
     create_stage_spriteset(instance)
 

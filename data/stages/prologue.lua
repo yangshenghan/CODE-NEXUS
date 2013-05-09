@@ -42,9 +42,19 @@ return {
         y                   = {}
     },
     resources               = {
-        audios              = {},
-        streams             = {},
-        graphics            = {}
+        effects             = {},
+        musics              = {},
+        sounds              = {},
+        animations          = {},
+        characters          = {},
+        icons               = {},
+        maps                = {},
+        objects             = {},
+        pictures            = {},
+        systems             = {},
+        fonts               = {},
+        glyphs              = {},
+        videos              = {}
     },
     attributes              = {
     },

@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
@@ -35,7 +37,6 @@ local Graphics              = Core.import 'nexus.core.graphics'
 local Font                  = Core.import 'nexus.base.font'
 local Tone                  = Core.import 'nexus.base.tone'
 local Viewport              = Core.import 'nexus.base.viewport'
-local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 local MINIMUM_LINE_HEIGHT   = Constants.MINIMUM_LINE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
@@ -45,11 +46,10 @@ local WindowBase            = {
     font                    = nil,
     tone                    = nil,
     viewport                = nil,
-    render                  = EMPTY_FUNCTION,
-    update                  = EMPTY_FUNCTION,
     active                  = false,
     visible                 = false,
     openness                = 0,
+    opacity                 = 255,
     padding                 = 12,
     height                  = 0,
     width                   = 0,
@@ -96,8 +96,40 @@ function WindowBase.close(instance)
     instance.visible = false
 end
 
+function WindowBase.beforeUpdate(instance, dt)
+end
+
+function WindowBase.afterUpdate(instance, dt)
+end
+
+function WindowBase.update(instance, dt)
+    WindowBase.beforeUpdate(instance, dt)
+    WindowBase.afterUpdate(instance, dt)
+end
+
+function WindowBase.beforeRender(instance)
+    lg.setColor(128, 128, 64, instance.opacity)
+    lg.rectangle('line', instance.x - instance.padding, instance.y - instance.padding, instance.width + instance.padding * 2, instance.height + instance.padding * 2)
+    lg.push()
+    lg.setScissor(instance.x, instance.y, instance.width, instance.height)
+end
+
+function WindowBase.afterRender(instance)
+    lg.setScissor()
+    lg.pop()
+end
+
+function WindowBase.render(instance)
+    WindowBase.beforeRender(instance)
+    WindowBase.afterRender(instance)
+end
+
+function WindowBase.getLineHeight(instance)
+    return Font.getHeight(instance.font)
+end
+
 function WindowBase.calculateLineHeight(instance, texts)
-    return math.max(MINIMUM_LINE_HEIGHT, Font.getLineHeight(instance.font))
+    return math.max(MINIMUM_LINE_HEIGHT, WindowBase.getLineHeight(instance))
 end
 
 return WindowBase

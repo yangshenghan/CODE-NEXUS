@@ -57,6 +57,8 @@ local t_default_color       = Color.new(255, 255, 255, 255)
 local t_disabled_color      = Color.new(255, 255, 255, 128)
 local t_selected_color      = Color.new(255, 255, 0, 255)
 
+local STANDARD_PADDING      = 12
+
 -- / ---------------------------------------------------------------------- \ --
 -- | Private functions                                                      | --
 -- \ ---------------------------------------------------------------------- / --
@@ -78,15 +80,15 @@ end
 -- | Member functions                                                       | --
 -- \ ---------------------------------------------------------------------- / --
 function WindowCommand.new(x, y, commands)
-    local instance = WindowBase.new(WindowCommand)
-    instance.x = x or instance.x
-    instance.y = y or instance.y
-    instance.font = Data.getFont('message')
+    local instance = WindowBase.new(WindowCommand, x, y)
     if commands then WindowCommand.addCommands(instance, commands) end
+    instance.width = 160
+    instance.height = instance.size * WindowBase.getLineHeight(instance)
     return instance
 end
 
 function WindowCommand.update(instance, dt)
+    WindowBase.beforeUpdate(instance, dt)
     if Input.isKeyRepeat(KEYS.UP) then
         move_cursor_up(instance, Input.isKeyTrigger(KEYS.UP))
     end
@@ -100,9 +102,11 @@ function WindowCommand.update(instance, dt)
         if command.enabled then command.handler() end
         return instance.cursor
     end
+    WindowBase.afterUpdate(instance, dt)
 end
 
 function WindowCommand.render(instance)
+    WindowBase.beforeRender(instance)
     for index, command in ipairs(instance.commands) do
         if command.enabled then
             instance.font.color = t_default_color
@@ -112,8 +116,9 @@ function WindowCommand.render(instance)
         if instance.cursor == index then
             instance.font.color = t_selected_color
         end
-        Font.text(instance.font, command.text, instance.x, instance.y + index * 32)
+        Font.text(instance.font, command.text, instance.x, instance.y + (index - 1) * WindowBase.calculateLineHeight(instance))
     end
+    WindowBase.afterRender(instance)
 end
 
 function WindowCommand.setHandler(instance, text, handler)

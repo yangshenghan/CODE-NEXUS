@@ -27,6 +27,8 @@
 -- / ---------------------------------------------------------------------- \ --
 -- | Import modules                                                         | --
 -- \ ---------------------------------------------------------------------- / --
+local l                     = love
+local lg                    = l.graphics
 local Nexus                 = nexus
 local Core                  = Nexus.core
 local Constants             = Nexus.constants
@@ -35,7 +37,6 @@ local Graphics              = Core.import 'nexus.core.graphics'
 local Font                  = Core.import 'nexus.base.font'
 local Tone                  = Core.import 'nexus.base.tone'
 local Viewport              = Core.import 'nexus.base.viewport'
-local EMPTY_FUNCTION        = Constants.EMPTY_FUNCTION
 local MINIMUM_LINE_HEIGHT   = Constants.MINIMUM_LINE_HEIGHT
 
 -- / ---------------------------------------------------------------------- \ --
@@ -47,7 +48,9 @@ local WindowBase            = {
     viewport                = nil,
     active                  = false,
     visible                 = false,
+    lineheight              = MINIMUM_LINE_HEIGHT,
     openness                = 0,
+    opacity                 = 255,
     padding                 = 12,
     height                  = 0,
     width                   = 0,
@@ -106,9 +109,15 @@ function WindowBase.update(instance, dt)
 end
 
 function WindowBase.beforeRender(instance)
+    lg.setColor(128, 128, 64, instance.opacity)
+    lg.rectangle('line', instance.x - instance.padding, instance.y - instance.padding, instance.width + instance.padding * 2, instance.height + instance.padding * 2)
+    lg.push()
+    lg.setScissor(instance.x, instance.y, instance.width, instance.height)
 end
 
 function WindowBase.afterRender(instance)
+    lg.setScissor()
+    lg.pop()
 end
 
 function WindowBase.render(instance)
@@ -117,7 +126,7 @@ function WindowBase.render(instance)
 end
 
 function WindowBase.calculateLineHeight(instance, texts)
-    return math.max(MINIMUM_LINE_HEIGHT, Font.getLineHeight(instance.font))
+    return math.max(math.max(MINIMUM_LINE_HEIGHT, instance.lineheight), Font.getLineHeight(instance.font))
 end
 
 return WindowBase

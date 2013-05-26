@@ -45,8 +45,6 @@ local WindowBase            = {
     font                    = nil,
     tone                    = nil,
     viewport                = nil,
-    render                  = EMPTY_FUNCTION,
-    update                  = EMPTY_FUNCTION,
     active                  = false,
     visible                 = false,
     openness                = 0,
@@ -94,6 +92,28 @@ end
 function WindowBase.close(instance)
     instance.active = false
     instance.visible = false
+end
+
+function WindowBase.beforeUpdate(instance, dt)
+end
+
+function WindowBase.afterUpdate(instance, dt)
+end
+
+function WindowBase.update(instance, dt)
+    WindowBase.beforeUpdate(instance, dt)
+    WindowBase.afterUpdate(instance, dt)
+end
+
+function WindowBase.beforeRender(instance)
+end
+
+function WindowBase.afterRender(instance)
+end
+
+function WindowBase.render(instance)
+    WindowBase.beforeRender(instance)
+    WindowBase.afterRender(instance)
 end
 
 function WindowBase.calculateLineHeight(instance, texts)

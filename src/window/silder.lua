@@ -79,15 +79,19 @@ function WindowSilder.new(x, y, width, height)
 end
 
 function WindowSilder.update(instance, dt)
+    WindowBase.beforeUpdate(instance, dt)
     if Input.isKeyRepeat(KEYS.RIGHT) then increase_silder_value(instance) end
     if Input.isKeyRepeat(KEYS.LEFT) then decrease_silder_value(instance) end
+    WindowBase.afterUpdate(instance, dt)
 end
 
 function WindowSilder.render(instance)
+    WindowBase.beforeRender(instance)
     lg.setColor(64, 64, 64, 255)
     lg.rectangle('fill', instance.x, instance.y + 2, instance.width, instance.height - 4)
     lg.setColor(128, 128, 128, 255)
     lg.rectangle('fill', instance.x + instance.width * instance.value / (instance.maximun - instance.minimun) - 2, instance.y, 4, instance.height)
+    WindowBase.afterRender(instance)
 end
 
 function WindowSilder.setStepValue(instance, step)

@@ -87,6 +87,7 @@ function WindowCommand.new(x, y, commands)
 end
 
 function WindowCommand.update(instance, dt)
+    WindowBase.beforeUpdate(instance, dt)
     if Input.isKeyRepeat(KEYS.UP) then
         move_cursor_up(instance, Input.isKeyTrigger(KEYS.UP))
     end
@@ -100,9 +101,11 @@ function WindowCommand.update(instance, dt)
         if command.enabled then command.handler() end
         return instance.cursor
     end
+    WindowBase.afterUpdate(instance, dt)
 end
 
 function WindowCommand.render(instance)
+    WindowBase.beforeRender(instance)
     for index, command in ipairs(instance.commands) do
         if command.enabled then
             instance.font.color = t_default_color
@@ -114,6 +117,7 @@ function WindowCommand.render(instance)
         end
         Font.text(instance.font, command.text, instance.x, instance.y + index * 32)
     end
+    WindowBase.afterRender(instance)
 end
 
 function WindowCommand.setHandler(instance, text, handler)

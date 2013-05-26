@@ -200,6 +200,7 @@ function WindowMessage.new()
 end
 
 function WindowMessage.update(instance, dt)
+    WindowBase.beforeUpdate(instance, dt)
     if instance.coroutine then
         coroutine.resume(instance.coroutine, instance, dt)
     elseif GameMessage.isBusy(Game.message) then
@@ -208,13 +209,16 @@ function WindowMessage.update(instance, dt)
     else
         instance.visible = false
     end
+    WindowBase.afterUpdate(instance, dt)
 end
 
 function WindowMessage.render(instance)
+    WindowBase.beforeRender(instance)
     for _, text in ipairs(instance.texts) do
         local c, x, y = unpack(text)
         Font.text(instance.font, c, instance.x + x, instance.y + y, instance.width - instance.x, Font.getHeight(instance.font))
     end
+    WindowBase.afterRender(instance)
 end
 
 return WindowMessage

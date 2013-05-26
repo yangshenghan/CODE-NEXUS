@@ -81,6 +81,7 @@ function WindowProgressBar.new(x, y, width, height)
 end
 
 function WindowProgressBar.render(instance)
+    WindowBase.beforeRender(instance)
     local rectangle = lg.newQuad(instance.x, instance.y, instance.width * instance.progress, instance.height, instance.width, instance.height)
     lg.setColor(128, 128, 128, 255)
     lg.rectangle('fill', instance.x, instance.y, instance.width, instance.height)
@@ -89,6 +90,7 @@ function WindowProgressBar.render(instance)
         lg.setColor(255, 255, 255, 255)
         lg.print(instance.text, instance.x, instance.y + instance.height)
     end
+    WindowBase.afterRender(instance)
 end
 
 function WindowProgressBar.getProgressText(instance)

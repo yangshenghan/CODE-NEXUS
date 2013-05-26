@@ -54,6 +54,7 @@ local SceneExit             = Core.import 'nexus.scene.exit'
 local KEYS                  = Constants.KEYS
 local VERSION               = Constants.VERSION
 local FIRST_RUN             = Constants.FIRST_RUN
+local DEBUG_MODE            = Constants.DEBUG_MODE
 local SAVING_FILENAME       = Constants.PATHS.SAVING
 local SAVING_SLOT_SIZE      = Constants.SAVING_SLOT_SIZE
 local SAVEINFO_FILENAME     = Constants.PATHS.SAVEINFO
@@ -176,7 +177,7 @@ function Game.start()
     Input.bindKeyEvent('game.reload', Input.TRIGGER, KEYS.F12, Game.reload)
     Input.bindKeyEvent('game.quit', Input.TRIGGER, KEYS.F4, KEYS.ALTERNATIVE, Game.quit)
 
-    if check_game_requirement() then Scene.goto(SceneTitle.new()) end
+    if check_game_requirement() then Scene.goto(SceneTitle.new(DEBUG_MODE)) end
 end
 
 function Game.terminate()

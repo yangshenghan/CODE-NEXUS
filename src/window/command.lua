@@ -83,7 +83,7 @@ function WindowCommand.new(x, y, commands)
     local instance = WindowBase.new(WindowCommand, x, y)
     if commands then WindowCommand.addCommands(instance, commands) end
     instance.width = 160
-    instance.height = instance.size * instance.lineheight
+    instance.height = instance.size * WindowBase.getLineHeight(instance)
     return instance
 end
 

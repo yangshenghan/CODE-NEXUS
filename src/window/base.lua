@@ -48,7 +48,6 @@ local WindowBase            = {
     viewport                = nil,
     active                  = false,
     visible                 = false,
-    lineheight              = MINIMUM_LINE_HEIGHT,
     openness                = 0,
     opacity                 = 255,
     padding                 = 12,
@@ -125,8 +124,12 @@ function WindowBase.render(instance)
     WindowBase.afterRender(instance)
 end
 
+function WindowBase.getLineHeight(instance)
+    return Font.getHeight(instance.font)
+end
+
 function WindowBase.calculateLineHeight(instance, texts)
-    return math.max(math.max(MINIMUM_LINE_HEIGHT, instance.lineheight), Font.getLineHeight(instance.font))
+    return math.max(MINIMUM_LINE_HEIGHT, WindowBase.getLineHeight(instance))
 end
 
 return WindowBase

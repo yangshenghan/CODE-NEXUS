@@ -94,6 +94,7 @@ nexus = {
         DEBUG_MODE          = true,
         FIRST_RUN           = false,
         EMPTY_FUNCTION      = function(...) end,
+        RESPONSE_TICKS      = 4,
         SAVING_SLOT_SIZE    = 15,
         LOGICAL_GRID_SIZE   = 16,
         MINIMUM_LINE_HEIGHT = 24,

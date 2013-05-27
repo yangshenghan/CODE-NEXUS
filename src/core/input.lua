@@ -40,6 +40,7 @@ local Configures            = Nexus.configures
 local MouseConfigures       = Configures.mouses
 local KeyboardConfigures    = Configures.keyboards
 -- local JoystickConfigures    = Configures.joysticks
+local RESPONSE_TICKS        = Constants.RESPONSE_TICKS
 
 -- / ---------------------------------------------------------------------- \ --
 -- | Declare object                                                         | --
@@ -113,7 +114,7 @@ function Input.update(dt)
             if t_pressed[key] then
                 t_triggered[key] = false
                 t_counter[key] = t_counter[key] + 1
-                if t_counter[key] > 15 then
+                if t_counter[key] > RESPONSE_TICKS then
                     t_counter[key] = 0
                 end
             else
